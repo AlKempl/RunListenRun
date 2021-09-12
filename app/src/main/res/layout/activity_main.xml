@@ -50,8 +50,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <Space
                 android:layout_width="match_parent"
@@ -94,7 +94,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="15dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -115,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textAlignment="center"
-                    android:textSize="34sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -138,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textAlignment="center"
-                    android:textSize="34sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -148,7 +149,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="15dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -169,40 +171,39 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textAlignment="center"
-                    android:textSize="34sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp" />
             </LinearLayout>
+        </LinearLayout>
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:id="@+id/alt_caption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:text="Altitude"
+                android:textAlignment="center" />
 
-                <TextView
-                    android:id="@+id/alt_caption"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Altitude"
-                    android:textAlignment="center" />
-
-                <TextView
-                    android:id="@+id/alt_value"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textAlignment="center"
-                    android:textSize="34sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
+            <TextView
+                android:id="@+id/alt_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textAlignment="center"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="15dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -223,8 +224,7 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textAlignment="center"
-                    android:textSize="34sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -246,8 +246,7 @@
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textAlignment="center"
-                    android:textSize="34sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -256,8 +255,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <TextView
                 android:id="@+id/time_caption"
@@ -272,22 +271,21 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textAlignment="center"
-                android:textSize="34sp"
-                android:textStyle="bold" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <TextView
                 android:id="@+id/src_caption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mock"
+                android:text="Provider"
                 android:textAlignment="center" />
 
             <TextView
@@ -296,8 +294,7 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textAlignment="center"
-                android:textSize="34sp"
-                android:textStyle="bold" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <EditText
