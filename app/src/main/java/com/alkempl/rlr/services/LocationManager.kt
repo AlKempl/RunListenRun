@@ -1,6 +1,7 @@
 package com.alkempl.rlr.services
 
 import android.Manifest
+import android.app.ActivityManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -9,16 +10,19 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.alkempl.rlr.LocationUpdatesBroadcastReceiver
+import com.alkempl.rlr.data.LocationRepository
+import com.alkempl.rlr.data.db.LocationEntity
 import com.alkempl.rlr.hasPermission
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
+import java.util.*
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 private const val TAG = "MyLocationManager"
 
 class LocationManager private constructor(private val context: Context) {
-    private val _receivingLocationUpdates: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    private val _receivingLocationUpdates: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>(false)
 
     /**
      * Status of location updates, i.e., whether the app is actively subscribed to location changes.
@@ -29,6 +33,9 @@ class LocationManager private constructor(private val context: Context) {
     // The Fused Location Provider provides access to location APIs.
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
+
+    // globally declare LocationCallback
+//    private lateinit var locationCallback: LocationCallback
 
     // Stores parameters for requests to the FusedLocationProviderApi.
     private val locationRequest: LocationRequest = LocationRequest().apply {
@@ -41,17 +48,17 @@ class LocationManager private constructor(private val context: Context) {
         // receive updates less frequently than this interval when the app is no longer in the
         // foreground.
 //        interval = TimeUnit.SECONDS.toMillis(60)
-        interval = 0
+        interval = 200
 
         // Sets the fastest rate for active location updates. This interval is exact, and your
         // application will never receive updates faster than this value.
-        fastestInterval = 0
+        fastestInterval = 100
 //        fastestInterval = TimeUnit.SECONDS.toMillis(30)
 
         // Sets the maximum time when batched location updates are delivered. Updates may be
         // delivered sooner than this interval.
 //        maxWaitTime = TimeUnit.MINUTES.toMillis(2)
-        maxWaitTime = TimeUnit.SECONDS.toMillis(2)
+        maxWaitTime = TimeUnit.SECONDS.toMillis(0)
 
         priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
@@ -87,6 +94,30 @@ class LocationManager private constructor(private val context: Context) {
             // If the PendingIntent is the same as the last request (which it always is), this
             // request will replace any requestLocationUpdates() called before.
             fusedLocationClient.requestLocationUpdates(locationRequest, locationUpdatePendingIntent)
+//            locationCallback = object : LocationCallback() {
+//                override fun onLocationResult(locationResult: LocationResult?) {
+//                    locationResult ?: return
+//
+//                    if (locationResult.locations.isNotEmpty()) {
+//                        val locations = locationResult.locations.map { location ->
+//                            LocationEntity(
+//                                latitude = location.latitude,
+//                                longitude = location.longitude,
+//                                foreground = isAppInForeground(context),
+//                                date = Date(location.time)
+//                            )
+//                        }
+//                        if (locations.isNotEmpty()) {
+//                            LocationRepository.getInstance(
+//                                context,
+//                                Executors.newSingleThreadExecutor()
+//                            )
+//                                .addLocations(locations)
+//                        }
+//                    }
+//                }
+//            }
+//            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
         } catch (permissionRevoked: SecurityException) {
             _receivingLocationUpdates.value = false
 
@@ -101,11 +132,14 @@ class LocationManager private constructor(private val context: Context) {
     fun stopLocationUpdates() {
         Log.d(TAG, "stopLocationUpdates()")
         _receivingLocationUpdates.value = false
+//        fusedLocationClient.removeLocationUpdates(locationCallback)
         fusedLocationClient.removeLocationUpdates(locationUpdatePendingIntent)
     }
 
     companion object {
-        @Volatile private var INSTANCE: LocationManager? = null
+        @Volatile
+        private var INSTANCE: LocationManager? = null
+
 
         fun getInstance(context: Context): LocationManager {
             return INSTANCE ?: synchronized(this) {
@@ -113,4 +147,18 @@ class LocationManager private constructor(private val context: Context) {
             }
         }
     }
+
+//    private fun isAppInForeground(context: Context): Boolean {
+//        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+//        val appProcesses = activityManager.runningAppProcesses ?: return false
+//
+//        appProcesses.forEach { appProcess ->
+//            if (appProcess.importance ==
+//                ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND &&
+//                appProcess.processName == context.packageName) {
+//                return true
+//            }
+//        }
+//        return false
+//    }
 }

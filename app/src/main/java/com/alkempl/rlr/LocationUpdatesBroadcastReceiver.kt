@@ -31,9 +31,8 @@ class LocationUpdatesBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(TAG, "onReceive() context:$context, intent:$intent")
-
         if (intent.action == ACTION_PROCESS_UPDATES) {
-
+            Log.d(TAG, "ACTION_PROCESS_UPDATES!")
             // Checks for location availability changes.
             LocationAvailability.extractLocationAvailability(intent)?.let { locationAvailability ->
                 if (!locationAvailability.isLocationAvailable) {

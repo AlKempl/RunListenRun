@@ -2,6 +2,7 @@ package com.alkempl.rlr.ui
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.alkempl.rlr.R
 import com.alkempl.rlr.databinding.FragmentLocationUpdateBinding
 import com.alkempl.rlr.hasPermission
+import com.alkempl.rlr.services.NewService
 import com.alkempl.rlr.viewmodel.LocationUpdateViewModel
 import java.lang.StringBuilder
 
@@ -37,6 +39,7 @@ class LocationUpdateFragment : Fragment() {
         binding.enableBackgroundLocationButton.setOnClickListener {
             activityListener?.requestBackgroundLocationPermission()
         }
+
 
         return binding.root
     }
@@ -103,10 +106,10 @@ class LocationUpdateFragment : Fragment() {
         // To simplify the sample, we are unsubscribing from updates here in the Fragment, but you
         // could do it at the Activity level if you want to continue receiving location updates
         // while the user is moving between Fragments.
-        if ((locationUpdateViewModel.receivingLocationUpdates.value == true) &&
-            (!requireContext().hasPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION))) {
-            locationUpdateViewModel.stopLocationUpdates()
-        }
+//        if ((locationUpdateViewModel.receivingLocationUpdates.value == true) &&
+//            (!requireContext().hasPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION))) {
+//            locationUpdateViewModel.stopLocationUpdates()
+//        }
     }
 
     override fun onDetach() {
@@ -131,14 +134,14 @@ class LocationUpdateFragment : Fragment() {
             binding.startOrStopLocationUpdatesButton.apply {
                 text = getString(R.string.stop_receiving_location)
                 setOnClickListener {
-                    locationUpdateViewModel.stopLocationUpdates()
+                    context?.stopService(Intent(context, NewService::class.java))
                 }
             }
         } else {
             binding.startOrStopLocationUpdatesButton.apply {
                 text = getString(R.string.start_receiving_location)
                 setOnClickListener {
-                    locationUpdateViewModel.startLocationUpdates()
+                    context?.startService(Intent(context, NewService::class.java))
                 }
             }
         }
