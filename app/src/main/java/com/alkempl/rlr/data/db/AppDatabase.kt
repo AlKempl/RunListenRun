@@ -6,13 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-private const val DATABASE_NAME = "main_db"
+private const val DATABASE_NAME = "main.db"
 
 
 /**
  * Database for storing all location data.
  */
-@Database(entities = [LocationEntity::class], version = 1)
+@Database(entities = [LocationEntity::class], version = 2)
 @TypeConverters(LocationTypeConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun locationDao(): LocationDao
@@ -32,7 +32,9 @@ abstract class AppDatabase : RoomDatabase() {
                 context,
                 AppDatabase::class.java,
                 DATABASE_NAME
-            ).build()
+            )
+                .fallbackToDestructiveMigration()
+                .build()
         }
     }
 }

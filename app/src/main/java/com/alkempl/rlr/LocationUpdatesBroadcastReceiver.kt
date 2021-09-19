@@ -45,6 +45,12 @@ class LocationUpdatesBroadcastReceiver : BroadcastReceiver() {
                     LocationEntity(
                         latitude = location.latitude,
                         longitude = location.longitude,
+                        accuracy = location.accuracy,
+                        speed = location.speed,
+                        altitude = location.altitude,
+                        bearing = location.bearing,
+                        mock = location.isFromMockProvider,
+                        provider = location.provider,
                         foreground = isAppInForeground(context),
                         date = Date(location.time)
                     )

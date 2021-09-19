@@ -13,11 +13,15 @@ class Utils {
 
 }
 
-fun getDateTime(milliseconds: Long): String {
+fun getDateTime(date: Date): String {
     val formatter = DateFormat.getDateTimeInstance()
+    return formatter.format(date)
+}
+
+fun getDateTime(milliseconds: Long): String {
     val cal = Calendar.getInstance()
     cal.timeInMillis = milliseconds
-    return formatter.format(cal.time)
+    return getDateTime(cal.time)
 }
 
 
