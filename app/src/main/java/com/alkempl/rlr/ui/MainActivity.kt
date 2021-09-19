@@ -4,13 +4,12 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil.setContentView
 import com.alkempl.rlr.R
 import com.alkempl.rlr.databinding.ActivityMainBinding
 import com.alkempl.rlr.services.MyService
-import com.alkempl.rlr.services.NewService
+import com.alkempl.rlr.services.LocationService
 
 private const val TAG = "MainActivity"
 
@@ -28,7 +27,7 @@ class MainActivity : AppCompatActivity(), PermissionRequestFragment.Callbacks, L
                 .commit()
         }
 
-        val serviceIntent = Intent(applicationContext, NewService::class.java)
+        val serviceIntent = Intent(applicationContext, LocationService::class.java)
         val serviceIntent2 = Intent(applicationContext, MyService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Log.d(TAG, "startForegroundService")

@@ -9,12 +9,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.alkempl.rlr.R
 import com.alkempl.rlr.databinding.FragmentLocationUpdateBinding
 import com.alkempl.rlr.hasPermission
-import com.alkempl.rlr.services.NewService
+import com.alkempl.rlr.services.LocationService
 import com.alkempl.rlr.viewmodel.LocationUpdateViewModel
 import java.lang.StringBuilder
 
@@ -134,14 +133,14 @@ class LocationUpdateFragment : Fragment() {
             binding.startOrStopLocationUpdatesButton.apply {
                 text = getString(R.string.stop_receiving_location)
                 setOnClickListener {
-                    context?.stopService(Intent(context, NewService::class.java))
+                    context?.stopService(Intent(context, LocationService::class.java))
                 }
             }
         } else {
             binding.startOrStopLocationUpdatesButton.apply {
                 text = getString(R.string.start_receiving_location)
                 setOnClickListener {
-                    context?.startService(Intent(context, NewService::class.java))
+                    context?.startService(Intent(context, LocationService::class.java))
                 }
             }
         }

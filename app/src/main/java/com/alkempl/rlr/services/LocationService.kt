@@ -26,7 +26,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.PRIORITY_MIN
 
 
-class NewService : Service() {
+class LocationService : Service() {
 
     var locationEnabled = false
 
