@@ -8,9 +8,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.alkempl.rlr.R
 import com.alkempl.rlr.databinding.FragmentLocationUpdateBinding
 import com.alkempl.rlr.hasPermission
+import com.alkempl.rlr.viewmodel.LocationUpdateViewModel
 import java.lang.StringBuilder
 
 private const val TAG = "LocationUpdateFragment"
@@ -20,6 +23,10 @@ class LocationUpdateFragment : Fragment() {
     private var activityListener: Callbacks? = null
 
     private lateinit var binding: FragmentLocationUpdateBinding
+
+    private val locationUpdateViewModel by lazy {
+        ViewModelProviders.of(this).get(LocationUpdateViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,34 +59,34 @@ class LocationUpdateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//
-//        locationUpdateViewModel.receivingLocationUpdates.observe(
-//            viewLifecycleOwner,
-//            androidx.lifecycle.Observer { receivingLocation ->
-//                updateStartOrStopButtonState(receivingLocation)
-//            }
-//        )
-//
-//        locationUpdateViewModel.locationListLiveData.observe(
-//            viewLifecycleOwner,
-//            androidx.lifecycle.Observer { locations ->
-//                locations?.let {
-//                    Log.d(TAG, "Got ${locations.size} locations")
-//
-//                    if (locations.isEmpty()) {
-//                        binding.locationOutputTextView.text =
-//                            getString(R.string.emptyLocationDatabaseMessage)
-//                    } else {
-//                        val outputStringBuilder = StringBuilder("")
-//                        for (location in locations) {
-//                            outputStringBuilder.append(location.toString() + "\n")
-//                        }
-//
-//                        binding.locationOutputTextView.text = outputStringBuilder.toString()
-//                    }
-//                }
-//            }
-//        )
+
+        locationUpdateViewModel.receivingLocationUpdates.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer { receivingLocation ->
+                updateStartOrStopButtonState(receivingLocation)
+            }
+        )
+
+        locationUpdateViewModel.locationListLiveData.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer { locations ->
+                locations?.let {
+                    Log.d(TAG, "Got ${locations.size} locations")
+
+                    if (locations.isEmpty()) {
+                        binding.locationOutputTextView.text =
+                            getString(R.string.emptyLocationDatabaseMessage)
+                    } else {
+                        val outputStringBuilder = StringBuilder("")
+                        for (location in locations) {
+                            outputStringBuilder.append(location.toString() + "\n")
+                        }
+
+                        binding.locationOutputTextView.text = outputStringBuilder.toString()
+                    }
+                }
+            }
+        )
     }
 
     override fun onResume() {
@@ -96,10 +103,10 @@ class LocationUpdateFragment : Fragment() {
         // To simplify the sample, we are unsubscribing from updates here in the Fragment, but you
         // could do it at the Activity level if you want to continue receiving location updates
         // while the user is moving between Fragments.
-//        if ((locationUpdateViewModel.receivingLocationUpdates.value == true) &&
-//            (!requireContext().hasPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION))) {
-//            locationUpdateViewModel.stopLocationUpdates()
-//        }
+        if ((locationUpdateViewModel.receivingLocationUpdates.value == true) &&
+            (!requireContext().hasPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION))) {
+            locationUpdateViewModel.stopLocationUpdates()
+        }
     }
 
     override fun onDetach() {
@@ -123,16 +130,16 @@ class LocationUpdateFragment : Fragment() {
         if (receivingLocation) {
             binding.startOrStopLocationUpdatesButton.apply {
                 text = getString(R.string.stop_receiving_location)
-//                setOnClickListener {
-//                    locationUpdateViewModel.stopLocationUpdates()
-//                }
+                setOnClickListener {
+                    locationUpdateViewModel.stopLocationUpdates()
+                }
             }
         } else {
             binding.startOrStopLocationUpdatesButton.apply {
                 text = getString(R.string.start_receiving_location)
-//                setOnClickListener {
-//                    locationUpdateViewModel.startLocationUpdates()
-//                }
+                setOnClickListener {
+                    locationUpdateViewModel.startLocationUpdates()
+                }
             }
         }
     }
