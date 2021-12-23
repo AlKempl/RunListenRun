@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -29,7 +30,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    buildFeatures{
+    buildFeatures {
         dataBinding true
     }
     compileOptions {
@@ -45,15 +46,24 @@ dependencies {
     def room_version = "2.3.0"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:29.0.3')
 
-//    kapt "android.arch.persistence.room:compiler:1.1.1"
+    // Add the dependency for the Firebase SDK for Google Analytics
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    
+    // Add the dependencies for any other desired Firebase products
+    // https://firebase.google.com/docs/android/setup#available-libraries
+    //    kapt "android.arch.persistence.room:compiler:1.1.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.activity:activity-ktx:1.3.0' //androidx.activity:activity-ktx:1.3.0 = minCompileSdk 30
+    implementation 'androidx.activity:activity-ktx:1.3.0'
+    //androidx.activity:activity-ktx:1.3.0 = minCompileSdk 30
 //    implementation 'androidx.room:room-roomx:2.3.0'
 //    implementation 'androidx.room:room-common:2.3.0'
 //    implementation 'androidx.room:room-ktx:2.3.0'
