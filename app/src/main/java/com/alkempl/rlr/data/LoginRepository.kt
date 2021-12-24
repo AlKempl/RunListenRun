@@ -1,5 +1,6 @@
 package com.alkempl.rlr.data
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseUser
 
 /**
@@ -27,7 +28,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout()
     }
 
-    fun login(username: String, password: String): Result<FirebaseUser> {
+    suspend fun login(username: String, password: String): Result<FirebaseUser> {
         // handle login
         val result = dataSource.login(username, password)
 
@@ -38,9 +39,10 @@ class LoginRepository(val dataSource: LoginDataSource) {
         return result
     }
 
-    fun register(username: String, password: String): Result<FirebaseUser> {
+    suspend fun register(username: String, password: String): Result<FirebaseUser> {
         // handle login
-        val result = dataSource.register(username, password)
+        val result = dataSource.register(username, password);
+        Log.d("LRR", result.toString())
 
         if (result is Result.Success) {
             setLoggedInUser(result.data)

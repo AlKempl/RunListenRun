@@ -1,9 +1,11 @@
 package com.alkempl.rlr.data
 
+import android.util.Log
 import com.alkempl.rlr.data.model.LoggedInUser
 import com.google.android.gms.tasks.Tasks.await
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.tasks.await
 import java.io.IOException
 import javax.security.auth.callback.Callback
 
@@ -17,27 +19,28 @@ class LoginDataSource {
 
     }
 
-    fun login(username: String, password: String): Result<FirebaseUser> {
+    suspend fun login(username: String, password: String): Result<FirebaseUser> {
         try {
-            val res = await(auth.signInWithEmailAndPassword(username, password))
-            return if (res.user != null && auth.currentUser != null){
+            val task = auth.signInWithEmailAndPassword(username, password).await()
+            return if (auth.currentUser != null){
                 Result.Success(auth.currentUser!!)
             }else{
-                Result.Error(IOException("Error logging in"))
+                Result.Error(IOException("Error logging in Test"))
             }
         } catch (e: Throwable) {
-            return Result.Error(IOException("Error logging in", e))
+            return Result.Error(IOException("Error logging in E", e))
         }
     }
 
-    fun register(username: String, password: String): Result<FirebaseUser> {
-        try {
-            return if(auth.createUserWithEmailAndPassword(username, password).isSuccessful
-                    && auth.currentUser != null){
-                        Result.Success(auth.currentUser!!)
-                    }else{
-                        Result.Error(IOException("Error registering Test"))
-                    }
+    suspend fun register(username: String, password: String): Result<FirebaseUser> {
+         try {
+            val task = auth.createUserWithEmailAndPassword(username, password).await();
+            if(auth.currentUser != null){
+                Log.d("LDRE", auth.currentUser!!.email.toString());
+                return Result.Success(auth.currentUser!!)
+            }else{
+                return Result.Error(IOException("Error registering Test"))
+            }
         } catch (e: Throwable) {
             return Result.Error(IOException("Error registering E: $e", e))
         }

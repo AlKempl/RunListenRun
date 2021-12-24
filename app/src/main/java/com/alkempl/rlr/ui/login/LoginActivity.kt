@@ -4,6 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
 import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +22,7 @@ import com.alkempl.rlr.R
 import com.alkempl.rlr.ui.MainActivity
 import com.alkempl.rlr.viewmodel.LoginViewModel
 import com.alkempl.rlr.viewmodel.LoginViewModelFactory
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
@@ -89,22 +93,28 @@ class LoginActivity : AppCompatActivity() {
             setOnEditorActionListener { _, actionId, _ ->
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
-                        loginViewModel.login(
-                            username.text.toString(),
-                            password.text.toString()
-                        )
+                        GlobalScope.launch (Dispatchers.Main) {
+                            loginViewModel.login(
+                                username.text.toString(),
+                                password.text.toString()
+                            )
+                        }
                 }
                 false
             }
 
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+                GlobalScope.launch (Dispatchers.Main) {
+                    loginViewModel.login(username.text.toString(), password.text.toString())
+                }
             }
 
             register.setOnClickListener {
                 loading.visibility = View.VISIBLE
-                loginViewModel.register(username.text.toString(), password.text.toString())
+                GlobalScope.launch (Dispatchers.Main) {
+                    loginViewModel.register(username.text.toString(), password.text.toString())
+                }
             }
         }
     }
