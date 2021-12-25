@@ -10,4 +10,8 @@
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/settings" />
+    <item
+        android:id="@+id/avatarFragment"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:title="@string/avatar_fragment" />
 </menu>

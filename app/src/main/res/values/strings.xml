@@ -164,4 +164,5 @@
     <string name="profile">Profile</string>
     <string name="lipsum">Lorem Ipsum</string>
     <string name="bg_location_updates">Background location updates</string>
+    <string name="avatar_fragment">Image upload</string>
 </resources>
