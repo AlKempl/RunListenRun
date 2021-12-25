@@ -10,7 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alkempl.rlr.R
+import com.alkempl.rlr.adapter.MyItemRecyclerViewAdapter
+import com.alkempl.rlr.databinding.FragmentItemListBinding
 import com.alkempl.rlr.databinding.FragmentLocationUpdateBinding
 import com.alkempl.rlr.hasPermission
 import com.alkempl.rlr.services.LocationService
@@ -24,6 +30,7 @@ class LocationUpdateFragment : Fragment() {
     private var activityListener: Callbacks? = null
 
     private lateinit var binding: FragmentLocationUpdateBinding
+    private lateinit var bindingItemList: FragmentItemListBinding
 
     private val locationUpdateViewModel by lazy {
         ViewModelProviders.of(this).get(LocationUpdateViewModel::class.java)
@@ -34,11 +41,18 @@ class LocationUpdateFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentLocationUpdateBinding.inflate(inflater, container, false)
+        bindingItemList = FragmentItemListBinding.inflate(inflater, container, false)
 
         binding.enableBackgroundLocationButton.setOnClickListener {
             activityListener?.requestBackgroundLocationPermission()
         }
 
+        binding.profileButton.setOnClickListener {
+            view?.findNavController()?.navigate(R.id.action_locationUpdateFragment_to_profileFragment)
+        }
+/*
+        bindingRecyclerViewAdapter.list.adapter = MyItemRecyclerViewAdapter(locationUpdateViewModel.locationListLiveData.value!!);
+*/
 
         return binding.root
     }
@@ -61,6 +75,19 @@ class LocationUpdateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
+        locationUpdateViewModel.locationListLiveData.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer { locations ->
+                locations?.let {
+                    val det: RecyclerView = binding.fragmentContainerView.findViewById(R.id.list)
+                    det.adapter = MyItemRecyclerViewAdapter(locations);
+                }
+            }
+        )
+
 
         locationUpdateViewModel.receivingLocationUpdates.observe(
             viewLifecycleOwner,
@@ -85,6 +112,7 @@ class LocationUpdateFragment : Fragment() {
                         }
 
                         binding.locationOutputTextView.text = outputStringBuilder.toString()
+                        /* bindingRecyclerViewAdapter.list.adapter.updateUserList(locations) */
                     }
                 }
             }

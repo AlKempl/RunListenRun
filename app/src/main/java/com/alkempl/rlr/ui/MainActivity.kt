@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil.setContentView
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.findNavController
 import com.alkempl.rlr.R
 import com.alkempl.rlr.databinding.ActivityMainBinding
 import com.alkempl.rlr.services.MyService
@@ -25,6 +27,7 @@ class MainActivity : AppCompatActivity(), PermissionRequestFragment.Callbacks, L
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit()
+
         }
 
         val serviceIntent = Intent(applicationContext, LocationService::class.java)

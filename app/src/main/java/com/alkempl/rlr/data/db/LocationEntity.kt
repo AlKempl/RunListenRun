@@ -27,13 +27,16 @@ data class LocationEntity(
     val date: Date = Date()
 ) {
 
-    override fun toString(): String {
-        val appState = if (foreground) {
+    fun getPrefix(): String{
+        return if (this.foreground) {
             "[APP]"
         } else {
             "[BG]"
         }
-
+    }
+    override fun toString(): String {
+        val appState = getPrefix()
         return "$appState $latitude, $longitude ( ${getDateTime(date)} )\n"
     }
 }
+

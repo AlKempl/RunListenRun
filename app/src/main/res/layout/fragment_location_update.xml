@@ -24,18 +24,52 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/enableBackgroundLocationButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:layout_marginEnd="@dimen/margin_normal"
-            android:text="@string/enhance_with_background_location_button_text" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/enableBackgroundLocationButton"
+                android:layout_width="114dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:text="@string/enhance_with_background_location_button_text" />
+
+            <Button
+                android:id="@+id/startOrStopLocationUpdatesButton"
+                android:layout_width="127dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:layout_marginRight="@dimen/margin_normal"
+                android:layout_marginBottom="@dimen/margin_normal"
+                android:gravity="start"
+                android:minWidth="48dp"
+                android:text="@string/start_receiving_location" />
+
+            <Button
+                android:id="@+id/profile_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:layout_marginRight="@dimen/margin_normal"
+                android:layout_marginBottom="@dimen/margin_normal"
+                android:gravity="start"
+                android:minWidth="48dp"
+                android:text="@string/profile" />
+        </TableRow>
 
         <TextView
             android:id="@+id/locationOutputTextView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="74dp"
             android:layout_marginStart="@dimen/margin_normal"
             android:layout_marginLeft="@dimen/margin_normal"
             android:layout_marginTop="@dimen/margin_normal"
@@ -45,24 +79,14 @@
             android:layout_weight="1"
             android:scrollbars="vertical"
             android:textIsSelectable="true"
-            android:visibility="visible"
-            tools:visibility="visible" />
+            android:visibility="gone"
+            tools:visibility="gone" />
 
-        <Button
-            android:id="@+id/startOrStopLocationUpdatesButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_normal"
-            android:layout_marginLeft="@dimen/margin_normal"
-            android:layout_marginEnd="@dimen/margin_normal"
-            android:layout_marginRight="@dimen/margin_normal"
-            android:layout_marginBottom="@dimen/margin_normal"
-            android:text="@string/start_receiving_location" />
-
-        <LinearLayout
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragmentContainerView"
+            android:name="com.alkempl.rlr.ui.ItemFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"/>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 </layout>
