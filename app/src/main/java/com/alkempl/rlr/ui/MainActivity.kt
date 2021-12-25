@@ -4,17 +4,16 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil.setContentView
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.alkempl.rlr.R
 import com.alkempl.rlr.databinding.ActivityMainBinding
 import com.alkempl.rlr.services.MyService
 import com.alkempl.rlr.services.LocationService
-import com.google.android.material.navigation.NavigationView
 
 private const val TAG = "MainActivity"
 
@@ -25,8 +24,11 @@ class MainActivity : AppCompatActivity(), PermissionRequestFragment.Callbacks, L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = setContentView<ActivityMainBinding>(this, R.layout.activity_main)
         drawerLayout = binding.drawerLayout
+
+        binding.navView.getHeaderView(0).findViewById<TextView>(R.id.username_label).text = intent.getStringExtra("displayName")
 
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (currentFragment == null) {

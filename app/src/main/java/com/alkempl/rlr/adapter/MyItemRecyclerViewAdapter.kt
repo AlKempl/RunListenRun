@@ -12,6 +12,8 @@ import com.alkempl.rlr.data.db.LocationEntity
 
 import com.alkempl.rlr.databinding.FragmentItemBinding
 import android.content.Intent
+import android.widget.ImageView
+import com.alkempl.rlr.R
 import com.alkempl.rlr.data.LocationRepository
 import java.util.concurrent.Executors
 
@@ -46,6 +48,9 @@ class MyItemRecyclerViewAdapter(
         val item = values[position]
         holder.idView.text = item.getPrefix()
         holder.contentView.text = item.toString()
+        if(item.checked){
+            holder.checkedRowImg.setImageResource(R.drawable.ic_baseline_check_24)
+        }
     }
 
     override fun getItemCount(): Int = values.size
@@ -59,6 +64,7 @@ class MyItemRecyclerViewAdapter(
     inner class ViewHolder(binding: FragmentItemBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         val idView: TextView = binding.itemNumber
         val contentView: TextView = binding.content
+        val checkedRowImg: ImageView = binding.checkedRowImg
 
         init{
             binding.root.setOnClickListener(this)
@@ -76,6 +82,7 @@ class MyItemRecyclerViewAdapter(
             var element: LocationEntity = values[mPosition]
             element.longitude = 0.0
             element.latitude = 0.0
+            element.checked = true
             Log.d("MIRVA_CLICK", element.toString())
 
             locationRepository.updateLocation(element)

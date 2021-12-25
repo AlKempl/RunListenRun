@@ -22,6 +22,7 @@ data class LocationEntity(
     var altitude: Double = 0.0,
     var bearing: Float = 0.0f,
     var foreground: Boolean = true,
+    var checked: Boolean = false,
     var mock: Boolean = false,
     var provider: String = "",
     var date: Date = Date()

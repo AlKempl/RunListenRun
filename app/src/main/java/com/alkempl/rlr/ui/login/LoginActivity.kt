@@ -131,7 +131,7 @@ class LoginActivity : AppCompatActivity() {
 //        val editText = findViewById<EditText>(R.id.editTextTextPersonName)
 //        val message = editText.text.toString()
         val intent = Intent(this, MainActivity::class.java).apply {
-//            putExtra(EXTRA_MESSAGE, message)
+            putExtra("displayName", displayName)
         }
         startActivity(intent)
     }
