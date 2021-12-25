@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.preference.PreferenceManager
 import com.alkempl.rlr.LocationUpdatesBroadcastReceiver
 import com.alkempl.rlr.data.LocationRepository
 import com.alkempl.rlr.data.db.LocationEntity

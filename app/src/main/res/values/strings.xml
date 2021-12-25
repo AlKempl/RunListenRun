@@ -162,4 +162,6 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="profile">Profile</string>
+    <string name="lipsum">Lorem Ipsum</string>
+    <string name="bg_location_updates">Background location updates</string>
 </resources>

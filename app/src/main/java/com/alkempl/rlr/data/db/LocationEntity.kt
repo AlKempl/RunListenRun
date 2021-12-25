@@ -15,16 +15,16 @@ import java.util.UUID
 @Entity(tableName = "location")
 data class LocationEntity(
     @PrimaryKey val id: UUID = UUID.randomUUID(),
-    val latitude: Double = 0.0,
-    val longitude: Double = 0.0,
-    val accuracy: Float = 0.0f,
-    val speed: Float = 0.0f,
-    val altitude: Double = 0.0,
-    val bearing: Float = 0.0f,
-    val foreground: Boolean = true,
-    val mock: Boolean = false,
-    val provider: String = "",
-    val date: Date = Date()
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0,
+    var accuracy: Float = 0.0f,
+    var speed: Float = 0.0f,
+    var altitude: Double = 0.0,
+    var bearing: Float = 0.0f,
+    var foreground: Boolean = true,
+    var mock: Boolean = false,
+    var provider: String = "",
+    var date: Date = Date()
 ) {
 
     fun getPrefix(): String{

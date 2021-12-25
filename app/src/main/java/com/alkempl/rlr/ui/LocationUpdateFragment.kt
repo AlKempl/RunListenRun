@@ -11,8 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alkempl.rlr.R
 import com.alkempl.rlr.adapter.MyItemRecyclerViewAdapter
@@ -47,13 +45,6 @@ class LocationUpdateFragment : Fragment() {
             activityListener?.requestBackgroundLocationPermission()
         }
 
-        binding.profileButton.setOnClickListener {
-            view?.findNavController()?.navigate(R.id.action_locationUpdateFragment_to_profileFragment)
-        }
-/*
-        bindingRecyclerViewAdapter.list.adapter = MyItemRecyclerViewAdapter(locationUpdateViewModel.locationListLiveData.value!!);
-*/
-
         return binding.root
     }
 
@@ -76,27 +67,22 @@ class LocationUpdateFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         locationUpdateViewModel.locationListLiveData.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer { locations ->
                 locations?.let {
                     val det: RecyclerView = binding.fragmentContainerView.findViewById(R.id.list)
-                    det.adapter = MyItemRecyclerViewAdapter(locations);
+                    with(det.adapter!!) {
+                        if (this is MyItemRecyclerViewAdapter) {
+                            updateUserList(locations)
+                        }
+                    }
                 }
             }
         )
 
 
-        locationUpdateViewModel.receivingLocationUpdates.observe(
-            viewLifecycleOwner,
-            androidx.lifecycle.Observer { receivingLocation ->
-                updateStartOrStopButtonState(receivingLocation)
-            }
-        )
-
-        locationUpdateViewModel.locationListLiveData.observe(
+        /*locationUpdateViewModel.locationListLiveData.observe(
             viewLifecycleOwner,
             androidx.lifecycle.Observer { locations ->
                 locations?.let {
@@ -112,11 +98,11 @@ class LocationUpdateFragment : Fragment() {
                         }
 
                         binding.locationOutputTextView.text = outputStringBuilder.toString()
-                        /* bindingRecyclerViewAdapter.list.adapter.updateUserList(locations) */
+                        *//* bindingRecyclerViewAdapter.list.adapter.updateUserList(locations) *//*
                     }
                 }
             }
-        )
+        )*/
     }
 
     override fun onResume() {
@@ -156,23 +142,6 @@ class LocationUpdateFragment : Fragment() {
         }
     }
 
-    private fun updateStartOrStopButtonState(receivingLocation: Boolean) {
-        if (receivingLocation) {
-            binding.startOrStopLocationUpdatesButton.apply {
-                text = getString(R.string.stop_receiving_location)
-                setOnClickListener {
-                    context?.stopService(Intent(context, LocationService::class.java))
-                }
-            }
-        } else {
-            binding.startOrStopLocationUpdatesButton.apply {
-                text = getString(R.string.start_receiving_location)
-                setOnClickListener {
-                    context?.startService(Intent(context, LocationService::class.java))
-                }
-            }
-        }
-    }
 
     companion object {
         fun newInstance() = LocationUpdateFragment()

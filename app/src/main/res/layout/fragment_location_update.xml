@@ -36,34 +36,6 @@
                 android:layout_marginTop="@dimen/margin_normal"
                 android:layout_marginEnd="@dimen/margin_normal"
                 android:text="@string/enhance_with_background_location_button_text" />
-
-            <Button
-                android:id="@+id/startOrStopLocationUpdatesButton"
-                android:layout_width="127dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginStart="@dimen/margin_normal"
-                android:layout_marginLeft="@dimen/margin_normal"
-                android:layout_marginEnd="@dimen/margin_normal"
-                android:layout_marginRight="@dimen/margin_normal"
-                android:layout_marginBottom="@dimen/margin_normal"
-                android:gravity="start"
-                android:minWidth="48dp"
-                android:text="@string/start_receiving_location" />
-
-            <Button
-                android:id="@+id/profile_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginStart="@dimen/margin_normal"
-                android:layout_marginLeft="@dimen/margin_normal"
-                android:layout_marginEnd="@dimen/margin_normal"
-                android:layout_marginRight="@dimen/margin_normal"
-                android:layout_marginBottom="@dimen/margin_normal"
-                android:gravity="start"
-                android:minWidth="48dp"
-                android:text="@string/profile" />
         </TableRow>
 
         <TextView
