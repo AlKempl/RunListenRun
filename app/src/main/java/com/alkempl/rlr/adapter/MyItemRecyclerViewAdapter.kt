@@ -12,6 +12,9 @@ import com.alkempl.rlr.data.db.LocationEntity
 
 import com.alkempl.rlr.databinding.FragmentItemBinding
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.widget.ImageView
 import com.alkempl.rlr.R
 import com.alkempl.rlr.data.LocationRepository
@@ -49,7 +52,8 @@ class MyItemRecyclerViewAdapter(
         holder.idView.text = item.getPrefix()
         holder.contentView.text = item.toString()
         if(item.checked){
-            holder.checkedRowImg.setImageResource(R.drawable.ic_baseline_check_24)
+            holder.contentView.setTextColor(Color.parseColor("#ff008000"))
+            holder.contentView.typeface = Typeface.DEFAULT_BOLD
         }
     }
 
@@ -64,7 +68,6 @@ class MyItemRecyclerViewAdapter(
     inner class ViewHolder(binding: FragmentItemBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         val idView: TextView = binding.itemNumber
         val contentView: TextView = binding.content
-        val checkedRowImg: ImageView = binding.checkedRowImg
 
         init{
             binding.root.setOnClickListener(this)
