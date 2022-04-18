@@ -1,0 +1,105 @@
+{
+  "id": "436207e3-0f06-4c5b-9b88-74ba456ede32",
+  "name": "Demo scenario",
+  "description": "It's a really demo",
+  "prev_ipd": null,
+  "next_id": null,
+  "chapters": [
+    {
+      "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+      "name": "Chapter 1",
+      "description": "The One Where Monica Gets a Roommate",
+      "is_final": false,
+      "audio": {
+        "radio": [
+          "res/dat1.mp3",
+          "res/dat1.mp3",
+          "res/dat1.mp3",
+          "res/dat1.mp3"
+        ],
+        "music": [
+          "res/dat1.mp3",
+          "res/dat1.mp3",
+          "res/dat1.mp3"
+        ]
+      },
+      "events": [
+        {
+          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+          "type": "Random",
+          "time": null,
+          "actions": [
+            {
+              "action": "play_sound",
+              "soundtrack": "res/dat1.mp3",
+              "delay": 0
+            },
+            {
+              "action": "generate_obstacle",
+              "obstacle": "dogs",
+              "severity": 3,
+              "delay": 0
+            }
+          ]
+        },
+        {
+          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+          "type": "Time-based",
+          "time": "01:02:03",
+          "action": [
+            {
+              "action": "give_item",
+              "item": "res/diamond_pickaxe",
+              "count": 1,
+              "delay": 0
+            },{
+              "action": "play_sound",
+              "soundtrack": "res/item_found.mp3",
+              "delay": 0
+            }
+          ]
+        },
+        {
+          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+          "type": "Time-based",
+          "time": "08:00:00",
+          "action": [
+            {
+              "action": "finish_chapter",
+              "delay": 0
+            },{
+              "action": "play_sound",
+              "soundtrack": "res/chapter_finished.mp3",
+              "delay": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+      "name": "Chapter 2",
+      "description": "The One with the Metaphorical Tunnel"
+    },
+    {
+      "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+      "name": "Chapter 3",
+      "description": "The One Where Finds Out"
+    },
+    {
+      "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+      "name": "Chapter 4",
+      "description": "The One Where Rosita Dies"
+    },
+    {
+      "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+      "name": "Chapter 5",
+      "description": "The One with the Lottery"
+    },
+    {
+      "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+      "name": "Chapter 6",
+      "description": "The Last One"
+    }
+  ]
+}
