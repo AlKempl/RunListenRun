@@ -40,17 +40,16 @@ class MainActivity : AppCompatActivity(), PermissionRequestFragment.Callbacks, L
 
         }
 
-        val serviceIntent = Intent(applicationContext, LocationService::class.java)
-        val serviceIntent2 = Intent(applicationContext, MyService::class.java)
+        val locationServiceIntent = Intent(applicationContext, LocationService::class.java)
+        val myServiceIntent = Intent(applicationContext, MyService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Log.d(TAG, "startForegroundService")
-            applicationContext.startForegroundService(serviceIntent)
-            applicationContext.startForegroundService(serviceIntent2)
+            applicationContext.startForegroundService(locationServiceIntent)
+            applicationContext.startForegroundService(myServiceIntent)
         } else {
             Log.d(TAG, "startService")
-
-            applicationContext.startService(serviceIntent)
-            applicationContext.startService(serviceIntent2)
+            applicationContext.startService(locationServiceIntent)
+            applicationContext.startService(myServiceIntent)
         }
         val navController = this.findNavController(R.id.fragment_container)
         NavigationUI.setupActionBarWithNavController(this,navController, drawerLayout)
