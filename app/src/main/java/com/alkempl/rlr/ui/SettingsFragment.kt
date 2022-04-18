@@ -6,6 +6,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import androidx.preference.SwitchPreference
 import androidx.preference.SwitchPreferenceCompat
 import com.alkempl.rlr.R
@@ -38,7 +39,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             backgroundLocationUpdatesSwitchPref?.apply {
                 isChecked = receivingLocation
                 setOnPreferenceChangeListener { preference, newValue -> logIfUserDisabledFeature(preference, newValue) }
-
             }
     }
 

@@ -24,6 +24,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.PRIORITY_MIN
+import androidx.preference.PreferenceManager
+import androidx.preference.SwitchPreference
 
 
 class LocationService : Service() {
@@ -43,7 +45,12 @@ class LocationService : Service() {
         Log.e(TAG, "onStartCommand")
         super.onStartCommand(intent, flags, startId)
         locationRepository.wipeOldLocations()
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+        val enabled = sharedPref.getBoolean("bg_location_updates", false)
 
+        if(enabled){
+            locationRepository.startLocationUpdates()
+        }
         return START_STICKY
     }
 
