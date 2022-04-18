@@ -1,11 +1,8 @@
 package com.alkempl.rlr.data.db
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
-import java.util.UUID
+import androidx.room.*
+import java.util.*
 
 /**
  * Defines database operations.
@@ -27,4 +24,7 @@ interface LocationDao {
 
     @Insert
     fun addLocations(myLocationEntities: List<LocationEntity>)
+
+    @Query("DELETE FROM location WHERE date <= (:date)")
+    fun dropOldLocations(date: Date)
 }

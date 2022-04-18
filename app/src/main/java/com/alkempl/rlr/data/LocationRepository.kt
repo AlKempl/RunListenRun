@@ -11,6 +11,8 @@ import java.util.concurrent.ExecutorService
 
 private const val TAG = "LocationRepository"
 
+private const val OLD_THRESHOLD_DAYS = 3;
+
 
 /**
  * Access point for database (MyLocation data) and location APIs (start/stop location updates and
@@ -52,6 +54,18 @@ class LocationRepository private constructor(
     fun addLocation(myLocationEntity: LocationEntity) {
         executor.execute {
             locationDao.addLocation(myLocationEntity)
+        }
+    }
+
+    /**
+     * Clears old locations in the database.
+     */
+    fun wipeOldLocations() {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, -OLD_THRESHOLD_DAYS)
+
+        executor.execute {
+            locationDao.dropOldLocations(calendar.time)
         }
     }
 

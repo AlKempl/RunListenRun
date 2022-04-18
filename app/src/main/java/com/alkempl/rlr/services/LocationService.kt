@@ -42,7 +42,8 @@ class LocationService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         Log.e(TAG, "onStartCommand")
         super.onStartCommand(intent, flags, startId)
-        locationRepository.startLocationUpdates()
+        locationRepository.wipeOldLocations()
+
         return START_STICKY
     }
 
