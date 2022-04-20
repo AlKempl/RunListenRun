@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.alkempl.rlr.R
 import com.alkempl.rlr.databinding.ActivityMainBinding
+import com.alkempl.rlr.services.BackgroundSoundService
 import com.alkempl.rlr.services.MyService
 import com.alkempl.rlr.services.LocationService
 
@@ -42,15 +43,19 @@ class MainActivity : AppCompatActivity(), PermissionRequestFragment.Callbacks, L
 
         val locationServiceIntent = Intent(applicationContext, LocationService::class.java)
         val myServiceIntent = Intent(applicationContext, MyService::class.java)
+        val musicServiceIntent = Intent(applicationContext, BackgroundSoundService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Log.d(TAG, "startForegroundService")
             applicationContext.startForegroundService(locationServiceIntent)
             applicationContext.startForegroundService(myServiceIntent)
+            applicationContext.startForegroundService(musicServiceIntent)
         } else {
             Log.d(TAG, "startService")
             applicationContext.startService(locationServiceIntent)
             applicationContext.startService(myServiceIntent)
+            applicationContext.startService(musicServiceIntent)
         }
+
         val navController = this.findNavController(R.id.fragment_container)
         NavigationUI.setupActionBarWithNavController(this,navController, drawerLayout)
 
