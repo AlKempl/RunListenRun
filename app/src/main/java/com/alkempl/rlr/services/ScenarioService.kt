@@ -1,6 +1,7 @@
 package com.alkempl.rlr.services
 
-import com.alkempl.rlr.data.model.scenario.Scenario
+import Scenario
+import com.alkempl.rlr.R
 import com.google.gson.Gson
 import java.io.File
 
