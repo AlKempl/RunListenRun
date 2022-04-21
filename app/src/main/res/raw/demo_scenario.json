@@ -26,51 +26,67 @@
       "events": [
         {
           "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
-          "type": "Random",
+          "type": "timer",
+          "time": 10,
+          "actions": [
+            {
+              "action": "sound",
+              "attributes": {
+                "track_name": "shakalaka",
+                "delay": 0
+              }
+            },
+            {
+              "action": "obstacle",
+              "attributes": {
+                "type": "dogs",
+                "severity": 3,
+                "delay": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+          "type": "timer",
+          "time": "20",
+          "actions": [
+            {
+              "action": "sound",
+              "attributes": {
+                "track_name": "ampup",
+                "delay": 0
+              }
+            },
+            {
+              "action": "obstacle",
+              "attributes": {
+                "type": "wind",
+                "severity": 1,
+                "delay": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+          "type": "random",
           "time": null,
           "actions": [
             {
-              "action": "play_sound",
-              "soundtrack": "res/dat1.mp3",
-              "delay": 0
+              "action": "sound",
+              "attributes": {
+                "track_name": "groovin",
+                "delay": 0
+              }
             },
             {
-              "action": "generate_obstacle",
-              "obstacle": "dogs",
-              "severity": 3,
-              "delay": 0
-            }
-          ]
-        },
-        {
-          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
-          "type": "Time-based",
-          "time": "01:02:03",
-          "action": [
-            {
-              "action": "give_item",
-              "item": "res/diamond_pickaxe",
-              "count": 1,
-              "delay": 0
-            },{
-              "action": "play_sound",
-              "soundtrack": "res/item_found.mp3",
-              "delay": 0
-            }
-          ]
-        },
-        {
-          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
-          "type": "Time-based",
-          "time": "08:00:00",
-          "action": [
-            {
-              "action": "finish_chapter",
-              "delay": 0
-            },{
-              "action": "play_sound",
-              "soundtrack": "res/chapter_finished.mp3",
-              "delay": 0
+              "action": "obstacle",
+              "attributes": {
+                "type": "dogs",
+                "severity": 20,
+                "delay": 0
+              }
             }
           ]
         }
