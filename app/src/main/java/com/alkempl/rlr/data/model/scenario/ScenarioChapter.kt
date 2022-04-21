@@ -8,7 +8,7 @@ data class ScenarioChapter(
     @SerializedName("description")
     val description: String, // The One Where Monica Gets a Roommate
     @SerializedName("events")
-    val events: List<ChapterEvent>,
+    val events: List<ChapterEvent>?,
     @SerializedName("id")
     val id: String, // ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4
     @SerializedName("is_final")

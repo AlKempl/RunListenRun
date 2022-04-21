@@ -3,7 +3,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Scenario(
     @SerializedName("chapters")
-    val chapters: List<ScenarioChapter>,
+    val chapters: List<ScenarioChapter>?,
     @SerializedName("description")
     val description: String, // It's a really demo
     @SerializedName("id")
