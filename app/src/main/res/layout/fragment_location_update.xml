@@ -36,6 +36,12 @@
                 android:layout_marginTop="@dimen/margin_normal"
                 android:layout_marginEnd="@dimen/margin_normal"
                 android:text="@string/enhance_with_background_location_button_text" />
+
+            <Button
+                android:id="@+id/scenario_control_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start scenario" />
         </TableRow>
 
         <TextView

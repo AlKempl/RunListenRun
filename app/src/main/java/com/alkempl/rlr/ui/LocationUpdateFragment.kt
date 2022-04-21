@@ -1,9 +1,13 @@
 package com.alkempl.rlr.ui
 
 import android.Manifest
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
+import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,6 +22,9 @@ import com.alkempl.rlr.databinding.FragmentItemListBinding
 import com.alkempl.rlr.databinding.FragmentLocationUpdateBinding
 import com.alkempl.rlr.hasPermission
 import com.alkempl.rlr.services.LocationService
+import com.alkempl.rlr.services.MyService
+import com.alkempl.rlr.services.ScenarioService
+import com.alkempl.rlr.services.SoundService
 import com.alkempl.rlr.viewmodel.LocationUpdateViewModel
 import java.lang.StringBuilder
 
@@ -29,6 +36,22 @@ class LocationUpdateFragment : Fragment() {
 
     private lateinit var binding: FragmentLocationUpdateBinding
     private lateinit var bindingItemList: FragmentItemListBinding
+
+    private var scenarioService: ScenarioService? = null
+    private var scenarioServiceBounded = false
+    private val scenarioServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            val binder = service as ScenarioService.LocalBinder
+            scenarioService = binder.getService()
+            scenarioServiceBounded = true
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            scenarioServiceBounded = false
+            scenarioService = null
+        }
+    }
 
     private val locationUpdateViewModel by lazy {
         ViewModelProviders.of(this).get(LocationUpdateViewModel::class.java)
@@ -44,6 +67,34 @@ class LocationUpdateFragment : Fragment() {
         binding.enableBackgroundLocationButton.setOnClickListener {
             activityListener?.requestBackgroundLocationPermission()
         }
+
+        binding.scenarioControlButton.setOnClickListener {
+            val scenarioServiceIntent = Intent(context, ScenarioService::class.java)
+
+            if (scenarioServiceBounded && scenarioService!!.isRunning()) {
+                Log.d(TAG, "stop Scenario Service")
+                requireActivity().unbindService(scenarioServiceConnection)
+                requireActivity().stopService(scenarioServiceIntent)
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Log.d(TAG, "start Scenario ForegroundService")
+                    requireActivity().startForegroundService(scenarioServiceIntent)
+                } else {
+                    Log.d(TAG, "start Scenario Service")
+                    requireActivity().startService(scenarioServiceIntent)
+                }
+                // Bind to LocalService
+                Intent(context, ScenarioService::class.java).also { ssintent ->
+                    requireActivity().bindService(
+                        ssintent,
+                        scenarioServiceConnection,
+                        Context.BIND_AUTO_CREATE
+                    )
+                }
+            }
+            updateScenarioButtonState()
+        }
+
 
         return binding.root
     }
@@ -108,6 +159,7 @@ class LocationUpdateFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         updateBackgroundButtonState()
+        updateScenarioButtonState()
     }
 
     override fun onPause() {
@@ -128,6 +180,7 @@ class LocationUpdateFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         activityListener = null
+        requireActivity().unbindService(scenarioServiceConnection)
     }
 
     private fun showBackgroundButton(): Boolean {
@@ -139,6 +192,14 @@ class LocationUpdateFragment : Fragment() {
             binding.enableBackgroundLocationButton.visibility = View.VISIBLE
         } else {
             binding.enableBackgroundLocationButton.visibility = View.GONE
+        }
+    }
+
+    private fun updateScenarioButtonState() {
+        if (scenarioServiceBounded && scenarioService!!.isRunning()) {
+            binding.scenarioControlButton.text = "Stop scenario"
+        } else {
+            binding.scenarioControlButton.text = "Start scenario"
         }
     }
 
