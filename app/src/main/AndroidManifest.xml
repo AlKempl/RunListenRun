@@ -39,7 +39,11 @@
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".services.BackgroundSoundService"
+            android:name=".services.SoundService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".services.ScenarioService"
             android:enabled="true"
             android:exported="true" />
 
