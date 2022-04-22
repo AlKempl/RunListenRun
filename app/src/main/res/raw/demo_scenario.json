@@ -27,7 +27,7 @@
         {
           "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
           "type": "timer",
-          "time": 10,
+          "time": 1,
           "actions": [
             {
               "action": "sound",
@@ -49,7 +49,7 @@
         {
           "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
           "type": "timer",
-          "time": "20",
+          "time": 30,
           "actions": [
             {
               "action": "sound",
