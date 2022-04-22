@@ -4,4 +4,5 @@
     <string name="disable_tracking_label">Disable tracking</string>
     <string name="scenario_stop_button_caption">Stop scenario</string>
     <string name="scenario_start_button_caption">Start scenario</string>
+    <string name="training_suspense_text">The training was interrupted in order to prevent potential damage to your health due to maximum training length limit reached.</string>
 </resources>
