@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.alkempl.rlr.databinding.FragmentItemListBinding
 import com.alkempl.rlr.databinding.FragmentUploadImageBinding
 import android.content.Intent
 import android.graphics.Bitmap

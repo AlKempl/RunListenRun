@@ -1,32 +1,38 @@
 package com.alkempl.rlr.ui
 
 import android.Manifest
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
+import android.content.*
+import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.alkempl.rlr.R
-import com.alkempl.rlr.adapter.MyItemRecyclerViewAdapter
-import com.alkempl.rlr.databinding.FragmentItemListBinding
+import com.alkempl.rlr.adapter.LocationEntityItemRecyclerViewAdapter
+import com.alkempl.rlr.adapter.ObstacleEntityItemRecyclerViewAdapter
+import com.alkempl.rlr.databinding.FragmentLocationItemListBinding
 import com.alkempl.rlr.databinding.FragmentLocationUpdateBinding
+import com.alkempl.rlr.databinding.FragmentObstacleItemListBinding
 import com.alkempl.rlr.hasPermission
-import com.alkempl.rlr.services.LocationService
-import com.alkempl.rlr.services.MyService
 import com.alkempl.rlr.services.ScenarioService
-import com.alkempl.rlr.services.SoundService
 import com.alkempl.rlr.viewmodel.LocationUpdateViewModel
-import java.lang.StringBuilder
+import com.alkempl.rlr.viewmodel.ObstacleUpdateViewModel
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.alkempl.rlr.BuildConfig
+import com.google.android.material.snackbar.Snackbar
+import org.json.JSONObject
+
 
 private const val TAG = "LocationUpdateFragment"
 
@@ -35,7 +41,8 @@ class LocationUpdateFragment : Fragment() {
     private var activityListener: Callbacks? = null
 
     private lateinit var binding: FragmentLocationUpdateBinding
-    private lateinit var bindingItemList: FragmentItemListBinding
+    private lateinit var bindingLocationItemList: FragmentLocationItemListBinding
+    private lateinit var bindingObstacleItemList: FragmentObstacleItemListBinding
 
     private var scenarioService: ScenarioService? = null
     private var scenarioServiceBounded = false
@@ -45,11 +52,13 @@ class LocationUpdateFragment : Fragment() {
             val binder = service as ScenarioService.LocalBinder
             scenarioService = binder.getService()
             scenarioServiceBounded = true
+            updateScenarioButtonState()
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {
             scenarioServiceBounded = false
             scenarioService = null
+            updateScenarioButtonState()
         }
     }
 
@@ -57,50 +66,68 @@ class LocationUpdateFragment : Fragment() {
         ViewModelProviders.of(this).get(LocationUpdateViewModel::class.java)
     }
 
+    private val obstacleUpdateViewModel by lazy {
+        ViewModelProviders.of(this).get(ObstacleUpdateViewModel::class.java)
+    }
+
+    private var bm: LocalBroadcastManager? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentLocationUpdateBinding.inflate(inflater, container, false)
-        bindingItemList = FragmentItemListBinding.inflate(inflater, container, false)
+        bindingLocationItemList =
+            FragmentLocationItemListBinding.inflate(inflater, container, false)
+        bindingObstacleItemList =
+            FragmentObstacleItemListBinding.inflate(inflater, container, false)
 
         binding.enableBackgroundLocationButton.setOnClickListener {
             activityListener?.requestBackgroundLocationPermission()
         }
 
         binding.scenarioControlButton.setOnClickListener {
-            val scenarioServiceIntent = Intent(context, ScenarioService::class.java)
-
-            if (scenarioServiceBounded && scenarioService!!.isRunning()) {
-                Log.d(TAG, "stop Scenario Service")
-                requireActivity().unbindService(scenarioServiceConnection)
-                requireActivity().stopService(scenarioServiceIntent)
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    Log.d(TAG, "start Scenario ForegroundService")
-                    requireActivity().startForegroundService(scenarioServiceIntent)
-                } else {
-                    Log.d(TAG, "start Scenario Service")
-                    requireActivity().startService(scenarioServiceIntent)
-                }
-                // Bind to LocalService
-                Intent(context, ScenarioService::class.java).also { ssintent ->
-                    requireActivity().bindService(
-                        ssintent,
-                        scenarioServiceConnection,
-                        Context.BIND_AUTO_CREATE
-                    )
-                }
-            }
-            updateScenarioButtonState()
+            manageScenarioService()
         }
-
 
         return binding.root
     }
 
+    private fun manageScenarioService() {
+        val scenarioServiceIntent = Intent(context, ScenarioService::class.java)
+
+        if (scenarioServiceBounded) {
+            Log.d(TAG, "stop Scenario Service")
+            requireActivity().unbindService(scenarioServiceConnection)
+            requireActivity().stopService(scenarioServiceIntent)
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Log.d(TAG, "start Scenario ForegroundService")
+                requireActivity().startForegroundService(scenarioServiceIntent)
+            } else {
+                Log.d(TAG, "start Scenario Service")
+                requireActivity().startService(scenarioServiceIntent)
+            }
+            // Bind to LocalService
+            Intent(context, ScenarioService::class.java).also { ssintent ->
+                requireActivity().bindService(
+                    ssintent,
+                    scenarioServiceConnection,
+                    Context.BIND_AUTO_CREATE
+                )
+            }
+        }
+        scenarioServiceBounded = !scenarioServiceBounded
+        updateScenarioButtonState()
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
+        val actionReceiver = IntentFilter()
+        bm = LocalBroadcastManager.getInstance(context)
+        actionReceiver.addAction("shutdownScenarioServicePlease")
+        bm!!.registerReceiver(onJsonReceived, actionReceiver)
 
         if (context is Callbacks) {
             activityListener = context
@@ -115,6 +142,30 @@ class LocationUpdateFragment : Fragment() {
         }
     }
 
+    private val onJsonReceived: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent != null) {
+                /* intent.getStringExtra("json")?.let {
+                     val data = JSONObject(it)
+                 }*/
+                manageScenarioService()
+                val sb = Snackbar.make(
+                    binding.root,
+                    getString(R.string.training_suspense_text),
+                    Snackbar.LENGTH_INDEFINITE
+                )
+
+                sb.setAction(R.string.ok) {
+                    sb.dismiss()
+                }
+
+                val snbid = com.google.android.material.R.id.snackbar_text
+                sb.view.findViewById<TextView>(snbid).maxLines = 5
+                sb.show()
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -122,10 +173,26 @@ class LocationUpdateFragment : Fragment() {
             viewLifecycleOwner,
             androidx.lifecycle.Observer { locations ->
                 locations?.let {
-                    val det: RecyclerView = binding.fragmentContainerView.findViewById(R.id.list)
+                    val det: RecyclerView =
+                        binding.fragmentLocationContainerView.findViewById(R.id.locations_list)
                     with(det.adapter!!) {
-                        if (this is MyItemRecyclerViewAdapter) {
+                        if (this is LocationEntityItemRecyclerViewAdapter) {
                             updateUserList(locations)
+                        }
+                    }
+                }
+            }
+        )
+
+        obstacleUpdateViewModel.obstacleListLiveData.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer { obstacles ->
+                obstacles?.let {
+                    val det: RecyclerView =
+                        binding.fragmentObstaclesContainerView.findViewById(R.id.obstacles_list)
+                    with(det.adapter!!) {
+                        if (this is ObstacleEntityItemRecyclerViewAdapter) {
+                            updateUserList(obstacles)
                         }
                     }
                 }
@@ -162,25 +229,11 @@ class LocationUpdateFragment : Fragment() {
         updateScenarioButtonState()
     }
 
-    override fun onPause() {
-        super.onPause()
-
-        // Stops location updates if background permissions aren't approved. The FusedLocationClient
-        // won't trigger any PendingIntents with location updates anyway if you don't have the
-        // background permission approved, but it's best practice to unsubscribing anyway.
-        // To simplify the sample, we are unsubscribing from updates here in the Fragment, but you
-        // could do it at the Activity level if you want to continue receiving location updates
-        // while the user is moving between Fragments.
-//        if ((locationUpdateViewModel.receivingLocationUpdates.value == true) &&
-//            (!requireContext().hasPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION))) {
-//            locationUpdateViewModel.stopLocationUpdates()
-//        }
-    }
-
     override fun onDetach() {
         super.onDetach()
         activityListener = null
         requireActivity().unbindService(scenarioServiceConnection)
+        bm!!.unregisterReceiver(onJsonReceived)
     }
 
     private fun showBackgroundButton(): Boolean {
@@ -196,10 +249,20 @@ class LocationUpdateFragment : Fragment() {
     }
 
     private fun updateScenarioButtonState() {
-        if (scenarioServiceBounded && scenarioService!!.isRunning()) {
-            binding.scenarioControlButton.text = "Stop scenario"
+        if (showBackgroundButton()) {
+            binding.scenarioControlButton.visibility = View.GONE
         } else {
-            binding.scenarioControlButton.text = "Start scenario"
+            binding.scenarioControlButton.visibility = View.VISIBLE
+
+            if (scenarioServiceBounded) {
+                binding.scenarioControlButton.setBackgroundColor(Color.RED)
+                binding.scenarioControlButton.text =
+                    getString(R.string.scenario_stop_button_caption)
+            } else {
+                binding.scenarioControlButton.setBackgroundColor(Color.GREEN)
+                binding.scenarioControlButton.text =
+                    getString(R.string.scenario_start_button_caption)
+            }
         }
     }
 

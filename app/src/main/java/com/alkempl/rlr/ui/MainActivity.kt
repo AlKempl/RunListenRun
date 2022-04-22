@@ -12,9 +12,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.alkempl.rlr.R
 import com.alkempl.rlr.databinding.ActivityMainBinding
-import com.alkempl.rlr.services.SoundService
-import com.alkempl.rlr.services.MyService
-import com.alkempl.rlr.services.LocationService
 
 private const val TAG = "MainActivity"
 

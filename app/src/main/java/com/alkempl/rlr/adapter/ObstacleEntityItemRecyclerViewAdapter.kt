@@ -11,26 +11,21 @@ import android.widget.TextView
 import com.alkempl.rlr.data.db.LocationEntity
 
 import com.alkempl.rlr.databinding.FragmentItemBinding
-import android.content.Intent
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Typeface
-import android.widget.ImageView
-import com.alkempl.rlr.R
 import com.alkempl.rlr.data.LocationRepository
+import com.alkempl.rlr.data.ObstacleRepository
+import com.alkempl.rlr.data.db.ObstacleEntity
+import com.alkempl.rlr.data.model.obstacle.ObstacleStatus
 import java.util.concurrent.Executors
 
 
-/**
- * [RecyclerView.Adapter] that can display a [LocationEntity].
- * TODO: Replace the implementation with code for your data type.
- */
-class MyItemRecyclerViewAdapter(
+class ObstacleEntityItemRecyclerViewAdapter(
     private var context: Context,
-    private var values: List<LocationEntity>
-) : RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder>()  {
+    private var values: List<ObstacleEntity>
+) : RecyclerView.Adapter<ObstacleEntityItemRecyclerViewAdapter.ViewHolder>()  {
 
-    private val locationRepository = LocationRepository.getInstance(
+    private val obstacleRepository = ObstacleRepository.getInstance(
         context,
         Executors.newSingleThreadExecutor()
     )
@@ -51,17 +46,26 @@ class MyItemRecyclerViewAdapter(
         val item = values[position]
         holder.idView.text = item.getPrefix()
         holder.contentView.text = item.toString()
-        if(item.checked){
-            holder.contentView.setTextColor(Color.parseColor("#ff008000"))
-            holder.contentView.typeface = Typeface.DEFAULT_BOLD
+        when(item.status){
+            ObstacleStatus.SUCCEEDED -> {
+                holder.contentView.setTextColor(Color.parseColor("#ff008000"))
+                holder.contentView.typeface = Typeface.DEFAULT_BOLD
+            }
+
+            ObstacleStatus.FAILED -> {
+                holder.contentView.setTextColor(Color.parseColor("#ff800000"))
+                holder.contentView.typeface = Typeface.DEFAULT_BOLD
+            }
+
+            else -> {}
         }
     }
 
     override fun getItemCount(): Int = values.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateUserList(locations:  List<LocationEntity>) {
-        this.values = locations
+    fun updateUserList(obstacles:  List<ObstacleEntity>) {
+        this.values = obstacles
         notifyDataSetChanged()
     }
 
@@ -79,7 +83,7 @@ class MyItemRecyclerViewAdapter(
 
         @SuppressLint("NotifyDataSetChanged")
         override fun onClick(v: View?) {
-            // Get the position of the item that was clicked.
+            /*// Get the position of the item that was clicked.
             val mPosition = layoutPosition
             // Use that to access the affected item in mWordList.
             var element: LocationEntity = values[mPosition]
@@ -94,7 +98,7 @@ class MyItemRecyclerViewAdapter(
 ////            values.set(mPosition, "Clicked! ${element.toString()}")
 //            // Notify the adapter, that the data has changed so it can
 //            // update the RecyclerView to display the data.
-            notifyDataSetChanged()
+            notifyDataSetChanged()*/
         }
     }
 }

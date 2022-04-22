@@ -5,6 +5,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.alkempl.rlr.data.LocationRepository
+import java.util.*
 import java.util.concurrent.Executors
 
 /**

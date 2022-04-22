@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService
 
 private const val TAG = "LocationRepository"
 
-private const val OLD_THRESHOLD_DAYS = 3;
+private const val OLD_THRESHOLD_DAYS = 3
 
 
 /**
@@ -31,6 +31,12 @@ class LocationRepository private constructor(
      * Returns all recorded locations from database.
      */
     fun getLocations(): LiveData<List<LocationEntity>> = locationDao.getLocations()
+
+    /**
+     * Returns all recorded locations from database.
+     */
+    fun getLocationsByPeriod(dateFrom: Date, dateTo: Date): LiveData<List<LocationEntity>> =
+        locationDao.getLocationsByPeriod(dateFrom, dateTo)
 
     // Not being used now but could in future versions.
     /**
@@ -97,14 +103,16 @@ class LocationRepository private constructor(
     fun stopLocationUpdates() = myLocationManager.stopLocationUpdates()
 
     companion object {
-        @Volatile private var INSTANCE: LocationRepository? = null
+        @Volatile
+        private var INSTANCE: LocationRepository? = null
 
         fun getInstance(context: Context, executor: ExecutorService): LocationRepository {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: LocationRepository(
                     AppDatabase.getInstance(context),
                     LocationManager.getInstance(context),
-                    executor)
+                    executor
+                )
                     .also { INSTANCE = it }
             }
         }

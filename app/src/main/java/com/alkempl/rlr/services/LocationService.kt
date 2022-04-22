@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -32,17 +33,23 @@ class LocationService : Service() {
 
     var locationEnabled = false
 
+    private val binder = LocalBinder()
+
     private val locationRepository = LocationRepository.getInstance(
         this,
         Executors.newSingleThreadExecutor()
     )
 
-    override fun onBind(arg0: Intent): IBinder? {
-        return null
+    inner class LocalBinder : Binder() {
+        fun getService(): LocationService = this@LocationService
+    }
+
+    override fun onBind(arg0: Intent?): IBinder {
+        return binder
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        Log.e(TAG, "onStartCommand")
+        Log.d(TAG, "onStartCommand")
         super.onStartCommand(intent, flags, startId)
         locationRepository.wipeOldLocations()
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
@@ -55,14 +62,14 @@ class LocationService : Service() {
     }
 
     override fun onCreate() {
-        Log.e(TAG, "onCreate")
+        Log.d(TAG, "onCreate")
         initializeLocationManager()
         startForeground(NotificationCreator.getNotificationId(),
             NotificationCreator.getNotification(this))
     }
 
     override fun onDestroy() {
-        Log.e(TAG, "onDestroy")
+        Log.d(TAG, "onDestroy")
         super.onDestroy()
         locationRepository.stopLocationUpdates()
     }

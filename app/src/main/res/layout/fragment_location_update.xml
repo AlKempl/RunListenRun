@@ -60,11 +60,25 @@
             android:visibility="gone"
             tools:visibility="gone" />
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragmentContainerView"
-            android:name="com.alkempl.rlr.ui.ItemFragment"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragmentObstaclesContainerView"
+                android:name="com.alkempl.rlr.ui.ObstaclesItemFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragmentLocationContainerView"
+                android:name="com.alkempl.rlr.ui.LocationItemFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3" />
+        </LinearLayout>
 
     </LinearLayout>
 </layout>
