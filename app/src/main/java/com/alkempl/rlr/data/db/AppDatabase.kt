@@ -12,10 +12,11 @@ private const val DATABASE_NAME = "main.db"
 /**
  * Database for storing all location data.
  */
-@Database(entities = [LocationEntity::class], version = 3)
-@TypeConverters(LocationTypeConverters::class)
+@Database(entities = [LocationEntity::class, ObstacleEntity::class], version = 5)
+@TypeConverters(LocationTypeConverters::class, ObstacleTypeConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun locationDao(): LocationDao
+    abstract fun obstacleDao(): ObstacleDao
 
     companion object {
         // For Singleton instantiation

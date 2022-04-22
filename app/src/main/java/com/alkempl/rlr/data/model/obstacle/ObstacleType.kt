@@ -4,7 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 enum class ObstacleType(val type: String) {
     DOGS("dogs"),
-    WIND("wind");
+    WIND("wind"),
+    ABSTRACT("abstract");
 
     companion object {
         fun from(s: String): ObstacleType? = values().find { it.type == s }
