@@ -15,8 +15,8 @@ import android.view.ViewGroup
 import com.alkempl.rlr.BuildConfig
 import com.alkempl.rlr.R
 import com.alkempl.rlr.databinding.FragmentPermissionRequestBinding
-import com.alkempl.rlr.hasPermission
-import com.alkempl.rlr.requestPermissionWithRationale
+import com.alkempl.rlr.utils.hasPermission
+import com.alkempl.rlr.utils.requestPermissionWithRationale
 import com.google.android.material.snackbar.Snackbar
 
 private const val TAG = "PermissionRequestFrag"
