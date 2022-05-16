@@ -38,8 +38,14 @@ class ScenarioService : Service() {
 
     private var soundService: SoundService? = null
     private var locationService: LocationService? = null
+    private var geofencingService: GeofencingService? = null
+    private var healthService: HealthProtectionService? = null
+
     private var soundServiceBounded = false
     private var locationServiceBounded = false
+    private var geofencingServiceBounded = false
+    private var healthServiceBounded = false
+
     private val soundServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
@@ -68,6 +74,34 @@ class ScenarioService : Service() {
         }
     }
 
+    private val geofencingServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            val binder = service as GeofencingService.LocalBinder
+            geofencingService = binder.getService()
+            geofencingServiceBounded = true
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            geofencingServiceBounded = false
+            geofencingService = null
+        }
+    }
+
+    private val healthServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            val binder = service as HealthProtectionService.LocalBinder
+            healthService = binder.getService()
+            healthServiceBounded = true
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            healthServiceBounded = false
+            healthService = null
+        }
+    }
+
     private var timerActions: ArrayList<CountDownTimer> = ArrayList()
     private var fixedRateTimer: Timer? = null
     private var randomActions: Stack<Pair<UUID, ChapterEventAction>> = Stack()
@@ -90,33 +124,9 @@ class ScenarioService : Service() {
             NotificationCreator.getNotificationId(),
             NotificationCreator.getNotification(this)
         )
-
-        startPhysicalProtection()
     }
 
-    private fun startPhysicalProtection() {
-        val TIME_LIMIT_MINUTES = 1
-//        val TIME_LIMIT_MINUTES = 30
-        val timer = object : CountDownTimer(TIME_LIMIT_MINUTES*60*1000L, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                Log.d(
-                    "PPT",
-                    "seconds remaining: " + millisUntilFinished / 1000
-                )
-            }
 
-            override fun onFinish() {
-                Log.d("PPT", "physical protection fired, shutting down")
-                firePhysicalProtection()
-            }
-        }
-        timerActions.add(timer)
-        timer.start()
-    }
-
-    private fun firePhysicalProtection() {
-        notifyFragment("")
-    }
 
     private fun notifyFragment(json: String){
         val intent = Intent("shutdownScenarioServicePlease");
@@ -133,14 +143,21 @@ class ScenarioService : Service() {
 
         val soundServiceIntent = Intent(applicationContext, SoundService::class.java)
         val locationServiceIntent = Intent(applicationContext, LocationService::class.java)
+        val geofencingServiceIntent = Intent(applicationContext, GeofencingService::class.java)
+        val healthServiceIntent = Intent(applicationContext, HealthProtectionService::class.java)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Log.d(TAG, "start Sound ForegroundService")
             this.startForegroundService(soundServiceIntent)
             this.startForegroundService(locationServiceIntent)
+//            this.startForegroundService(geofencingServiceIntent)
+            this.startForegroundService(healthServiceIntent)
         } else {
             Log.d(TAG, "start Sound Service")
             this.startService(soundServiceIntent)
             this.startService(locationServiceIntent)
+//            this.startService(geofencingServiceIntent)
+            this.startService(healthServiceIntent)
         }
 
         // Bind to LocalService
@@ -149,6 +166,12 @@ class ScenarioService : Service() {
         }
         Intent(application, LocationService::class.java).also { ssintent ->
             bindService(ssintent, locationServiceConnection, Context.BIND_AUTO_CREATE)
+        }
+//        Intent(application, GeofencingService::class.java).also { ssintent ->
+//            bindService(ssintent, geofencingServiceConnection, Context.BIND_AUTO_CREATE)
+//        }
+        Intent(application, HealthProtectionService::class.java).also { ssintent ->
+            bindService(ssintent, healthServiceConnection, Context.BIND_AUTO_CREATE)
         }
 
         loadScenarioFromRawResource("demo_scenario")
