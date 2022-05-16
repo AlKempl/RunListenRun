@@ -1,4 +1,4 @@
-package com.alkempl.rlr
+package com.alkempl.rlr.utils
 
 import android.Manifest
 import android.content.Context

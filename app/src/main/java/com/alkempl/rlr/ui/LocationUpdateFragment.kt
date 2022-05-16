@@ -23,13 +23,13 @@ import com.alkempl.rlr.adapter.ObstacleEntityItemRecyclerViewAdapter
 import com.alkempl.rlr.databinding.FragmentLocationItemListBinding
 import com.alkempl.rlr.databinding.FragmentLocationUpdateBinding
 import com.alkempl.rlr.databinding.FragmentObstacleItemListBinding
-import com.alkempl.rlr.hasPermission
 import com.alkempl.rlr.services.ScenarioService
 import com.alkempl.rlr.viewmodel.LocationUpdateViewModel
 import com.alkempl.rlr.viewmodel.ObstacleUpdateViewModel
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.alkempl.rlr.BuildConfig
+import com.alkempl.rlr.utils.hasPermission
 import com.google.android.material.snackbar.Snackbar
 import org.json.JSONObject
 

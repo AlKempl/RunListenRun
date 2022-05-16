@@ -1,19 +1,13 @@
 package com.alkempl.rlr.services
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Intent
 
 import android.os.IBinder
 
 import android.app.Service
-import android.content.Context
-import android.graphics.Color
 
 import android.media.MediaPlayer
 import android.os.Binder
-import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -64,7 +58,7 @@ class SoundService : Service() {
         val resId = application.resources.getIdentifier(track_name, "raw", packageName)
         val resFd = application.resources.openRawResourceFd(resId) ?: return
 
-        if(this.player.isPlaying){
+        if (this.player.isPlaying) {
             this.player.stop()
             this.player.reset()
         }

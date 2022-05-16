@@ -13,7 +13,7 @@ import androidx.preference.PreferenceManager
 import com.alkempl.rlr.LocationUpdatesBroadcastReceiver
 import com.alkempl.rlr.data.LocationRepository
 import com.alkempl.rlr.data.db.LocationEntity
-import com.alkempl.rlr.hasPermission
+import com.alkempl.rlr.utils.hasPermission
 import com.google.android.gms.location.*
 import java.util.*
 import java.util.concurrent.Executors
@@ -34,6 +34,8 @@ class LocationManager private constructor(private val context: Context) {
     // The Fused Location Provider provides access to location APIs.
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
+    private val geofencingClient: GeofencingClient =
+        LocationServices.getGeofencingClient(context)
 
     // globally declare LocationCallback
 //    private lateinit var locationCallback: LocationCallback

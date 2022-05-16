@@ -2,7 +2,7 @@ package com.alkempl.rlr.data.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.alkempl.rlr.getDateTime
+import com.alkempl.rlr.utils.getDateTime
 import com.google.android.gms.location.FusedLocationProviderClient
 import java.text.DateFormat
 import java.util.Date
