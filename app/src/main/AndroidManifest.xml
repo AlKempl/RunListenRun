@@ -25,7 +25,6 @@
             android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -43,12 +42,26 @@
             android:enabled="true"
             android:exported="true" />
         <service
+            android:name=".services.HealthProtectionService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".services.GeofencingService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
             android:name=".services.ScenarioService"
             android:enabled="true"
             android:exported="true" />
 
         <activity android:name=".ui.MainActivity" />
 
+        <receiver
+            android:name=".GeofenceBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.alkempl.rlr.GeofenceBroadcastReceiver.ACTION_GEOFENCE_EVENT" />
+            </intent-filter>
+        </receiver>
         <receiver
             android:name=".LocationUpdatesBroadcastReceiver"
             android:exported="true">
@@ -57,5 +70,4 @@
             </intent-filter>
         </receiver>
     </application>
-
 </manifest>

@@ -24,6 +24,7 @@ import java.io.Reader
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.concurrent.fixedRateTimer
 import kotlin.concurrent.thread
@@ -80,11 +81,14 @@ class ScenarioService : Service() {
             val binder = service as GeofencingService.LocalBinder
             geofencingService = binder.getService()
             geofencingServiceBounded = true
+            Log.d("$TAG/GEO1", "geofencingServiceConnection onServiceConnected")
+            processGeofences()
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {
             geofencingServiceBounded = false
             geofencingService = null
+            Log.d("$TAG/GEO9", "geofencingServiceConnection onServiceDisconnected")
         }
     }
 
@@ -120,6 +124,33 @@ class ScenarioService : Service() {
         super.onCreate()
         Log.d(TAG, "onCreate")
 
+        this.isRunning = true
+
+        Log.d(TAG, "onStartCommand")
+
+        loadScenarioFromRawResource("demo_scenario")
+        Log.d(TAG, "json scenario loaded")
+        processChapters()
+        Log.d(TAG, "scenario parsed")
+
+        // Bind to LocalService
+        Intent(application, SoundService::class.java).also { ssintent ->
+            bindService(ssintent, soundServiceConnection, Context.BIND_AUTO_CREATE)
+        }
+
+        Intent(application, LocationService::class.java).also { ssintent ->
+            bindService(ssintent, locationServiceConnection, Context.BIND_AUTO_CREATE)
+        }
+
+        Intent(application, GeofencingService::class.java).also { ssintent ->
+            bindService(ssintent, geofencingServiceConnection, Context.BIND_AUTO_CREATE)
+        }
+        Log.d("$TAG/GEO3", "bindService geofencingServiceConnection")
+
+        Intent(application, HealthProtectionService::class.java).also { ssintent ->
+            bindService(ssintent, healthServiceConnection, Context.BIND_AUTO_CREATE)
+        }
+
         startForeground(
             NotificationCreator.getNotificationId(),
             NotificationCreator.getNotification(this)
@@ -127,65 +158,40 @@ class ScenarioService : Service() {
     }
 
 
-
-    private fun notifyFragment(json: String){
-        val intent = Intent("shutdownScenarioServicePlease");
-        val bundle = Bundle();
+    private fun notifyFragment(json: String) {
+        val intent = Intent("shutdownScenarioServicePlease")
+        val bundle = Bundle()
 //        bundle.putString("json", json)
 //        intent.putExtras(bundle);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d(TAG, "onStartCommand")
 
-        this.isRunning = true
 
-        val soundServiceIntent = Intent(applicationContext, SoundService::class.java)
-        val locationServiceIntent = Intent(applicationContext, LocationService::class.java)
-        val geofencingServiceIntent = Intent(applicationContext, GeofencingService::class.java)
-        val healthServiceIntent = Intent(applicationContext, HealthProtectionService::class.java)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Log.d(TAG, "start Sound ForegroundService")
-            this.startForegroundService(soundServiceIntent)
-            this.startForegroundService(locationServiceIntent)
-//            this.startForegroundService(geofencingServiceIntent)
-            this.startForegroundService(healthServiceIntent)
-        } else {
-            Log.d(TAG, "start Sound Service")
-            this.startService(soundServiceIntent)
-            this.startService(locationServiceIntent)
-//            this.startService(geofencingServiceIntent)
-            this.startService(healthServiceIntent)
-        }
-
-        // Bind to LocalService
-        Intent(application, SoundService::class.java).also { ssintent ->
-            bindService(ssintent, soundServiceConnection, Context.BIND_AUTO_CREATE)
-        }
-        Intent(application, LocationService::class.java).also { ssintent ->
-            bindService(ssintent, locationServiceConnection, Context.BIND_AUTO_CREATE)
-        }
-//        Intent(application, GeofencingService::class.java).also { ssintent ->
-//            bindService(ssintent, geofencingServiceConnection, Context.BIND_AUTO_CREATE)
-//        }
-        Intent(application, HealthProtectionService::class.java).also { ssintent ->
-            bindService(ssintent, healthServiceConnection, Context.BIND_AUTO_CREATE)
-        }
-
-        loadScenarioFromRawResource("demo_scenario")
-        Log.d(TAG, "json scenario loaded")
-        processChapters()
-        Log.d(TAG, "scenario parsed")
 //        initRandomTickActionTimer()
 //        Log.d(TAG, "random tick parsed")
+        Log.d(TAG, "onStartCommand End")
         return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun someTask() {
+        Thread {
+
+            stopSelf()
+        }.start()
     }
 
     private fun processChapters() {
         this.scenario?.let { scenario ->
             scenario.chapters?.forEach { chapter ->
+
+                chapter.initial_event?.let { initial_event ->
+                    initial_event.actions?.forEach { action ->
+                        processEventAction(initial_event, action)
+                    }
+                }
+
                 chapter.events?.forEach { event ->
                     event.actions?.forEach { action ->
                         processEventAction(event, action)
@@ -195,15 +201,25 @@ class ScenarioService : Service() {
         }
     }
 
+    private fun processGeofences() {
+        if (geofencingServiceBounded) {
+            this.scenario?.let { scenario ->
+                scenario.chapters?.forEach { chapter ->
+                    chapter.geofencing?.forEach { geofence ->
+                        geofencingService?.landmarkData?.add(geofence)
+                        Log.d("$TAG/ADD_GEOFENCE", geofence.toString())
+                    }
+                }
+            }
+            geofencingService?.addGeofenceForClue()
+        }
+    }
+
     private fun processEventAction(event: ChapterEvent, action: ChapterEventAction) {
         val time = when (event.type) {
-            ChapterEventType.TIME_BASED -> {
-                event.time!!
-            }
-
-            ChapterEventType.RANDOM -> {
-                (0..890).random()
-            }
+            ChapterEventType.INITIAL -> 0
+            ChapterEventType.TIME_BASED -> event.time!!
+            ChapterEventType.RANDOM -> (0..890).random()
         }
         scheduleAction(time * 1000, event, action)
 
@@ -229,13 +245,30 @@ class ScenarioService : Service() {
         this.isRunning = false
         super.onDestroy()
 
-        val soundServiceIntent = Intent(applicationContext, SoundService::class.java)
-        this.stopService(soundServiceIntent)
-        unbindService(soundServiceConnection)
+        if (soundServiceBounded) {
+            val soundServiceIntent = Intent(applicationContext, SoundService::class.java)
+            this.stopService(soundServiceIntent)
+            unbindService(soundServiceConnection)
+        }
 
-        val locationServiceIntent = Intent(applicationContext, LocationService::class.java)
-        this.stopService(locationServiceIntent)
-        unbindService(locationServiceConnection)
+        if (locationServiceBounded) {
+            val locationServiceIntent = Intent(applicationContext, LocationService::class.java)
+            this.stopService(locationServiceIntent)
+            unbindService(locationServiceConnection)
+        }
+
+        if (geofencingServiceBounded) {
+            val geofencingServiceIntent = Intent(applicationContext, GeofencingService::class.java)
+            this.stopService(geofencingServiceIntent)
+            unbindService(geofencingServiceConnection)
+        }
+
+        if (healthServiceBounded) {
+            val healthServiceIntent =
+                Intent(applicationContext, HealthProtectionService::class.java)
+            this.stopService(healthServiceIntent)
+            unbindService(healthServiceConnection)
+        }
 
         fixedRateTimer?.cancel()
 
@@ -246,56 +279,56 @@ class ScenarioService : Service() {
         Log.d(TAG, "onDestroy")
     }
 
-  /*  private fun initRandomTickActionTimer() {
-        fixedRateTimer = fixedRateTimer("random_tick_action", true, 0L, 5 * 1000) {
-            if (!randomActions.empty()) {
-                val (uuid, action) = randomActions.pop()
-                when (action.type) {
-                    EventActionType.PLAY_SOUND -> {
-                        val track = action.attributes.getOrDefault("track_name", "groovin")
-                        if (soundServiceBounded) {
-                            Log.d("RTA", "soundServiceBounded")
-                            soundService?.playTrack(track)
-                        }
-                        val desc = "playing track $track"
-                        Log.d("RTA", "action done: $desc")
-                    }
+    /*  private fun initRandomTickActionTimer() {
+          fixedRateTimer = fixedRateTimer("random_tick_action", true, 0L, 5 * 1000) {
+              if (!randomActions.empty()) {
+                  val (uuid, action) = randomActions.pop()
+                  when (action.type) {
+                      EventActionType.PLAY_SOUND -> {
+                          val track = action.attributes.getOrDefault("track_name", "groovin")
+                          if (soundServiceBounded) {
+                              Log.d("RTA", "soundServiceBounded")
+                              soundService?.playTrack(track)
+                          }
+                          val desc = "playing track $track"
+                          Log.d("RTA", "action done: $desc")
+                      }
 
-                    EventActionType.GENERATE_OBSTACLE -> {
-                        val type = ObstacleType.from(action.attributes.getOrDefault("type", "dogs"))
-                        val duration = action.attributes.getOrDefault("duration", "20").toInt()
+                      EventActionType.GENERATE_OBSTACLE -> {
+                          val type = ObstacleType.from(action.attributes.getOrDefault("type", "dogs"))
+                          val duration = action.attributes.getOrDefault("duration", "20").toInt()
 
-                        val obstacle = ObstacleFactory.buildObstacle(type!!, duration)
+                          val obstacle = ObstacleFactory.buildObstacle(type!!, duration)
 
-                        val desc = "obstacle generation"
-                        Log.d("RTA", "action done: $desc")
+                          val desc = "obstacle generation"
+                          Log.d("RTA", "action done: $desc")
 
-                        val obstacleFinishTimer = object : CountDownTimer(
-                            obstacle.duration.toLong() * 1000,
-                            1000
-                        ) {
-                            override fun onTick(millisUntilFinished: Long) {
-                                Log.d(
-                                    "RTA",
-                                    "seconds remaining: " + millisUntilFinished / 1000
-                                )
-                            }
+                          val obstacleFinishTimer = object : CountDownTimer(
+                              obstacle.duration.toLong() * 1000,
+                              1000
+                          ) {
+                              override fun onTick(millisUntilFinished: Long) {
+                                  Log.d(
+                                      "RTA",
+                                      "seconds remaining: " + millisUntilFinished / 1000
+                                  )
+                              }
 
-                            override fun onFinish() {
-                                val desc = "obstacle finalization"
-                                Log.d("RTA", "action done: $desc")
-                                obstacle.onFinish()
-                            }
-                        }
+                              override fun onFinish() {
+                                  val desc = "obstacle finalization"
+                                  Log.d("RTA", "action done: $desc")
+                                  obstacle.onFinish()
+                              }
+                          }
 
-                        obstacle.onStart()
-                        timerActions.add(obstacleFinishTimer)
-                        obstacleFinishTimer.start()
-                    }
-                }
-            }
-        }
-    }*/
+                          obstacle.onStart()
+                          timerActions.add(obstacleFinishTimer)
+                          obstacleFinishTimer.start()
+                      }
+                  }
+              }
+          }
+      }*/
 
     private fun scheduleAction(
         millisInFuture: Number,

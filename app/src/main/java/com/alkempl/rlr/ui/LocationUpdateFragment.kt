@@ -99,15 +99,15 @@ class LocationUpdateFragment : Fragment() {
         if (scenarioServiceBounded) {
             Log.d(TAG, "stop Scenario Service")
             requireActivity().unbindService(scenarioServiceConnection)
-            requireActivity().stopService(scenarioServiceIntent)
+//            requireActivity().stopService(scenarioServiceIntent)
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Log.d(TAG, "start Scenario ForegroundService")
-                requireActivity().startForegroundService(scenarioServiceIntent)
-            } else {
-                Log.d(TAG, "start Scenario Service")
-                requireActivity().startService(scenarioServiceIntent)
-            }
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                Log.d(TAG, "start Scenario ForegroundService")
+//                requireActivity().startForegroundService(scenarioServiceIntent)
+//            } else {
+//                Log.d(TAG, "start Scenario Service")
+//                requireActivity().startService(scenarioServiceIntent)
+//            }
             // Bind to LocalService
             Intent(context, ScenarioService::class.java).also { ssintent ->
                 requireActivity().bindService(

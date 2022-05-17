@@ -5,6 +5,7 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import com.alkempl.rlr.data.db.AppDatabase
 import com.alkempl.rlr.data.db.LocationEntity
+import com.alkempl.rlr.data.model.scenario.GeofenceEntry
 import com.alkempl.rlr.services.LocationManager
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -82,6 +83,10 @@ class LocationRepository private constructor(
         executor.execute {
             locationDao.addLocations(myLocationEntities)
         }
+    }
+
+    fun addGeofence(entry: GeofenceEntry){
+        myLocationManager.addGeofence(entry)
     }
 
     // Location related fields/methods:

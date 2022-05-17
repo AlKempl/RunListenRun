@@ -23,6 +23,64 @@
           "res/dat1.mp3"
         ]
       },
+      "initial_event": {
+        "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+        "type": "init",
+        "actions": [
+          {
+            "action": "sound",
+            "attributes": {
+              "track_name": "shakalaka",
+              "delay": 0
+            }
+          },
+          {
+            "action": "obstacle",
+            "attributes": {
+              "type": "dogs",
+              "severity": 3,
+              "delay": 0
+            }
+          }
+        ]
+      },
+      "geofencing": [
+        {
+          "id": "ca1b1ed4-garden",
+          "name": "Детская площадка",
+          "hint": "Иди на детскую площадку",
+          "location": {
+            "latitude": 47.260840,
+            "longitude": 39.648080
+          },
+          "actions": [
+            {
+              "action": "sound",
+              "attributes": {
+                "track_name": "shakalaka",
+                "delay": 0
+              }
+            },
+            {
+              "action": "obstacle",
+              "attributes": {
+                "type": "dogs",
+                "severity": 3,
+                "delay": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "da1b1eg8-bench",
+          "name": "Лавочка",
+          "hint": "Иди к лавочке",
+          "location": {
+            "latitude": 47.261060,
+            "longitude": 39.648680
+          }
+        }
+      ],
       "events": [
         {
           "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",

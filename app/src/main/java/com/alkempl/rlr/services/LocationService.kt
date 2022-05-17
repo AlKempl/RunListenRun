@@ -45,6 +45,15 @@ class LocationService : Service() {
     }
 
     override fun onBind(arg0: Intent?): IBinder {
+        Log.d(TAG, "onBindCommand")
+        locationRepository.wipeOldLocations()
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+        val enabled = sharedPref.getBoolean("bg_location_updates", false)
+
+        if(enabled){
+            locationRepository.startLocationUpdates()
+        }
+
         return binder
     }
 
@@ -63,7 +72,6 @@ class LocationService : Service() {
 
     override fun onCreate() {
         Log.d(TAG, "onCreate")
-        initializeLocationManager()
         startForeground(NotificationCreator.getNotificationId(),
             NotificationCreator.getNotification(this))
     }
@@ -74,13 +82,8 @@ class LocationService : Service() {
         locationRepository.stopLocationUpdates()
     }
 
-    private fun initializeLocationManager() {
-
-    }
-
-
     companion object {
-        private const val TAG = "BOOMBOOMTESTGPS"
+        private const val TAG = "GPS"
         private const val LOCATION_INTERVAL = 1000
         private const val LOCATION_DISTANCE = 100
     }

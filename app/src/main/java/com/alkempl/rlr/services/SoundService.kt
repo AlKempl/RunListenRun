@@ -18,11 +18,12 @@ class SoundService : Service() {
     private val binder = LocalBinder()
 
     override fun onBind(arg0: Intent?): IBinder {
+        Log.d(TAG, "onBindCommand")
         return binder
     }
 
     override fun onCreate() {
-        Log.e(TAG, "onCreate")
+        Log.d(TAG, "onCreate")
         super.onCreate()
 
         startForeground(
@@ -32,7 +33,7 @@ class SoundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.e(TAG, "onStartCommand")
+        Log.d(TAG, "onStartCommand")
         return START_STICKY
     }
 
@@ -48,7 +49,7 @@ class SoundService : Service() {
     fun onStop() {}
     fun onPause() {}
     override fun onDestroy() {
-        Log.e(TAG, "onDestroy")
+        Log.d(TAG, "onDestroy")
         this.player.stop()
         this.player.reset()
         this.player.release()
@@ -77,6 +78,6 @@ class SoundService : Service() {
     }
 
     companion object {
-        private val TAG: String = "BG_MUSIC_SVC"
+        private val TAG: String = "Sound"
     }
 }

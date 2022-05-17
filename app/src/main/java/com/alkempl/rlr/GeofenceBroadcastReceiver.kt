@@ -21,11 +21,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.SavedStateViewModelFactory
-import androidx.lifecycle.ViewModelProviders
-import com.alkempl.rlr.services.GeofencingService.Companion.ACTION_GEOFENCE_EVENT
 import com.alkempl.rlr.utils.GeofencingConstants
 import com.alkempl.rlr.utils.errorMessage
 import com.alkempl.rlr.utils.sendGeofenceEnteredNotification
@@ -43,7 +39,9 @@ import com.google.android.gms.location.GeofencingEvent
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
+        Log.d(TAG, "onReceive() context:$context, intent:$intent")
         if (intent.action == ACTION_GEOFENCE_EVENT) {
+            Log.d(TAG, "ACTION_GEOFENCE_EVENT!")
             val geofencingEvent = GeofencingEvent.fromIntent(intent)
 
             if (geofencingEvent.hasError()) {
@@ -52,11 +50,13 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 return
             }
 
-            if (geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
-                Log.v(TAG, context.getString(R.string.geofence_entered))
-                Toast.makeText(context, context.getString(R.string.geofence_entered),
-                    Toast.LENGTH_LONG)
-                    .show()
+            if (geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER
+                || geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT
+            ) {
+                Log.d(TAG, context.getString(R.string.geofence_entered))
+//                Toast.makeText(context, context.getString(R.string.geofence_entered),
+//                    Toast.LENGTH_LONG)
+//                    .show()
 
                 val fenceId = when {
                     geofencingEvent.triggeringGeofences.isNotEmpty() ->
@@ -90,6 +90,11 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 //TODO: code from com.example.android.treasureHunt.HuntMainActivity.onNewIntent
             }
         }
+    }
+
+    companion object {
+        const val ACTION_GEOFENCE_EVENT =
+            "com.alkempl.rlr.action.ACTION_GEOFENCE_EVENT"
     }
 }
 

@@ -60,6 +60,8 @@ class LocationUpdatesBroadcastReceiver : BroadcastReceiver() {
                         .addLocations(locations)
                 }
             }
+        }else{
+            Log.d(TAG, "intent.action")
         }
     }
 
@@ -84,7 +86,6 @@ class LocationUpdatesBroadcastReceiver : BroadcastReceiver() {
 
     companion object {
         const val ACTION_PROCESS_UPDATES =
-            "com.alkempl.rlr.action." +
-                    "PROCESS_UPDATES"
+            "com.alkempl.rlr.action.PROCESS_UPDATES"
     }
 }

@@ -8,20 +8,18 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.location.*
 
 
-class HealthProtectionService : Service() {
+class VirtualObstacleService : Service() {
 
     private val binder = LocalBinder()
 
     inner class LocalBinder : Binder() {
-        fun getService(): HealthProtectionService = this@HealthProtectionService
+        fun getService(): VirtualObstacleService = this@VirtualObstacleService
     }
 
     private var timers: ArrayList<CountDownTimer> = ArrayList()
 
 
     override fun onBind(arg0: Intent?): IBinder {
-        Log.d(TAG, "onBindCommand")
-        startPhysicalProtectionTimer()
         return binder
     }
 
