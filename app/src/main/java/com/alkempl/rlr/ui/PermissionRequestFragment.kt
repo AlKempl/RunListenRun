@@ -60,6 +60,20 @@ class PermissionRequestFragment : Fragment() {
             }
     }
 
+    private val activityRecognitionRationalSnackbar by lazy {
+        Snackbar.make(
+            binding.frameLayout,
+            R.string.activity_recognition_permission_denied_explanation,
+            Snackbar.LENGTH_LONG
+        )
+            .setAction(R.string.ok) {
+                requestPermissions(
+                    arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
+                    REQUEST_ACTIVITY_RECOGNITION_PERMISSIONS_REQUEST_CODE
+                )
+            }
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -117,6 +131,22 @@ class PermissionRequestFragment : Fragment() {
                         getString(R.string.enable_background_location_button_text)
                 }
             }
+
+            PermissionRequestType.ACTIVITY_RECOGNITION -> {
+
+                binding.apply {
+                    iconImageView.setImageResource(R.drawable.ic_baseline_directions_run_24)
+
+                    titleTextView.text =
+                        getString(R.string.activity_recognition_access_rationale_title_text)
+
+                    detailsTextView.text =
+                        getString(R.string.activity_recognition_access_rationale_details_text)
+
+                    permissionRequestButton.text =
+                        getString(R.string.enable_activity_recognition_button_text)
+                }
+            }
         }
 
         binding.permissionRequestButton.setOnClickListener {
@@ -126,6 +156,9 @@ class PermissionRequestFragment : Fragment() {
 
                 PermissionRequestType.BACKGROUND_LOCATION ->
                     requestBackgroundLocationPermission()
+
+                PermissionRequestType.ACTIVITY_RECOGNITION ->
+                    requestActivityRecognitionPermission()
             }
         }
 
@@ -147,6 +180,7 @@ class PermissionRequestFragment : Fragment() {
 
         when (requestCode) {
             REQUEST_FINE_LOCATION_PERMISSIONS_REQUEST_CODE,
+            REQUEST_ACTIVITY_RECOGNITION_PERMISSIONS_REQUEST_CODE,
             REQUEST_BACKGROUND_LOCATION_PERMISSIONS_REQUEST_CODE -> when {
                 grantResults.isEmpty() ->
                     // If user interaction was interrupted, the permission request
@@ -217,11 +251,26 @@ class PermissionRequestFragment : Fragment() {
         }
     }
 
+    private fun requestActivityRecognitionPermission() {
+        val permissionApproved =
+            context?.hasPermission(Manifest.permission.ACTIVITY_RECOGNITION) ?: return
+
+        if (permissionApproved) {
+            activityListener?.displayLocationUI()
+        } else {
+            requestPermissionWithRationale(
+                Manifest.permission.ACTIVITY_RECOGNITION,
+                REQUEST_ACTIVITY_RECOGNITION_PERMISSIONS_REQUEST_CODE,
+                activityRecognitionRationalSnackbar)
+        }
+    }
+
     companion object {
         private const val ARG_PERMISSION_REQUEST_TYPE = "com.alkempl.rlr.PERMISSION_REQUEST_TYPE"
 
         private const val REQUEST_FINE_LOCATION_PERMISSIONS_REQUEST_CODE = 34
         private const val REQUEST_BACKGROUND_LOCATION_PERMISSIONS_REQUEST_CODE = 56
+        private const val REQUEST_ACTIVITY_RECOGNITION_PERMISSIONS_REQUEST_CODE = 78
 
         /**
          * Use this factory method to create a new instance of
@@ -245,5 +294,5 @@ class PermissionRequestFragment : Fragment() {
 }
 
 enum class PermissionRequestType {
-    FINE_LOCATION, BACKGROUND_LOCATION
+    FINE_LOCATION, BACKGROUND_LOCATION, ACTIVITY_RECOGNITION
 }

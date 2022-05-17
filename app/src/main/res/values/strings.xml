@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Run, Listen, Run</string>
     <string name="enable_tracking_label">Enable tracking</string>
     <string name="disable_tracking_label">Disable tracking</string>
@@ -9,6 +9,7 @@
 
     <string name="background_location_permission_rationale">The background location permission is needed for enhanced functionality.</string>
     <string name="background_permission_denied_explanation">Background location permission was denied but needed for enhanced functionality.</string>
+    <string name="activity_recognition_permission_denied_explanation">Activity recognition permission was denied but needed for enhanced functionality.</string>
 
 
     <string name="settings">Settings</string>
@@ -22,8 +23,16 @@
     </string>
 
     <string name="background_location_access_rationale_title_text">Improve location accuracy!</string>
+    <string name="activity_recognition_access_rationale_title_text">Improve activity tracking accuracy!</string>
 
     <string name="background_location_access_rationale_details_text">
+        Dev Tip: Unless you have a valid use case for background location updates, you should instead only request updates while your app is in the foreground (app/foreground service).
+        \n\n
+        For this app, you would explain why the particular use case requires background location updates and direct user to click \"Allow all the time\" below.
+        \n\n
+    </string>
+
+    <string name="activity_recognition_access_rationale_details_text">
         Dev Tip: Unless you have a valid use case for background location updates, you should instead only request updates while your app is in the foreground (app/foreground service).
         \n\n
         For this app, you would explain why the particular use case requires background location updates and direct user to click \"Allow all the time\" below.
@@ -33,6 +42,7 @@
 
     <string name="enable_fine_location_button_text">Approve Location Access</string>
     <string name="enable_background_location_button_text">Approve Background Location Access</string>
+    <string name="enable_activity_recognition_button_text">Approve Activity Recognition Access</string>
 
     <string name="start_receiving_location">Start Receiving Location Updates</string>
     <string name="stop_receiving_location">Stop Receiving Location Updates</string>
@@ -168,4 +178,58 @@
     <string name="scenario_stop_button_caption">Stop scenario</string>
     <string name="scenario_start_button_caption">Start scenario</string>
     <string name="training_suspense_text">The training was interrupted in order to prevent potential damage to your health due to maximum training length limit reached.</string>
+
+    <!--    Geofence Status Strings-->
+    <string name="geofences_added">Clue Geofence added</string>
+    <string name="geofences_removed">Geofences removed.</string>
+    <string name="geofence_entered">Geofence entered.</string>
+    <string name="geofence_over">You have found the treasure! Congratulations!</string>
+
+    <!-- Geofence Hints -->
+    <string name="not_started_hint"></string>
+    <string name="golden_gate_bridge_hint">Go to a bridge with a name that does not match the color that it is!</string>
+    <string name="ferry_building_hint">Go to a market with an amazing assortment of delicious foods. It is a San Francisco classic!</string>
+    <string name="pier_39_hint">Go to a pier popular for tourist attractions, carnival games, fresh fish, and delicious sourdough bread!</string>
+    <string name="union_square_hint">Go to a square named after Civil War rallies held there, but now known for its amazing shopping!</string>
+
+    <!-- Geofence Locations -->
+    <string name="golden_gate_bridge_location">at the Golden Gate bridge</string>
+    <string name="ferry_building_location">in the Ferry Building</string>
+    <string name="pier_39_location">at Pier 39</string>
+    <string name="union_square_location">in Union Square</string>
+
+    <!-- Error strings -->
+    <string name="geofence_not_available">Geofence service is not available now</string>
+    <string name="geofence_too_many_geofences">Your app has registered too many geofences</string>
+    <string name="geofence_too_many_pending_intents">
+        You have provided too many PendingIntents to the addGeofences() call
+    </string>
+    <string name="unknown_geofence_error">
+        Unknown error: the Geofence service is not available now
+    </string>
+    <string name="location_required_error">Location services must be enabled for this game.</string>
+
+    <string name="geofences_not_removed">Geofences not removed.</string>
+    <string name="geofences_not_added">Problem in adding geofences.</string>
+    <string name="insufficient_permissions">Insufficient permissions.</string>
+    <string name="geofence_error">There was an error in finding your treasure</string>
+
+    <!-- Notification Strings-->
+    <string name="channel_name">GeofenceStatus</string>
+    <string name="content_text">You found a clue <xliff:g id="geofence_location">%1$s</xliff:g>.</string>
+    <string name="notification_channel_description">Geofence status notification</string>
+
+    <!-- Content Description Strings -->
+    <string name="android_map_description">An Android robot with a map</string>
+    <string name="garden_hint">Иди на детскую площадку</string>
+    <string name="garden_location">Детская площадка</string>
+    <string name="atelier_hint">Иди к ателье</string>
+    <string name="atelier_location">Ателье</string>
+    <string name="magnit_hint">Иди к магниту</string>
+    <string name="magnit_location">Магнит</string>
+    <string name="kindergarten_hint">Иди к детсаду</string>
+    <string name="kindergarten_location">Ltncfl</string>
+    <string name="bench_hint">Иди к лавочке</string>
+    <string name="bench_location">Лавочка</string>
+
 </resources>
