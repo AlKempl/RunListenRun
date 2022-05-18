@@ -3,4 +3,9 @@
     <string name="scenario_stop_button_caption">Stop scenario</string>
     <string name="scenario_start_button_caption">Start scenario</string>
     <string name="training_suspense_text">The training was interrupted in order to prevent potential damage to your health due to maximum training length limit reached.</string>
+    <string name="scenario">Сценарий</string>
+    <string name="scenario_pref_caption">Сценарий, который будет задействован</string>
+    <string name="helth_protection_pref_cat">Защита здоровья</string>
+    <string name="health_level_pref_caption">Ваш уровень физической подготовки</string>
+    <string name="bg_loc_pref_cat">Location</string>
 </resources>

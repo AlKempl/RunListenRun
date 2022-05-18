@@ -85,8 +85,8 @@ class LocationRepository private constructor(
         }
     }
 
-    fun addGeofence(entry: GeofenceEntry){
-        myLocationManager.addGeofence(entry)
+    fun setActiveGeofence(entry: GeofenceEntry){
+        myLocationManager.setActiveGeofence(entry)
     }
 
     // Location related fields/methods:

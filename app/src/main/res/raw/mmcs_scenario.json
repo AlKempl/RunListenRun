@@ -1,0 +1,154 @@
+{
+  "id": "436207e3-0f06-4c5b-9b88-74ba456ede32",
+  "name": "MMCS Scenario",
+  "description": "It's a demo",
+  "prev_ipd": null,
+  "next_id": null,
+  "chapters": [
+    {
+      "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+      "name": "Chapter 1",
+      "description": "The One Where Monica Gets a Roommate",
+      "is_final": false,
+      "audio": {
+        "radio": [
+          "res/dat1.mp3",
+          "res/dat1.mp3",
+          "res/dat1.mp3",
+          "res/dat1.mp3"
+        ],
+        "music": [
+          "res/dat1.mp3",
+          "res/dat1.mp3",
+          "res/dat1.mp3"
+        ]
+      },
+      "initial_event": {
+        "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+        "type": "init",
+        "actions": [
+          {
+            "action": "sound",
+            "attributes": {
+              "track_name": "shakalaka",
+              "delay": 0
+            }
+          },
+          {
+            "action": "obstacle",
+            "attributes": {
+              "type": "dogs",
+              "severity": 3,
+              "delay": 0
+            }
+          }
+        ]
+      },
+      "geofencing": [
+        {
+          "id": "ca1b1ed4-garden",
+          "name": "Детская площадка",
+          "hint": "Иди на детскую площадку",
+          "location": {
+            "latitude": 47.260840,
+            "longitude": 39.648080
+          },
+          "actions": [
+            {
+              "action": "sound",
+              "attributes": {
+                "track_name": "shakalaka",
+                "delay": 0
+              }
+            },
+            {
+              "action": "obstacle",
+              "attributes": {
+                "type": "dogs",
+                "severity": 3,
+                "delay": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "da1b1eg8-bench",
+          "name": "Лавочка",
+          "hint": "Иди к лавочке",
+          "location": {
+            "latitude": 47.261060,
+            "longitude": 39.648680
+          }
+        }
+      ],
+      "events": [
+        {
+          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+          "type": "timer",
+          "time": 1,
+          "actions": [
+            {
+              "action": "sound",
+              "attributes": {
+                "track_name": "shakalaka",
+                "delay": 0
+              }
+            },
+            {
+              "action": "obstacle",
+              "attributes": {
+                "type": "dogs",
+                "severity": 3,
+                "delay": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+          "type": "timer",
+          "time": 30,
+          "actions": [
+            {
+              "action": "sound",
+              "attributes": {
+                "track_name": "ampup",
+                "delay": 0
+              }
+            },
+            {
+              "action": "obstacle",
+              "attributes": {
+                "type": "wind",
+                "severity": 1,
+                "delay": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+          "type": "random",
+          "time": null,
+          "actions": [
+            {
+              "action": "sound",
+              "attributes": {
+                "track_name": "groovin",
+                "delay": 0
+              }
+            },
+            {
+              "action": "obstacle",
+              "attributes": {
+                "type": "dogs",
+                "severity": 20,
+                "delay": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -2,20 +2,16 @@ package com.alkempl.rlr.services
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.*
+import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
-import com.alkempl.rlr.GeofenceBroadcastReceiver
-import com.alkempl.rlr.R
+import com.alkempl.rlr.data.GeofencingRepository
 import com.alkempl.rlr.data.LocationRepository
 import com.alkempl.rlr.data.model.scenario.GeofenceEntry
-import com.alkempl.rlr.utils.GeofencingConstants
 import com.alkempl.rlr.utils.hasPermission
-import com.alkempl.rlr.viewmodel.GeofenceViewModel
-import com.google.android.gms.location.*
+import java.util.ArrayList
 import java.util.concurrent.Executors
 
 
@@ -24,9 +20,13 @@ class GeofencingService : Service() {
     var geofencingEnabled = false
 
     private val binder = LocalBinder()
-    public var landmarkData = ArrayList<GeofenceEntry>()
 
     private val locationRepository = LocationRepository.getInstance(
+        this,
+        Executors.newSingleThreadExecutor()
+    )
+
+    private val geofencingRepository = GeofencingRepository.getInstance(
         this,
         Executors.newSingleThreadExecutor()
     )
@@ -45,11 +45,28 @@ class GeofencingService : Service() {
     public fun addGeofenceForClue() {
         if (!applicationContext.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)) return
 
-        val currentGeofenceData = landmarkData[0]
-        locationRepository.addGeofence(currentGeofenceData)
+        geofencingRepository.processNext()
     }
 
+    fun getStored(): ArrayList<GeofenceEntry> {
+        return geofencingRepository.getStored()
+    }
 
+    fun storeGeofence(entry: GeofenceEntry){
+        geofencingRepository.storeGeofence(entry)
+    }
+
+    fun storeGeofences(entries: List<GeofenceEntry>){
+        geofencingRepository.storeGeofences(entries)
+    }
+
+    fun getActiveIdx(): Int {
+        return geofencingRepository.getActiveIdx()
+    }
+
+    fun getActiveEntry(): GeofenceEntry{
+        return geofencingRepository.getActiveEntry()
+    }
 
     override fun onBind(arg0: Intent?): IBinder {
         Log.d(TAG, "onBindCommand")
@@ -62,16 +79,18 @@ class GeofencingService : Service() {
         return START_STICKY
     }
 
-
     override fun onCreate() {
         Log.d(TAG, "onCreate")
-        startForeground(NotificationCreator.getNotificationId(),
-            NotificationCreator.getNotification(this))
+        startForeground(
+            NotificationCreator.getNotificationId(),
+            NotificationCreator.getNotification(this)
+        )
         super.onCreate()
     }
 
     override fun onDestroy() {
         Log.d(TAG, "onDestroy")
+        geofencingRepository.reset()
         super.onDestroy()
     }
 

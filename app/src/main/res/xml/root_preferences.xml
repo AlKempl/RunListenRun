@@ -1,53 +1,75 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
->
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory
+    <PreferenceCategory app:title="@string/bg_loc_pref_cat"
         android:backgroundTint="#E35353"
         android:foregroundTint="#6FDC22"
-        android:title="Location">
+        >
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="bg_location_updates"
+            app:key="bg_location_updates"
             android:switchTextOff="dsdsdsd"
             android:switchTextOn="dsdsdsd"
             android:title="@string/bg_location_updates"
             app:switchTextOff="fdfdf"
             app:switchTextOn="dsdsds" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Dummy settings">
+    <PreferenceCategory app:title="@string/scenario">
 
-        <PreferenceCategory app:title="@string/sync_header">
-
-            <SwitchPreferenceCompat
-                app:key="sync"
-                app:title="@string/sync_title" />
-
-            <SwitchPreferenceCompat
-                app:dependency="sync"
-                app:key="attachment"
-                app:summaryOff="@string/attachment_summary_off"
-                app:summaryOn="@string/attachment_summary_on"
-                app:title="@string/attachment_title" />
-
-        </PreferenceCategory>
-        <PreferenceCategory app:title="@string/messages_header">
-
-            <EditTextPreference
-                app:key="signature"
-                app:title="@string/signature_title"
-                app:useSimpleSummaryProvider="true" />
-
-            <ListPreference
-                app:defaultValue="reply"
-                app:entries="@array/reply_entries"
-                app:entryValues="@array/reply_values"
-                app:key="reply"
-                app:title="@string/reply_title"
-                app:useSimpleSummaryProvider="true" />
-
-        </PreferenceCategory>
+        <ListPreference
+            app:defaultValue="mmcs"
+            app:key="scenario_prep_value"
+            app:entries="@array/scenario_names"
+            app:entryValues="@array/scenario_values"
+            app:title="@string/scenario_pref_caption"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/helth_protection_pref_cat">
+
+        <ListPreference
+            android:key="max_running_time_value"
+            app:defaultValue="30"
+            app:entries="@array/health_level_names"
+            app:entryValues="@array/health_level_values"
+            app:key="30"
+            app:title="@string/health_level_pref_caption"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+<!--    <PreferenceCategory android:title="Dummy settings">-->
+
+<!--        <PreferenceCategory app:title="@string/sync_header">-->
+
+<!--            <SwitchPreferenceCompat-->
+<!--                app:key="sync"-->
+<!--                app:title="@string/sync_title" />-->
+
+<!--            <SwitchPreferenceCompat-->
+<!--                app:dependency="sync"-->
+<!--                app:key="attachment"-->
+<!--                app:summaryOff="@string/attachment_summary_off"-->
+<!--                app:summaryOn="@string/attachment_summary_on"-->
+<!--                app:title="@string/attachment_title" />-->
+
+<!--        </PreferenceCategory>-->
+<!--        <PreferenceCategory app:title="@string/messages_header">-->
+
+<!--            <EditTextPreference-->
+<!--                app:key="signature"-->
+<!--                app:title="@string/signature_title"-->
+<!--                app:useSimpleSummaryProvider="true" />-->
+
+<!--            <ListPreference-->
+<!--                app:defaultValue="reply"-->
+<!--                app:entries="@array/reply_entries"-->
+<!--                app:entryValues="@array/reply_values"-->
+<!--                app:key="reply"-->
+<!--                app:title="@string/reply_title"-->
+<!--                app:useSimpleSummaryProvider="true" />-->
+
+<!--        </PreferenceCategory>-->
+<!--    </PreferenceCategory>-->
 
 </PreferenceScreen>

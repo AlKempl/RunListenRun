@@ -22,11 +22,14 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.content.ContextCompat
+import com.alkempl.rlr.data.GeofencingRepository
+import com.alkempl.rlr.data.LocationRepository
 import com.alkempl.rlr.utils.GeofencingConstants
 import com.alkempl.rlr.utils.errorMessage
 import com.alkempl.rlr.utils.sendGeofenceEnteredNotification
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
+import java.util.concurrent.Executors
 
 /*
  * Triggered by the Geofence.  Since we only have one active Geofence at once, we pull the request
@@ -50,9 +53,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 return
             }
 
-            if (geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER
-                || geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT
-            ) {
+            if (geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
                 Log.d(TAG, context.getString(R.string.geofence_entered))
 //                Toast.makeText(context, context.getString(R.string.geofence_entered),
 //                    Toast.LENGTH_LONG)
@@ -66,9 +67,12 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                         return
                     }
                 }
+
+                val geofencingRepository = GeofencingRepository.getInstance(context, Executors.newSingleThreadExecutor())
+
                 // Check geofence against the constants listed in GeofenceUtil.kt to see if the
                 // user has entered any of the locations we track for geofences.
-                val foundIndex = GeofencingConstants.LANDMARK_DATA.indexOfFirst {
+                val foundIndex = geofencingRepository.getStored().indexOfFirst {
                     it.id == fenceId
                 }
 
@@ -78,16 +82,23 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                     return
                 }
 
-                val notificationManager = ContextCompat.getSystemService(
-                    context,
-                    NotificationManager::class.java
-                ) as NotificationManager
+                if(geofencingRepository.getActiveIdx() != foundIndex){
+                    Log.e(TAG, "Not Active Geofence: Abort Mission")
+                    return
+                }
 
-                notificationManager.sendGeofenceEnteredNotification(
-                    context, foundIndex
-                )
+//                val notificationManager = ContextCompat.getSystemService(
+//                    context,
+//                    NotificationManager::class.java
+//                ) as NotificationManager
+//
+//                notificationManager.sendGeofenceEnteredNotification(
+//                    context, foundIndex
+//                )
+                val geofence = geofencingRepository.getActiveEntry()
+                Log.d(TAG, "Entered: $geofence")
 
-                //TODO: code from com.example.android.treasureHunt.HuntMainActivity.onNewIntent
+                geofencingRepository.processNext()
             }
         }
     }

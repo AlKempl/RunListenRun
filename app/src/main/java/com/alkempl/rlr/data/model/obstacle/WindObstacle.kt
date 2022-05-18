@@ -1,9 +1,7 @@
 package com.alkempl.rlr.data.model.obstacle
 
 import android.content.Context
-import android.os.CountDownTimer
 import android.util.Log
-import com.alkempl.rlr.services.SoundService
 import java.util.*
 import java.util.stream.IntStream
 
@@ -13,7 +11,7 @@ class WindObstacle(context: Context, duration: Int) : Obstacle(context, duration
     override fun onStart() {
         Log.i(TAG, "onStart")
         this.entity.type = ObstacleType.WIND
-        this.obstacleRepository.addObstacle(this.entity)
+        this.obstacleRepository.add(this.entity)
     }
 
     private fun isDecreasing(a: List<Float>): Boolean {
@@ -36,7 +34,7 @@ class WindObstacle(context: Context, duration: Int) : Obstacle(context, duration
             }
         })
 
-        this.obstacleRepository.updateObstacle(this.entity)
+        this.obstacleRepository.update(this.entity)
     }
 
     override fun onSuccess() {

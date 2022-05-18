@@ -11,20 +11,26 @@ import java.util.*
 interface ObstacleDao {
 
     @Query("SELECT * FROM obstacle ORDER BY date DESC")
-    fun getObstacles(): LiveData<List<ObstacleEntity>>
+    fun getAll(): LiveData<List<ObstacleEntity>>
 
     @Query("SELECT * FROM obstacle WHERE id=(:id)")
-    fun getObstacle(id: UUID): LiveData<ObstacleEntity>
+    fun getById(id: UUID): LiveData<ObstacleEntity>
+
+    @Query("SELECT * FROM obstacle WHERE status='ongoing' ORDER BY date DESC")
+    fun getOngoing(): LiveData<List<ObstacleEntity>>
 
     @Update
-    fun updateObstacle(myObstacleEntity: ObstacleEntity)
+    fun update(myObstacleEntity: ObstacleEntity)
 
     @Insert
-    fun addObstacle(myObstacleEntity: ObstacleEntity)
+    fun add(myObstacleEntity: ObstacleEntity)
 
     @Insert
-    fun addObstacles(myObstacleEntity: List<ObstacleEntity>)
+    fun add(myObstacleEntitiesList: List<ObstacleEntity>)
 
     @Query("DELETE FROM obstacle WHERE date <= (:date)")
-    fun dropOldObstacles(date: Date)
+    fun dropOld(date: Date)
+
+    @Query("DELETE FROM obstacle")
+    fun clearObstacles()
 }

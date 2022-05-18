@@ -2,28 +2,19 @@ package com.alkempl.rlr.services
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.ActivityManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.MainThread
-import androidx.core.content.res.TypedArrayUtils.getString
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.preference.PreferenceManager
 import com.alkempl.rlr.GeofenceBroadcastReceiver
 import com.alkempl.rlr.LocationUpdatesBroadcastReceiver
-import com.alkempl.rlr.R
-import com.alkempl.rlr.data.LocationRepository
-import com.alkempl.rlr.data.db.LocationEntity
 import com.alkempl.rlr.data.model.scenario.GeofenceEntry
 import com.alkempl.rlr.utils.GeofencingConstants
 import com.alkempl.rlr.utils.hasPermission
 import com.google.android.gms.location.*
-import java.util.*
-import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 private const val TAG = "MyLocationManager"
@@ -44,8 +35,6 @@ class LocationManager private constructor(private val context: Context) {
 
     private val geofencingClient: GeofencingClient =
         LocationServices.getGeofencingClient(context)
-
-
 
     // globally declare LocationCallback
 //    private lateinit var locationCallback: LocationCallback
@@ -101,7 +90,7 @@ class LocationManager private constructor(private val context: Context) {
     }
 
     @SuppressLint("MissingPermission")
-    fun addGeofence(currentGeofenceData: GeofenceEntry){
+    fun setActiveGeofence(currentGeofenceData: GeofenceEntry){
         // Build the Geofence Object
         val geofence = Geofence.Builder()
             // Set the request ID, string to identify the geofence.
@@ -110,14 +99,14 @@ class LocationManager private constructor(private val context: Context) {
             .setCircularRegion(
                 currentGeofenceData.location.latitude,
                 currentGeofenceData.location.longitude,
-                GeofencingConstants.GEOFENCE_RADIUS_IN_METERS
+                currentGeofenceData.radius,
             )
             // Set the expiration duration of the geofence. This geofence gets
             // automatically removed after this period of time.
-            .setExpirationDuration(GeofencingConstants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+            .setExpirationDuration(currentGeofenceData.expires_in)
             // Set the transition types of interest. Alerts are only generated for these
             // transition. We track entry and exit transitions in this sample.
-            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
+            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
             .build()
 
         // Build the geofence request
@@ -216,6 +205,7 @@ class LocationManager private constructor(private val context: Context) {
         _receivingLocationUpdates.value = false
 //        fusedLocationClient.removeLocationUpdates(locationCallback)
         fusedLocationClient.removeLocationUpdates(locationUpdatePendingIntent)
+        geofencingClient.removeGeofences(geofencePendingIntent)
     }
 
     companion object {

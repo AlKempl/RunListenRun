@@ -9,4 +9,30 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+    <string-array name="scenario_names">
+        <item>Debug demo</item>
+        <item>Debug MMCS</item>
+    </string-array>
+
+    <string-array name="scenario_values">
+        <item>demo</item>
+        <item>mmcs</item>
+    </string-array>
+
+    <string-array name="health_level_names">
+        <item>Новичок</item>
+        <item>Продвинутый</item>
+        <item>Уверенный</item>
+        <item>Мастер</item>
+        <item>Легенда</item>
+    </string-array>
+
+    <string-array name="health_level_values">
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+        <item>75</item>
+        <item>90</item>
+    </string-array>
 </resources>

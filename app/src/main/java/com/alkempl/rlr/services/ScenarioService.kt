@@ -9,7 +9,8 @@ import android.content.ServiceConnection
 import android.os.*
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.alkempl.rlr.data.LocationRepository
+import androidx.preference.PreferenceManager
+import com.alkempl.rlr.R
 import com.alkempl.rlr.data.ObstacleRepository
 import com.alkempl.rlr.data.model.obstacle.ObstacleFactory
 import com.alkempl.rlr.data.model.obstacle.ObstacleType
@@ -22,12 +23,8 @@ import kotlinx.coroutines.*
 import java.io.File
 import java.io.Reader
 import java.util.*
-import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
-import kotlin.concurrent.fixedRateTimer
-import kotlin.concurrent.thread
 
 
 class ScenarioService : Service() {
@@ -128,7 +125,11 @@ class ScenarioService : Service() {
 
         Log.d(TAG, "onStartCommand")
 
-        loadScenarioFromRawResource("demo_scenario")
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(application)
+        val scenario_prefix = sharedPref.getString("scenario_prep_value", "mickro")
+        Log.d(TAG, "Loading [\"${scenario_prefix}_scenario\"] scenario json")
+
+        loadScenarioFromRawResource("${scenario_prefix}_scenario")
         Log.d(TAG, "json scenario loaded")
         processChapters()
         Log.d(TAG, "scenario parsed")
@@ -205,9 +206,9 @@ class ScenarioService : Service() {
         if (geofencingServiceBounded) {
             this.scenario?.let { scenario ->
                 scenario.chapters?.forEach { chapter ->
-                    chapter.geofencing?.forEach { geofence ->
-                        geofencingService?.landmarkData?.add(geofence)
-                        Log.d("$TAG/ADD_GEOFENCE", geofence.toString())
+                    chapter.geofencing?.let {
+                        geofencingService?.storeGeofences(it)
+                        Log.d("$TAG/ADD_GEOFENCES", "Len: ${chapter.geofencing.size}")
                     }
                 }
             }

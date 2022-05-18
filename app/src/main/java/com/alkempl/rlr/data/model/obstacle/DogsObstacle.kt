@@ -2,8 +2,6 @@ package com.alkempl.rlr.data.model.obstacle
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
-import com.alkempl.rlr.data.db.LocationEntity
 import java.util.*
 import java.util.stream.IntStream
 
@@ -13,7 +11,7 @@ class DogsObstacle(context: Context, duration: Int) : Obstacle(context, duration
     override fun onStart() {
         Log.i(TAG, "onStart")
         this.entity.type = ObstacleType.DOGS
-        this.obstacleRepository.addObstacle(this.entity)
+        this.obstacleRepository.add(this.entity)
     }
 
     private fun isIncreasing(a: List<Float>): Boolean {
@@ -36,7 +34,7 @@ class DogsObstacle(context: Context, duration: Int) : Obstacle(context, duration
             } else {
                 this.entity.status = ObstacleStatus.FAILED
             }
-            this.obstacleRepository.updateObstacle(this.entity)
+            this.obstacleRepository.update(this.entity)
         })
     }
 

@@ -3,8 +3,6 @@ package com.alkempl.rlr.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import com.alkempl.rlr.data.LocationRepository
 import com.alkempl.rlr.data.ObstacleRepository
 import java.util.concurrent.Executors
 
@@ -19,5 +17,5 @@ class ObstacleUpdateViewModel(application: Application) : AndroidViewModel(appli
         Executors.newSingleThreadExecutor()
     )
 
-    val obstacleListLiveData = obstacleRepository.getObstacles()
+    val obstacleListLiveData = obstacleRepository.getAll()
 }
