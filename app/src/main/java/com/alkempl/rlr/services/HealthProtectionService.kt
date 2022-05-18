@@ -6,6 +6,7 @@ import android.os.*
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.location.*
+import java.util.concurrent.TimeUnit
 
 
 class HealthProtectionService : Service() {
@@ -42,7 +43,7 @@ class HealthProtectionService : Service() {
 
     private fun startPhysicalProtectionTimer() {
         val timer = object :
-            CountDownTimer(DEFAULT_TRAINING_TIMEOUT_MINS * 60 * 1000L, 1000) {
+            CountDownTimer(DEFAULT_TRAINING_TIMEOUT_IN_MILLIS, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 Log.d(TAG, "seconds remaining: " + millisUntilFinished / 1000)
             }
@@ -75,7 +76,6 @@ class HealthProtectionService : Service() {
 
     companion object {
         private const val TAG = "HealthProtection"
-        private const val DEFAULT_TRAINING_TIMEOUT_MINS = 1;
-//        private const val DEFAULT_TRAINING_TIMEOUT_MINS = 30;
+        private val DEFAULT_TRAINING_TIMEOUT_IN_MILLIS = TimeUnit.MINUTES.toMillis(60)
     }
 }
