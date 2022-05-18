@@ -64,7 +64,7 @@ class GeofencingService : Service() {
         return geofencingRepository.getActiveIdx()
     }
 
-    fun getActiveEntry(): GeofenceEntry{
+    fun getActiveEntry(): GeofenceEntry?{
         return geofencingRepository.getActiveEntry()
     }
 
@@ -88,6 +88,12 @@ class GeofencingService : Service() {
         super.onCreate()
     }
 
+    override fun onUnbind(intent: Intent?): Boolean {
+        Log.d(TAG, "onUnbind")
+        geofencingRepository.reset()
+        return super.onUnbind(intent)
+    }
+
     override fun onDestroy() {
         Log.d(TAG, "onDestroy")
         geofencingRepository.reset()
@@ -96,7 +102,6 @@ class GeofencingService : Service() {
 
 
     companion object {
-
         private const val TAG = "Geofencing"
     }
 }

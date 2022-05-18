@@ -65,6 +65,15 @@ class HealthProtectionService : Service() {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
+    override fun onUnbind(intent: Intent?): Boolean {
+        for (timer in timers) {
+            timer.cancel()
+        }
+
+        Log.d(TAG, "onUnbind")
+        return super.onUnbind(intent)
+    }
+
     override fun onDestroy() {
         for (timer in timers) {
             timer.cancel()
