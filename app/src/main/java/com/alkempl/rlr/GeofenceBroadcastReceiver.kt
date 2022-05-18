@@ -16,18 +16,14 @@
 
 package com.alkempl.rlr
 
-import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import com.alkempl.rlr.data.GeofencingRepository
-import com.alkempl.rlr.data.LocationRepository
-import com.alkempl.rlr.utils.GeofencingConstants
 import com.alkempl.rlr.utils.errorMessage
-import com.alkempl.rlr.utils.sendGeofenceEnteredNotification
+import com.alkempl.rlr.utils.vibrate
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
 import java.util.concurrent.Executors
@@ -101,20 +97,26 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 val enteredGeofence = geofencingRepository.getActiveEntry()
                 Log.d(TAG, "Entered: $enteredGeofence")
 
+                val enteredDesc = "Ура! Локация ${enteredGeofence?.name} открыта!"
                 geofencingRepository.processNext()
 
                 val nextGeofence = geofencingRepository.getActiveEntry()
 
-                val nextDesc = nextGeofence?.hint ?: "Тратата"
+                val nextDesc = if (nextGeofence != null)
+                    "Следующая локация: ${nextGeofence.name}. ${nextGeofence.hint}"
+                     else "Глава завершена!"
+
+                val pattern = longArrayOf(0, 200, 100, 300)
+                vibrate(context,pattern)
 
                 Toast.makeText(
                     context,
-                    context.getString(R.string.geofence_entered)
-                            + ": ",
+//                    context.getString(R.string.geofence_entered)
+                    "$enteredDesc: $nextDesc",
                     Toast.LENGTH_LONG
                 ).show()
 
-
+                //TODO Stop scenario on chapter finish
             }
         }
     }
