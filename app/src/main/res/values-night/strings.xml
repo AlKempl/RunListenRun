@@ -10,4 +10,5 @@
     <string name="helth_protection_pref_cat">Защита здоровья</string>
     <string name="health_level_pref_caption">Ваш уровень физической подготовки</string>
     <string name="bg_loc_pref_cat">Location</string>
+    <string name="dev_settings">Testing</string>
 </resources>

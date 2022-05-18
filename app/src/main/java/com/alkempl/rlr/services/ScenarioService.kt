@@ -125,8 +125,8 @@ class ScenarioService : Service() {
 
         Log.d(TAG, "onStartCommand")
 
-        val sharedPref = PreferenceManager.getDefaultSharedPreferences(application)
-        val scenario_prefix = sharedPref.getString("scenario_prep_value", "mickro")
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        val scenario_prefix = sharedPref.getString("scenario_prep_value", "demo")
         Log.d(TAG, "Loading [\"${scenario_prefix}_scenario\"] scenario json")
 
         loadScenarioFromRawResource("${scenario_prefix}_scenario")

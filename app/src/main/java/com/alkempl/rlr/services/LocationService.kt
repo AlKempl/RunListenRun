@@ -48,7 +48,7 @@ class LocationService : Service() {
         Log.d(TAG, "onBindCommand")
         locationRepository.wipeOldLocations()
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
-        val enabled = sharedPref.getBoolean("bg_location_updates", false)
+        val enabled = sharedPref.getBoolean("bg_location_updates", true)
 
         if(enabled){
             locationRepository.startLocationUpdates()
@@ -62,7 +62,7 @@ class LocationService : Service() {
         super.onStartCommand(intent, flags, startId)
         locationRepository.wipeOldLocations()
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
-        val enabled = sharedPref.getBoolean("bg_location_updates", false)
+        val enabled = sharedPref.getBoolean("bg_location_updates", true)
 
         if(enabled){
             locationRepository.startLocationUpdates()

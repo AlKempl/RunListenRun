@@ -12,10 +12,10 @@ import androidx.lifecycle.MutableLiveData
 import com.alkempl.rlr.GeofenceBroadcastReceiver
 import com.alkempl.rlr.LocationUpdatesBroadcastReceiver
 import com.alkempl.rlr.data.model.scenario.GeofenceEntry
-import com.alkempl.rlr.utils.GeofencingConstants
 import com.alkempl.rlr.utils.hasPermission
 import com.google.android.gms.location.*
 import java.util.concurrent.TimeUnit
+import com.alkempl.rlr.R
 
 private const val TAG = "MyLocationManager"
 
@@ -153,19 +153,19 @@ class LocationManager private constructor(private val context: Context) {
      * Removes geofences. This method should be called after the user has granted the location
      * permission.
      */
-    private fun removeGeofences() {
-//        geofencingClient.removeGeofences(geofencePendingIntent)?.run {
-//            addOnSuccessListener {
-//                // Geofences removed
-//                Log.d(TAG, getString(R.string.geofences_removed))
+    fun removeGeofences() {
+        geofencingClient.removeGeofences(geofencePendingIntent)?.run {
+            addOnSuccessListener {
+                // Geofences removed
+                Log.d(TAG, context.getString(R.string.geofences_removed))
 //                Toast.makeText(context, R.string.geofences_removed, Toast.LENGTH_SHORT)
 //                    .show()
-//            }
-//            addOnFailureListener {
-//                // Failed to remove geofences
-//                Log.d(TAG, getString(R.string.geofences_not_removed))
-//            }
-//        }
+            }
+            addOnFailureListener {
+                // Failed to remove geofences
+                Log.d(TAG, context.getString(R.string.geofences_not_removed))
+            }
+        }
     }
 
 

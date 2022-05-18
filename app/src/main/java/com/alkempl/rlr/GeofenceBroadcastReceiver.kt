@@ -21,6 +21,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.alkempl.rlr.data.GeofencingRepository
 import com.alkempl.rlr.data.LocationRepository
@@ -68,7 +69,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                     }
                 }
 
-                val geofencingRepository = GeofencingRepository.getInstance(context, Executors.newSingleThreadExecutor())
+                val geofencingRepository =
+                    GeofencingRepository.getInstance(context, Executors.newSingleThreadExecutor())
 
                 // Check geofence against the constants listed in GeofenceUtil.kt to see if the
                 // user has entered any of the locations we track for geofences.
@@ -77,12 +79,12 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 }
 
                 // Unknown Geofences aren't helpful to us
-                if ( -1 == foundIndex ) {
+                if (-1 == foundIndex) {
                     Log.e(TAG, "Unknown Geofence: Abort Mission")
                     return
                 }
 
-                if(geofencingRepository.getActiveIdx() != foundIndex){
+                if (geofencingRepository.getActiveIdx() != foundIndex) {
                     Log.e(TAG, "Not Active Geofence: Abort Mission")
                     return
                 }
@@ -95,10 +97,24 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 //                notificationManager.sendGeofenceEnteredNotification(
 //                    context, foundIndex
 //                )
-                val geofence = geofencingRepository.getActiveEntry()
-                Log.d(TAG, "Entered: $geofence")
+
+                val enteredGeofence = geofencingRepository.getActiveEntry()
+                Log.d(TAG, "Entered: $enteredGeofence")
 
                 geofencingRepository.processNext()
+
+                val nextGeofence = geofencingRepository.getActiveEntry()
+
+                val nextDesc = nextGeofence?.hint ?: "Тратата"
+
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.geofence_entered)
+                            + ": ",
+                    Toast.LENGTH_LONG
+                ).show()
+
+
             }
         }
     }

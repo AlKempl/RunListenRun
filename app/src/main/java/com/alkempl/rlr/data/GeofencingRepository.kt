@@ -41,8 +41,8 @@ class GeofencingRepository private constructor(
         return active_idx
     }
 
-    fun getActiveEntry(): GeofenceEntry {
-        return landmarkData[active_idx]
+    fun getActiveEntry(): GeofenceEntry? {
+        return landmarkData.getOrNull(active_idx)
     }
 
     fun reset() {
@@ -52,7 +52,11 @@ class GeofencingRepository private constructor(
 
     fun processNext() {
         active_idx += 1
-        myLocationManager.setActiveGeofence(landmarkData[active_idx])
+        if(active_idx > landmarkData.size - 1){
+            myLocationManager.removeGeofences()
+        }else{
+            myLocationManager.setActiveGeofence(landmarkData[active_idx])
+        }
     }
 
     init {

@@ -1,20 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/bg_loc_pref_cat"
-        android:backgroundTint="#E35353"
-        android:foregroundTint="#6FDC22"
-        >
-
-        <SwitchPreference
-            android:defaultValue="false"
-            app:key="bg_location_updates"
-            android:switchTextOff="dsdsdsd"
-            android:switchTextOn="dsdsdsd"
-            android:title="@string/bg_location_updates"
-            app:switchTextOff="fdfdf"
-            app:switchTextOn="dsdsds" />
-    </PreferenceCategory>
     <PreferenceCategory app:title="@string/scenario">
 
         <ListPreference
@@ -37,6 +23,16 @@
             app:title="@string/health_level_pref_caption"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
+
+        <PreferenceCategory app:title="@string/dev_settings">
+            <SwitchPreference
+                android:defaultValue="false"
+                app:key="bg_location_updates"
+                android:title="@string/bg_location_updates"
+                app:switchTextOff="fdfdf"
+                app:switchTextOn="dsdsds"
+                app:useSimpleSummaryProvider="true"/>
+        </PreferenceCategory>
 
 <!--    <PreferenceCategory android:title="Dummy settings">-->
 

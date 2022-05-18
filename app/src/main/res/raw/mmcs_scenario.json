@@ -10,145 +10,54 @@
       "name": "Chapter 1",
       "description": "The One Where Monica Gets a Roommate",
       "is_final": false,
-      "audio": {
-        "radio": [
-          "res/dat1.mp3",
-          "res/dat1.mp3",
-          "res/dat1.mp3",
-          "res/dat1.mp3"
-        ],
-        "music": [
-          "res/dat1.mp3",
-          "res/dat1.mp3",
-          "res/dat1.mp3"
-        ]
-      },
-      "initial_event": {
-        "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
-        "type": "init",
-        "actions": [
-          {
-            "action": "sound",
-            "attributes": {
-              "track_name": "shakalaka",
-              "delay": 0
-            }
-          },
-          {
-            "action": "obstacle",
-            "attributes": {
-              "type": "dogs",
-              "severity": 3,
-              "delay": 0
-            }
-          }
-        ]
-      },
       "geofencing": [
         {
-          "id": "ca1b1ed4-garden",
-          "name": "Детская площадка",
-          "hint": "Иди на детскую площадку",
+          "id": "enter",
+          "name": "A - Вход на мехмат",
+          "hint": "Иди ко входу на мехмат",
           "location": {
-            "latitude": 47.260840,
-            "longitude": 39.648080
-          },
-          "actions": [
-            {
-              "action": "sound",
-              "attributes": {
-                "track_name": "shakalaka",
-                "delay": 0
-              }
-            },
-            {
-              "action": "obstacle",
-              "attributes": {
-                "type": "dogs",
-                "severity": 3,
-                "delay": 0
-              }
-            }
-          ]
+            "latitude": 47.216916060575144,
+            "longitude": 39.628686010837555
+          }
         },
         {
-          "id": "da1b1eg8-bench",
-          "name": "Лавочка",
-          "hint": "Иди к лавочке",
+          "id": "corner",
+          "name": "C - Угол мехмата",
+          "hint": "Иди к углу мехмата",
           "location": {
-            "latitude": 47.261060,
-            "longitude": 39.648680
+            "latitude": 47.21680561247273,
+            "longitude": 39.62795443832874
+          }
+        },
+        {
+          "id": "parking",
+          "name": "E - Парковка",
+          "hint": "Иди к парковке",
+          "location": {
+            "latitude": 47.216391600837156,
+            "longitude": 39.629066549241536
+          }
+        },
+        {
+          "id": "bicycle",
+          "name": "I - Велосипеды",
+          "hint": "Иди к парковке для велосипедов",
+          "location": {
+            "latitude": 47.21670222373123,
+            "longitude": 39.62923653423786
+          }
+        },
+        {
+          "id": "smoking",
+          "name": "J - Парковка",
+          "hint": "Иди к парковке",
+          "location": {
+            "latitude": 47.216940199717435,
+            "longitude": 39.628869742155075
           }
         }
       ],
-      "events": [
-        {
-          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
-          "type": "timer",
-          "time": 1,
-          "actions": [
-            {
-              "action": "sound",
-              "attributes": {
-                "track_name": "shakalaka",
-                "delay": 0
-              }
-            },
-            {
-              "action": "obstacle",
-              "attributes": {
-                "type": "dogs",
-                "severity": 3,
-                "delay": 0
-              }
-            }
-          ]
-        },
-        {
-          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
-          "type": "timer",
-          "time": 30,
-          "actions": [
-            {
-              "action": "sound",
-              "attributes": {
-                "track_name": "ampup",
-                "delay": 0
-              }
-            },
-            {
-              "action": "obstacle",
-              "attributes": {
-                "type": "wind",
-                "severity": 1,
-                "delay": 0
-              }
-            }
-          ]
-        },
-        {
-          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
-          "type": "random",
-          "time": null,
-          "actions": [
-            {
-              "action": "sound",
-              "attributes": {
-                "track_name": "groovin",
-                "delay": 0
-              }
-            },
-            {
-              "action": "obstacle",
-              "attributes": {
-                "type": "dogs",
-                "severity": 20,
-                "delay": 0
-              }
-            }
-          ]
-        }
-      ]
+      "events": []
     }
   ]
 }
