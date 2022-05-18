@@ -127,6 +127,7 @@ class LocationUpdateFragment : Fragment() {
         val actionReceiver = IntentFilter()
         bm = LocalBroadcastManager.getInstance(context)
         actionReceiver.addAction("shutdownScenarioServicePlease")
+        actionReceiver.addAction("ACTION_GEOFENCE_EVENT")
         bm!!.registerReceiver(onJsonReceived, actionReceiver)
 
         if (context is Callbacks) {
