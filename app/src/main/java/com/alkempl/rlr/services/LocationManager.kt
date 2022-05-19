@@ -50,8 +50,9 @@ class LocationManager private constructor(private val context: Context) {
         // receive updates less frequently than this interval when the app is no longer in the
         // foreground.
 //        interval = TimeUnit.SECONDS.toMillis(60)
-        interval = 200
-        interval = TimeUnit.SECONDS.toMillis(20)
+//        interval = 200
+//        interval = TimeUnit.SECONDS.toMillis(20)
+        interval = TimeUnit.SECONDS.toMillis(2)
 
         // Sets the fastest rate for active location updates. This interval is exact, and your
         // application will never receive updates faster than this value.
@@ -62,10 +63,11 @@ class LocationManager private constructor(private val context: Context) {
         // delivered sooner than this interval.
 //        maxWaitTime = TimeUnit.MINUTES.toMillis(2)
 //        maxWaitTime = TimeUnit.SECONDS.toMillis(0)
-        maxWaitTime = TimeUnit.SECONDS.toMillis(5)
+//        maxWaitTime = TimeUnit.SECONDS.toMillis(5)
+        maxWaitTime = TimeUnit.SECONDS.toMillis(1)
 
-//        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+//        priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
     }
 
     /**
@@ -99,7 +101,7 @@ class LocationManager private constructor(private val context: Context) {
             .setCircularRegion(
                 currentGeofenceData.location.latitude,
                 currentGeofenceData.location.longitude,
-                currentGeofenceData.radius,
+                currentGeofenceData.radius, // in meters
             )
             // Set the expiration duration of the geofence. This geofence gets
             // automatically removed after this period of time.

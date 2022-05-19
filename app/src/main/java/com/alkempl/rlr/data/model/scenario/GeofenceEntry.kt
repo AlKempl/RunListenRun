@@ -13,6 +13,9 @@ data class GeofenceEntry(
     val hint: String,
     @SerializedName("location")
     val location: LatLng,
+    /**
+     * In meters
+     * */
     @SerializedName("radius")
     private val _radius: Float?,
     /**
@@ -28,6 +31,9 @@ data class GeofenceEntry(
         return "GeofenceEntry(id='$id', name='$name', hint='$hint', location=$location, actions=$actions)"
     }
 
+    /**
+     * In meters
+     * */
     val radius: Float
         get() = _radius ?: 20f;
 

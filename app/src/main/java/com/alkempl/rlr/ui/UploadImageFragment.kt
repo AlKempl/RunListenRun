@@ -1,4 +1,4 @@
-package com.alkempl.rlr
+package com.alkempl.rlr.ui
 
 import android.app.ProgressDialog
 import android.os.Bundle

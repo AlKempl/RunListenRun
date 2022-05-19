@@ -7,7 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.*
+import android.speech.tts.TextToSpeech
 import android.util.Log
+import android.widget.Toast
+import androidx.annotation.UiThread
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
 import com.alkempl.rlr.R
@@ -38,11 +41,13 @@ class ScenarioService : Service() {
     private var locationService: LocationService? = null
     private var geofencingService: GeofencingService? = null
     private var healthService: HealthProtectionService? = null
+    private var ttsService: TTSService? = null
 
     private var soundServiceBounded = false
     private var locationServiceBounded = false
     private var geofencingServiceBounded = false
     private var healthServiceBounded = false
+    private var ttsServiceBounded = false
 
     private val soundServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
@@ -103,6 +108,81 @@ class ScenarioService : Service() {
         }
     }
 
+    private val ttsServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            val binder = service as TTSService.LocalBinder
+            ttsService = binder.getService()
+            ttsServiceBounded = true
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            ttsServiceBounded = false
+            ttsService = null
+        }
+    }
+
+    private lateinit var ttsManager: TTSManager
+
+    private fun ttsTest() {
+        Log.d("$TAG/HELLO", "Привет, приложение запущено!")
+        ttsManager.speak("Привет, приложение запущено!")
+//        if(ttsServiceBounded){
+//        val ttsManager = TTSManager.getInstance(baseContext)
+//        ttsManager.speak("Привет, приложение запущено!")
+//        var textToSpeech: TextToSpeech? = null
+//
+//        textToSpeech = TextToSpeech(baseContext) { status: Int ->
+//            if (status == TextToSpeech.SUCCESS) {
+//                Log.d("$TAG/SSS", "1")
+//                if (textToSpeech!!.isLanguageAvailable(
+//                        Locale(
+//                            Locale.getDefault().language
+//                        )
+//                    )
+//                    == TextToSpeech.LANG_AVAILABLE
+//                ) {
+//                    textToSpeech!!.language = Locale(
+//                        Locale.getDefault().language
+//                    )
+//                } else {
+//                    textToSpeech!!.language = Locale.US
+//                }
+//                Log.d("$TAG/SSS", "2")
+//
+//                textToSpeech!!.setPitch(1.0f)
+//                Log.d("$TAG/SSS", "3")
+//
+//                textToSpeech!!.setSpeechRate(1f)
+//                Log.d("$TAG/SSS", "4")
+//
+//                Log.d("${TAG}/SETUP", "OK")
+//            } else if (status == TextToSpeech.ERROR) {
+//                Toast.makeText(
+//                    baseContext,
+//                    resources.getString(R.string.tts_initialization_error),
+//                    Toast.LENGTH_LONG
+//                ).show()
+//                Log.e("${TAG}/SETUP", resources.getString(R.string.tts_initialization_error))
+//            }
+//
+//            Log.d("$TAG/BBBB", "1")
+//
+//            textToSpeech?.speak(
+//                "Привет, приложение запущено!",
+//                TextToSpeech.QUEUE_ADD,
+//                null,
+//                Math.random().toString() + ""
+//            )
+//            Log.d("$TAG/BBBB", "2")
+//        }
+
+//            ttsManager.setupTTS()
+
+//            ttsService!!.speak("Привет, приложение запущено!")
+//        }
+    }
+
     private var timerActions: ArrayList<CountDownTimer> = ArrayList()
     private var fixedRateTimer: Timer? = null
     private var randomActions: Stack<Pair<UUID, ChapterEventAction>> = Stack()
@@ -124,6 +204,10 @@ class ScenarioService : Service() {
         this.isRunning = true
 
         Log.d(TAG, "onStartCommand")
+
+        ttsManager = TTSManager.getInstance(baseContext)
+        ttsManager!!.setupTTS()
+        ttsManager!!.speak("Привет")
 
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(baseContext)
         val scenario_prefix = sharedPref.getString("scenario_prep_value", "demo")
@@ -152,10 +236,16 @@ class ScenarioService : Service() {
             bindService(ssintent, healthServiceConnection, Context.BIND_AUTO_CREATE)
         }
 
+        Intent(application, TTSService::class.java).also { ssintent ->
+            bindService(ssintent, ttsServiceConnection, Context.BIND_AUTO_CREATE)
+        }
+
         startForeground(
             NotificationCreator.getNotificationId(),
             NotificationCreator.getNotification(this)
         )
+
+        someTask()
     }
 
 
@@ -176,9 +266,10 @@ class ScenarioService : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
+    @UiThread
     private fun someTask() {
         Thread {
-
+            ttsTest()
             stopSelf()
         }.start()
     }
@@ -269,6 +360,13 @@ class ScenarioService : Service() {
                 Intent(applicationContext, HealthProtectionService::class.java)
             this.stopService(healthServiceIntent)
             unbindService(healthServiceConnection)
+        }
+
+        if (ttsServiceBounded) {
+            val ttsServiceIntent =
+                Intent(applicationContext, TTSService::class.java)
+            this.stopService(ttsServiceIntent)
+            unbindService(ttsServiceConnection)
         }
 
         fixedRateTimer?.cancel()

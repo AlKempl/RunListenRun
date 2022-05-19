@@ -11,4 +11,5 @@
     <string name="health_level_pref_caption">Ваш уровень физической подготовки</string>
     <string name="bg_loc_pref_cat">Location</string>
     <string name="dev_settings">Testing</string>
+    <string name="tts_initialization_error">Error initializing TTS</string>
 </resources>

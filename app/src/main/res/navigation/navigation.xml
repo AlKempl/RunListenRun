@@ -30,7 +30,7 @@
         tools:layout="@layout/fragment_lipsum" />
     <fragment
         android:id="@+id/avatarFragment"
-        android:name="com.alkempl.rlr.UploadImageFragment"
+        android:name="com.alkempl.rlr.ui.UploadImageFragment"
         android:label="fragment_upload_image"
         tools:layout="@layout/fragment_upload_image" />
 </navigation>
