@@ -29,6 +29,7 @@ import com.alkempl.rlr.viewmodel.ObstacleUpdateViewModel
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.alkempl.rlr.BuildConfig
+import com.alkempl.rlr.services.TTSManager
 import com.alkempl.rlr.utils.hasPermission
 import com.google.android.material.snackbar.Snackbar
 import org.json.JSONObject
@@ -39,6 +40,8 @@ private const val TAG = "LocationUpdateFragment"
 class LocationUpdateFragment : Fragment() {
 
     private var activityListener: Callbacks? = null
+
+    private lateinit var ttsManager: TTSManager
 
     private lateinit var binding: FragmentLocationUpdateBinding
     private lateinit var bindingLocationItemList: FragmentLocationItemListBinding
@@ -76,6 +79,7 @@ class LocationUpdateFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        ttsManager = TTSManager.getInstance(this.requireContext())
         binding = FragmentLocationUpdateBinding.inflate(inflater, container, false)
         bindingLocationItemList =
             FragmentLocationItemListBinding.inflate(inflater, container, false)

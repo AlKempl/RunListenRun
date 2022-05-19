@@ -37,13 +37,13 @@ class SoundService : Service() {
         return START_STICKY
     }
 
-    /* override fun onStart(intent: Intent?, startId: Int) {
-         // TO DO
-     }*/
 
-    fun onUnBind(arg0: Intent?): IBinder? {
-        // TO DO Auto-generated method
-        return null
+    override fun onUnbind(intent: Intent?): Boolean {
+        Log.d(TAG, "onUnbind")
+        this.player.stop()
+        this.player.reset()
+        this.player.release()
+        return super.onUnbind(intent)
     }
 
     fun onStop() {}

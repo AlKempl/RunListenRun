@@ -22,6 +22,7 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import com.alkempl.rlr.data.GeofencingRepository
+import com.alkempl.rlr.services.TTSManager
 import com.alkempl.rlr.utils.errorMessage
 import com.alkempl.rlr.utils.vibrate
 import com.google.android.gms.location.Geofence
@@ -37,6 +38,9 @@ import java.util.concurrent.Executors
  * message associated with each Geofence.
  */
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
+
+    private lateinit var ttsManager: TTSManager
+
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(TAG, "onReceive() context:$context, intent:$intent")
@@ -85,6 +89,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                     return
                 }
 
+                ttsManager = TTSManager.getInstance(context)
+
 //                val notificationManager = ContextCompat.getSystemService(
 //                    context,
 //                    NotificationManager::class.java
@@ -103,11 +109,13 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 val nextGeofence = geofencingRepository.getActiveEntry()
 
                 val nextDesc = if (nextGeofence != null)
-                    "Следующая локация: ${nextGeofence.name}. ${nextGeofence.hint}"
+                    "Следующая локация – ${nextGeofence.name}. ${nextGeofence.hint}"
                      else "Глава завершена!"
 
                 val pattern = longArrayOf(0, 200, 100, 300)
                 vibrate(context,pattern)
+
+                ttsManager.speak("$enteredDesc $nextDesc")
 
                 Toast.makeText(
                     context,
