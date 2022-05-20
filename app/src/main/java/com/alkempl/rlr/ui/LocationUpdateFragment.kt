@@ -24,9 +24,7 @@ import com.alkempl.rlr.adapter.ObstacleEntityItemRecyclerViewAdapter
 import com.alkempl.rlr.databinding.FragmentLocationItemListBinding
 import com.alkempl.rlr.databinding.FragmentLocationUpdateBinding
 import com.alkempl.rlr.databinding.FragmentObstacleItemListBinding
-import com.alkempl.rlr.services.ScenarioService
-import com.alkempl.rlr.services.SoundManager
-import com.alkempl.rlr.services.TTSManager
+import com.alkempl.rlr.services.*
 import com.alkempl.rlr.utils.hasPermission
 import com.alkempl.rlr.viewmodel.LocationUpdateViewModel
 import com.alkempl.rlr.viewmodel.ObstacleUpdateViewModel
