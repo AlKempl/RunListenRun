@@ -33,29 +33,13 @@ class ScenarioService : Service() {
 
     private val binder = LocalBinder()
 
-    private var soundService: SoundService? = null
     private var locationService: LocationService? = null
     private var geofencingService: GeofencingService? = null
     private var healthService: HealthProtectionService? = null
 
-    private var soundServiceBounded = false
     private var locationServiceBounded = false
     private var geofencingServiceBounded = false
     private var healthServiceBounded = false
-
-    private val soundServiceConnection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            val binder = service as SoundService.LocalBinder
-            soundService = binder.getService()
-            soundServiceBounded = true
-        }
-
-        override fun onServiceDisconnected(arg0: ComponentName) {
-            soundServiceBounded = false
-            soundService = null
-        }
-    }
 
     private val locationServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
@@ -103,6 +87,7 @@ class ScenarioService : Service() {
     }
 
     private lateinit var ttsManager: TTSManager
+    private lateinit var soundManager: SoundManager
 
     private fun ttsTest() {
         Log.d("$TAG/HELLO", "Привет, приложение запущено!")
@@ -134,6 +119,8 @@ class ScenarioService : Service() {
         ttsManager = TTSManager.getInstance(baseContext)
         ttsManager.speak("Привет")
 
+        soundManager = SoundManager.getInstance(baseContext)
+
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(baseContext)
         val scenario_prefix = sharedPref.getString("scenario_pref_value", "demo")
         Log.d(TAG, "Loading [\"${scenario_prefix}_scenario\"] scenario json")
@@ -144,10 +131,6 @@ class ScenarioService : Service() {
         Log.d(TAG, "scenario parsed")
 
         // Bind to LocalService
-        Intent(application, SoundService::class.java).also { ssintent ->
-            bindService(ssintent, soundServiceConnection, Context.BIND_AUTO_CREATE)
-        }
-
         Intent(application, LocationService::class.java).also { ssintent ->
             bindService(ssintent, locationServiceConnection, Context.BIND_AUTO_CREATE)
         }
@@ -258,12 +241,6 @@ class ScenarioService : Service() {
         this.isRunning = false
         super.onDestroy()
 
-        if (soundServiceBounded) {
-            val soundServiceIntent = Intent(applicationContext, SoundService::class.java)
-            this.stopService(soundServiceIntent)
-            unbindService(soundServiceConnection)
-        }
-
         if (locationServiceBounded) {
             val locationServiceIntent = Intent(applicationContext, LocationService::class.java)
             this.stopService(locationServiceIntent)
@@ -360,9 +337,8 @@ class ScenarioService : Service() {
 
                     override fun onFinish() {
                         val track = action.attributes.getOrDefault("track_name", "groovin")
-                        if (soundServiceBounded) {
-                            Log.d("CDT-" + event.hashCode(), "soundServiceBounded")
-                            soundService?.playTrack(track)
+                        if (soundManager.mediaEnabled) {
+                            soundManager.playTrack(track)
                         }
                         val desc = "playing track $track"
                         Log.d("CDT-" + event.hashCode(), "action done: $desc")
