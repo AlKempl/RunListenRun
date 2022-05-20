@@ -62,6 +62,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
     kapt "androidx.room:room-compiler:$room_version"
     // Import the Firebase BoM
+    implementation("io.github.isharipov:gson-adapters:0.1")
     implementation platform('com.google.firebase:firebase-bom:29.0.3')
 
     // Add the dependency for the Firebase SDK for Google Analytics

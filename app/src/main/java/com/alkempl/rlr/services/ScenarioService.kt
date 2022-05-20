@@ -29,8 +29,6 @@ import kotlin.collections.ArrayList
 class ScenarioService : Service() {
     private var isRunning = false
 
-    private var scenario: Scenario? = null
-
     private val binder = LocalBinder()
 
     private var locationService: LocationService? = null
@@ -62,7 +60,7 @@ class ScenarioService : Service() {
             geofencingService = binder.getService()
             geofencingServiceBounded = true
             Log.d("$TAG/GEO1", "geofencingServiceConnection onServiceConnected")
-            processGeofences()
+//            processGeofences()
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {
@@ -88,13 +86,14 @@ class ScenarioService : Service() {
 
     private lateinit var ttsManager: TTSManager
     private lateinit var soundManager: SoundManager
+    private lateinit var scenarioManager: ScenarioManager
+    private lateinit var actionsManager: ActionsManager
 
     private fun ttsTest() {
         Log.d("$TAG/HELLO", "Привет, приложение запущено!")
         ttsManager.speak("Привет, приложение запущено!", true)
     }
 
-    private var timerActions: ArrayList<CountDownTimer> = ArrayList()
     private var fixedRateTimer: Timer? = null
     private var randomActions: Stack<Pair<UUID, ChapterEventAction>> = Stack()
     /*
@@ -120,15 +119,9 @@ class ScenarioService : Service() {
         ttsManager.speak("Привет")
 
         soundManager = SoundManager.getInstance(baseContext)
+        scenarioManager = ScenarioManager.getInstance(baseContext)
+        actionsManager = ActionsManager.getInstance(baseContext)
 
-        val sharedPref = PreferenceManager.getDefaultSharedPreferences(baseContext)
-        val scenario_prefix = sharedPref.getString("scenario_pref_value", "demo")
-        Log.d(TAG, "Loading [\"${scenario_prefix}_scenario\"] scenario json")
-
-        loadScenarioFromRawResource("${scenario_prefix}_scenario")
-        Log.d(TAG, "json scenario loaded")
-        processChapters()
-        Log.d(TAG, "scenario parsed")
 
         // Bind to LocalService
         Intent(application, LocationService::class.java).also { ssintent ->
@@ -138,7 +131,6 @@ class ScenarioService : Service() {
         Intent(application, GeofencingService::class.java).also { ssintent ->
             bindService(ssintent, geofencingServiceConnection, Context.BIND_AUTO_CREATE)
         }
-        Log.d("$TAG/GEO3", "bindService geofencingServiceConnection")
 
         Intent(application, HealthProtectionService::class.java).also { ssintent ->
             bindService(ssintent, healthServiceConnection, Context.BIND_AUTO_CREATE)
@@ -149,6 +141,7 @@ class ScenarioService : Service() {
             NotificationCreator.getNotification(this)
         )
 
+        scenarioManager.initialize()
         someTask()
     }
 
@@ -178,68 +171,30 @@ class ScenarioService : Service() {
         }.start()
     }
 
-    private fun processChapters() {
-        this.scenario?.let { scenario ->
-            scenario.chapters?.forEach { chapter ->
 
-                chapter.initial_event?.let { initial_event ->
-                    initial_event.actions?.forEach { action ->
-                        processEventAction(initial_event, action)
-                    }
-                }
+//
+//    private fun processGeofences() {
+//        if (geofencingServiceBounded) {
+//            this.scenario?.let { scenario ->
+//                scenario.chapters?.forEach { chapter ->
+//                    chapter.geofencing?.let {
+//                        geofencingService?.storeGeofences(it)
+//                        Log.d("$TAG/ADD_GEOFENCES", "Len: ${chapter.geofencing.size}")
+//                    }
+//                }
+//            }
+//            geofencingService?.processNext()
+//        }
+//    }
 
-                chapter.events?.forEach { event ->
-                    event.actions?.forEach { action ->
-                        processEventAction(event, action)
-                    }
-                }
-            }
-        }
-    }
 
-    private fun processGeofences() {
-        if (geofencingServiceBounded) {
-            this.scenario?.let { scenario ->
-                scenario.chapters?.forEach { chapter ->
-                    chapter.geofencing?.let {
-                        geofencingService?.storeGeofences(it)
-                        Log.d("$TAG/ADD_GEOFENCES", "Len: ${chapter.geofencing.size}")
-                    }
-                }
-            }
-            geofencingService?.processNext()
-        }
-    }
-
-    private fun processEventAction(event: ChapterEvent, action: ChapterEventAction) {
-        val time = when (event.type) {
-            ChapterEventType.INITIAL -> 0
-            ChapterEventType.TIME_BASED -> event.time!!
-            ChapterEventType.RANDOM -> (0..890).random()
-        }
-        scheduleAction(time * 1000, event, action)
-
-        /*when (action.type) {
-            EventActionType.PLAY_SOUND -> {
-                randomActions.push(
-                    Pair<String, ChapterEventAction>(UUID.randomUUID(), action)
-                )
-            }
-
-            EventActionType.GENERATE_OBSTACLE -> {
-                randomActions.push(
-                    Pair<String, ChapterEventAction>(UUID.randomUUID(), action)
-                )
-                randomActions.push(
-                    Pair<String, ChapterEventAction>(UUID.randomUUID(), action)
-                )
-            }
-        }*/
-    }
 
     override fun onDestroy() {
         this.isRunning = false
-        super.onDestroy()
+
+        soundManager.clear()
+        scenarioManager.clear()
+        actionsManager.clear()
 
         if (locationServiceBounded) {
             val locationServiceIntent = Intent(applicationContext, LocationService::class.java)
@@ -261,10 +216,7 @@ class ScenarioService : Service() {
         }
 
         fixedRateTimer?.cancel()
-
-        for (timer in timerActions) {
-            timer.cancel()
-        }
+        super.onDestroy()
 
         Log.d(TAG, "onDestroy")
     }
@@ -320,104 +272,13 @@ class ScenarioService : Service() {
           }
       }*/
 
-    private fun scheduleAction(
-        millisInFuture: Number,
-        event: ChapterEvent,
-        action: ChapterEventAction
-    ) {
-        when (action.type) {
-            EventActionType.PLAY_SOUND -> {
-                val musicPlayTimer = object : CountDownTimer(millisInFuture.toLong(), 1000) {
-                    override fun onTick(millisUntilFinished: Long) {
-                        Log.d(
-                            "CDT-" + event.hashCode(),
-                            "seconds remaining: " + millisUntilFinished / 1000
-                        )
-                    }
 
-                    override fun onFinish() {
-                        val track = action.attributes.getOrDefault("track_name", "groovin")
-                        if (soundManager.mediaEnabled) {
-                            soundManager.playTrack(track)
-                        }
-                        val desc = "playing track $track"
-                        Log.d("CDT-" + event.hashCode(), "action done: $desc")
-                    }
-                }
-                timerActions.add(musicPlayTimer)
-                musicPlayTimer.start()
-            }
-
-            EventActionType.GENERATE_OBSTACLE -> {
-                val type = ObstacleType.from(action.attributes.getOrDefault("type", "dogs"))
-                val duration = action.attributes.getOrDefault("duration", "20").toInt()
-
-                val obstacle = ObstacleFactory.buildObstacle(type!!, application, duration)
-
-                val obstacleStartTimer = object : CountDownTimer(millisInFuture.toLong(), 1000) {
-                    override fun onTick(millisUntilFinished: Long) {
-                        Log.d(
-                            "CDT-" + event.hashCode(),
-                            "seconds remaining: " + millisUntilFinished / 1000
-                        )
-                    }
-
-                    override fun onFinish() {
-                        val desc = "obstacle generation"
-                        Log.d("CDT-" + event.hashCode(), "action done: $desc")
-                        obstacle.onStart()
-                    }
-                }
-                timerActions.add(obstacleStartTimer)
-                obstacleStartTimer.start()
-
-                val obstacleFinishTimer = object :
-                    CountDownTimer(millisInFuture.toLong() + duration.toLong() * 1000, 1000) {
-                    override fun onTick(millisUntilFinished: Long) {
-                        Log.d(
-                            "CDT-" + event.hashCode(),
-                            "seconds remaining: " + millisUntilFinished / 1000
-                        )
-                    }
-
-                    override fun onFinish() {
-                        val desc = "obstacle finalization"
-                        Log.d("CDT-" + event.hashCode(), "action done: $desc")
-                        obstacle.onFinish()
-                    }
-                }
-                timerActions.add(obstacleFinishTimer)
-                obstacleFinishTimer.start()
-            }
-        }
-
-    }
 
     override fun onBind(intent: Intent): IBinder {
         Log.d(TAG, "onBind")
         return binder
     }
 
-    fun loadScenarioFromFile(filename: String) {
-        val reader = File(filename).bufferedReader()
-        _loadScenario(reader)
-    }
-
-    fun loadScenarioFromRawResource(res_name: String) {
-        Log.d(TAG, "loadScenarioFromRawResource: resId")
-        val resId = this.resources.getIdentifier(res_name, "raw", packageName)
-        Log.d(TAG, "loadScenarioFromRawResource: reader")
-        val reader = resources.openRawResource(resId).bufferedReader()
-        Log.d(TAG, "loadScenarioFromRawResource: _loadScenario")
-        _loadScenario(reader)
-    }
-
-    private fun _loadScenario(reader: Reader) {
-        Log.d(TAG, "_loadScenario: gson")
-        val gson = Gson()
-        Log.d(TAG, "_loadScenario: fromJson")
-        this.scenario = gson.fromJson(reader, Scenario::class.java)
-    }
 
     fun isRunning(): Boolean {
         return this.isRunning

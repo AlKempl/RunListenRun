@@ -13,12 +13,19 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import java.text.DateFormat
 import java.util.*
+import kotlin.reflect.KClass
 
 const val TAG = "Utils"
 
 class Utils {
 
 }
+
+annotation class JsonSubtype(val clazz: KClass<*>, val name: String)
+
+@Target(AnnotationTarget.TYPE, AnnotationTarget.CLASS, AnnotationTarget.ANNOTATION_CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class JsonType(val property: String, val subtypes: Array<JsonSubtype>)
 
 fun getDateTime(date: Date): String {
     val formatter = DateFormat.getDateTimeInstance()

@@ -27,11 +27,11 @@ data class GeofenceEntry(
     /**
     * Actions to run on geofence entered
     */
-    @SerializedName("actions")
-    val actions: List<ChapterEventAction>?,
+    @SerializedName("events")
+    val events: List<ChapterEvent>?,
 ){
     override fun toString(): String {
-        return "GeofenceEntry(id='$id', name='$name', hint='$hint', location=$location, actions=$actions)"
+        return "GeofenceEntry(id='$id', name='$name', hint='$hint', location=$location, events=$events)"
     }
 
     fun getTTSEntryText(): String {

@@ -24,17 +24,22 @@ class SoundManager private constructor(private val context: Context) {
         Log.d("${TAG}/BasicSetup", "OK")
     }
 
-    fun destroy() {
+
+    fun clear(){
         Log.d(TAG, "destroy")
         mediaPlayer.stop()
         mediaPlayer.reset()
+    }
+
+    private fun destroy() {
+        Log.d(TAG, "destroy")
+        clear()
         mediaPlayer.release()
     }
 
     fun stop() {
         if (mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
-            mediaPlayer.reset()
+            clear()
         }
     }
 

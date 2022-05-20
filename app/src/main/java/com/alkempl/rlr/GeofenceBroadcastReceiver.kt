@@ -19,12 +19,13 @@ package com.alkempl.rlr
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.alkempl.rlr.data.GeofencingRepository
 import com.alkempl.rlr.data.model.scenario.GeofenceEntry
+import com.alkempl.rlr.services.ActionsManager
+import com.alkempl.rlr.services.ScenarioManager
 import com.alkempl.rlr.services.TTSManager
 import com.alkempl.rlr.utils.errorMessage
 import com.alkempl.rlr.utils.vibrate
@@ -43,7 +44,8 @@ import java.util.concurrent.Executors
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
     private lateinit var ttsManager: TTSManager
-
+    private lateinit var actionsManager: ActionsManager
+    private lateinit var scenarioManager: ScenarioManager
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(TAG, "onReceive() context:$context, intent:$intent")
@@ -93,22 +95,36 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 }
 
                 ttsManager = TTSManager.getInstance(context)
+                actionsManager = ActionsManager.getInstance(context)
+                scenarioManager = ScenarioManager.getInstance(context)
 
                 val enteredGeofence = geofencingRepository.getActiveEntry()
                 Log.d(TAG, "Entered: $enteredGeofence")
                 geofencingRepository.processNext()
                 val nextGeofence = geofencingRepository.getActiveEntry()
 
-                enteredGeofence?.let { onGoodGeofenceEntered(it, nextGeofence, context) }
-                if (nextGeofence == null){
-                    ttsManager.speak("Ура! Глава завершена!", true)
-                    val intent22 = Intent("scenarioShutdownChapterEnd")
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent22)
+                enteredGeofence?.let {
+                    onGoodGeofenceEntered(it, nextGeofence, context)
+                }
+
+                if (nextGeofence == null) {
+                    onChapterFinished(context)
                 }
 
 
             }
         }
+    }
+
+    private fun onChapterFinished(context: Context) {
+        ttsManager.speak("Ура! Глава завершена!", true)
+
+        scenarioManager.finishChapter()
+        actionsManager.clear()
+
+        val intent22 = Intent("scenarioShutdownChapterEnd")
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent22)
+
     }
 
     private fun onGoodGeofenceEntered(
@@ -128,10 +144,19 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
         Toast.makeText(
             context,
-    //                    context.getString(R.string.geofence_entered)
+            //                    context.getString(R.string.geofence_entered)
             "$enteredDesc: $nextDesc",
             Toast.LENGTH_LONG
         ).show()
+
+        //        TODO: process events on entering
+        actionsManager.clearGeofenceTimers()
+
+        enteredGeofence.events?.forEach { event ->
+            event.actions?.forEach { action ->
+                actionsManager.processEventAction(event, action, true)
+            }
+        }
     }
 
     companion object {

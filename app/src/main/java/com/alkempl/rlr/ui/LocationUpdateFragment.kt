@@ -41,6 +41,8 @@ class LocationUpdateFragment : Fragment() {
 
     private lateinit var ttsManager: TTSManager
     private lateinit var soundManager: SoundManager
+    private lateinit var scenarioManager: ScenarioManager
+    private lateinit var actionsManager: ActionsManager
     private lateinit var sensorManager: SensorManager
     private lateinit var heartSensor: Sensor
 
@@ -82,8 +84,9 @@ class LocationUpdateFragment : Fragment() {
     ): View? {
 
         ttsManager = TTSManager.getInstance(this.requireContext())
-
         soundManager = SoundManager.getInstance(this.requireContext())
+        scenarioManager = ScenarioManager.getInstance(this.requireContext())
+        actionsManager = ActionsManager.getInstance(this.requireContext())
 
         /*
         * https://stackoverflow.com/questions/44337896/get-heart-rate-from-android-wear
