@@ -101,7 +101,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
                 enteredGeofence?.let { onGoodGeofenceEntered(it, nextGeofence, context) }
                 if (nextGeofence == null){
-                    ttsManager.speak("Ура! Глава завершена!")
+                    ttsManager.speak("Ура! Глава завершена!", true)
                     val intent22 = Intent("scenarioShutdownChapterEnd")
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent22)
                 }

@@ -19,7 +19,6 @@ class HealthProtectionService : Service() {
 
     private var timers: ArrayList<CountDownTimer> = ArrayList()
 
-
     override fun onBind(arg0: Intent?): IBinder {
         Log.d(TAG, "onBindCommand")
         startPhysicalProtectionTimer()

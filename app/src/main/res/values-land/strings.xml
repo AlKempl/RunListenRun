@@ -10,4 +10,8 @@
     <string name="bg_loc_pref_cat">Location</string>
     <string name="dev_settings">Testing</string>
     <string name="tts_initialization_error">Error initializing TTS</string>
+    <string name="enable_music_pref_caption">Включить музыку</string>
+    <string name="enable_tts_pref_caption">Включить голосовое сопровождение</string>
+    <string name="audio_settings">Звуки</string>
+    <string name="basic_heart_rate_caption">Ваш нормальный пульс</string>
 </resources>

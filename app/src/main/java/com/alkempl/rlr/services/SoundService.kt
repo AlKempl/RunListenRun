@@ -11,6 +11,7 @@ import android.os.Binder
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.preference.PreferenceManager
 import com.alkempl.rlr.R
 
 class SoundService : Service() {
@@ -53,19 +54,26 @@ class SoundService : Service() {
     }
 
     fun playTrack(track_name: String) {
-        val resId = application.resources.getIdentifier(track_name, "raw", packageName)
-        val resFd = application.resources.openRawResourceFd(resId) ?: return
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        val musicEnabled = sharedPref.getBoolean("enable_music_pref_value", true)
 
-        if (this.player.isPlaying) {
-            this.player.stop()
-            this.player.reset()
+        if(musicEnabled){
+            val resId = application.resources.getIdentifier(track_name, "raw", packageName)
+            val resFd = application.resources.openRawResourceFd(resId) ?: return
+
+            if (this.player.isPlaying) {
+                this.player.stop()
+                this.player.reset()
+            }
+
+            this.player.setDataSource(resFd.fileDescriptor, resFd.startOffset, resFd.length)
+            this.player.prepare()
+            this.player.isLooping = true // Set looping
+            this.player.setVolume(50f, 50f)
+            this.player.start()
+        }else{
+            Log.d(TAG, "Cant play [$track_name]: music is disabled from preferences")
         }
-
-        this.player.setDataSource(resFd.fileDescriptor, resFd.startOffset, resFd.length)
-        this.player.prepare()
-        this.player.isLooping = true // Set looping
-        this.player.setVolume(50f, 50f)
-        this.player.start()
     }
 
     override fun onLowMemory() {}

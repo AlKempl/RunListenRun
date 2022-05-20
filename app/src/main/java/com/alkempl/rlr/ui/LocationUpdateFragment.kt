@@ -3,15 +3,20 @@ package com.alkempl.rlr.ui
 import android.Manifest
 import android.content.*
 import android.graphics.Color
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alkempl.rlr.R
 import com.alkempl.rlr.adapter.LocationEntityItemRecyclerViewAdapter
@@ -20,22 +25,22 @@ import com.alkempl.rlr.databinding.FragmentLocationItemListBinding
 import com.alkempl.rlr.databinding.FragmentLocationUpdateBinding
 import com.alkempl.rlr.databinding.FragmentObstacleItemListBinding
 import com.alkempl.rlr.services.ScenarioService
-import com.alkempl.rlr.viewmodel.LocationUpdateViewModel
-import com.alkempl.rlr.viewmodel.ObstacleUpdateViewModel
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.alkempl.rlr.services.TTSManager
 import com.alkempl.rlr.utils.hasPermission
+import com.alkempl.rlr.viewmodel.LocationUpdateViewModel
+import com.alkempl.rlr.viewmodel.ObstacleUpdateViewModel
 import com.google.android.material.snackbar.Snackbar
 
 
-private const val TAG = "LocationUpdateFragment"
+private const val TAG = "LUFragment"
 
 class LocationUpdateFragment : Fragment() {
 
     private var activityListener: Callbacks? = null
 
     private lateinit var ttsManager: TTSManager
+    private lateinit var sensorManager: SensorManager
+    private lateinit var heartSensor: Sensor
 
     private lateinit var binding: FragmentLocationUpdateBinding
     private lateinit var bindingLocationItemList: FragmentLocationItemListBinding
@@ -74,6 +79,14 @@ class LocationUpdateFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         ttsManager = TTSManager.getInstance(this.requireContext())
+
+        /*
+        * https://stackoverflow.com/questions/44337896/get-heart-rate-from-android-wear
+        * */
+        sensorManager = this.requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        heartSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)
+        sensorManager.registerListener(mSensorEventListener, heartSensor, SensorManager.SENSOR_DELAY_FASTEST);
+
         binding = FragmentLocationUpdateBinding.inflate(inflater, container, false)
         bindingLocationItemList =
             FragmentLocationItemListBinding.inflate(inflater, container, false)
@@ -178,7 +191,18 @@ class LocationUpdateFragment : Fragment() {
             }
         }
     }
-
+    private val mSensorEventListener: SensorEventListener = object : SensorEventListener {
+        override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
+        override fun onSensorChanged(event: SensorEvent) {
+//            mStub.setOnLayoutInflatedListener(object : OnLayoutInflatedListener() {
+//                fun onLayoutInflated(stub: WatchViewStub) {
+//                    mTextView = stub.findViewById(R.id.text) as TextView
+//                    mTextView.setText(java.lang.Float.toString(event.values[0]))
+//                }
+//            })
+            Log.d("$TAG/HeartSensor", "Value: ${event.values[0]}")
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

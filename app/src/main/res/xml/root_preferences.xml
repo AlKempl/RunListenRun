@@ -5,9 +5,9 @@
 
         <ListPreference
             app:defaultValue="mmcs"
-            app:key="scenario_prep_value"
             app:entries="@array/scenario_names"
             app:entryValues="@array/scenario_values"
+            app:key="scenario_pref_value"
             app:title="@string/scenario_pref_caption"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
@@ -22,50 +22,70 @@
             app:key="30"
             app:title="@string/health_level_pref_caption"
             app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="basic_heart_rate_value"
+            app:title="@string/basic_heart_rate_caption"
+            app:defaultValue="80"
+            app:useSimpleSummaryProvider="true" />
+
     </PreferenceCategory>
 
-        <PreferenceCategory app:title="@string/dev_settings">
-            <SwitchPreference
-                android:defaultValue="false"
-                app:key="bg_location_updates"
-                android:title="@string/bg_location_updates"
-                app:switchTextOff="fdfdf"
-                app:switchTextOn="dsdsds"
-                app:useSimpleSummaryProvider="true"/>
-        </PreferenceCategory>
+    <PreferenceCategory app:title="@string/audio_settings">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:title="@string/enable_music_pref_caption"
+            app:key="enable_music_pref_value"
+            app:useSimpleSummaryProvider="true" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:title="@string/enable_tts_pref_caption"
+            app:key="enable_tts_pref_value"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
 
-<!--    <PreferenceCategory android:title="Dummy settings">-->
+    <PreferenceCategory app:title="@string/dev_settings">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:title="@string/bg_location_updates"
+            app:key="bg_location_updates"
+            app:switchTextOff="fdfdf"
+            app:switchTextOn="dsdsds"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
 
-<!--        <PreferenceCategory app:title="@string/sync_header">-->
+    <!--    <PreferenceCategory android:title="Dummy settings">-->
 
-<!--            <SwitchPreferenceCompat-->
-<!--                app:key="sync"-->
-<!--                app:title="@string/sync_title" />-->
+    <!--        <PreferenceCategory app:title="@string/sync_header">-->
 
-<!--            <SwitchPreferenceCompat-->
-<!--                app:dependency="sync"-->
-<!--                app:key="attachment"-->
-<!--                app:summaryOff="@string/attachment_summary_off"-->
-<!--                app:summaryOn="@string/attachment_summary_on"-->
-<!--                app:title="@string/attachment_title" />-->
+    <!--            <SwitchPreferenceCompat-->
+    <!--                app:key="sync"-->
+    <!--                app:title="@string/sync_title" />-->
 
-<!--        </PreferenceCategory>-->
-<!--        <PreferenceCategory app:title="@string/messages_header">-->
+    <!--            <SwitchPreferenceCompat-->
+    <!--                app:dependency="sync"-->
+    <!--                app:key="attachment"-->
+    <!--                app:summaryOff="@string/attachment_summary_off"-->
+    <!--                app:summaryOn="@string/attachment_summary_on"-->
+    <!--                app:title="@string/attachment_title" />-->
 
-<!--            <EditTextPreference-->
-<!--                app:key="signature"-->
-<!--                app:title="@string/signature_title"-->
-<!--                app:useSimpleSummaryProvider="true" />-->
+    <!--        </PreferenceCategory>-->
+    <!--        <PreferenceCategory app:title="@string/messages_header">-->
 
-<!--            <ListPreference-->
-<!--                app:defaultValue="reply"-->
-<!--                app:entries="@array/reply_entries"-->
-<!--                app:entryValues="@array/reply_values"-->
-<!--                app:key="reply"-->
-<!--                app:title="@string/reply_title"-->
-<!--                app:useSimpleSummaryProvider="true" />-->
+    <!--            <EditTextPreference-->
+    <!--                app:key="signature"-->
+    <!--                app:title="@string/signature_title"-->
+    <!--                app:useSimpleSummaryProvider="true" />-->
 
-<!--        </PreferenceCategory>-->
-<!--    </PreferenceCategory>-->
+    <!--            <ListPreference-->
+    <!--                app:defaultValue="reply"-->
+    <!--                app:entries="@array/reply_entries"-->
+    <!--                app:entryValues="@array/reply_values"-->
+    <!--                app:key="reply"-->
+    <!--                app:title="@string/reply_title"-->
+    <!--                app:useSimpleSummaryProvider="true" />-->
+
+    <!--        </PreferenceCategory>-->
+    <!--    </PreferenceCategory>-->
 
 </PreferenceScreen>

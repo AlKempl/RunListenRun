@@ -106,7 +106,7 @@ class ScenarioService : Service() {
 
     private fun ttsTest() {
         Log.d("$TAG/HELLO", "Привет, приложение запущено!")
-        ttsManager.speak("Привет, приложение запущено!")
+        ttsManager.speak("Привет, приложение запущено!", true)
     }
 
     private var timerActions: ArrayList<CountDownTimer> = ArrayList()
@@ -135,7 +135,7 @@ class ScenarioService : Service() {
         ttsManager.speak("Привет")
 
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(baseContext)
-        val scenario_prefix = sharedPref.getString("scenario_prep_value", "demo")
+        val scenario_prefix = sharedPref.getString("scenario_pref_value", "demo")
         Log.d(TAG, "Loading [\"${scenario_prefix}_scenario\"] scenario json")
 
         loadScenarioFromRawResource("${scenario_prefix}_scenario")
