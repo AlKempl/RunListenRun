@@ -7,13 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.*
-import android.speech.tts.TextToSpeech
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
-import com.alkempl.rlr.R
 import com.alkempl.rlr.data.ObstacleRepository
 import com.alkempl.rlr.data.model.obstacle.ObstacleFactory
 import com.alkempl.rlr.data.model.obstacle.ObstacleType
@@ -22,7 +19,6 @@ import com.alkempl.rlr.data.model.scenario.ChapterEventAction
 import com.alkempl.rlr.data.model.scenario.ChapterEventType
 import com.alkempl.rlr.data.model.scenario.EventActionType
 import com.google.gson.Gson
-import kotlinx.coroutines.*
 import java.io.File
 import java.io.Reader
 import java.util.*
@@ -175,7 +171,7 @@ class ScenarioService : Service() {
 
 
     private fun notifyFragment(json: String) {
-        val intent = Intent("shutdownScenarioServicePlease")
+        val intent = Intent("scenarioShutdownHealth")
         val bundle = Bundle()
 //        bundle.putString("json", json)
 //        intent.putExtras(bundle);
@@ -228,7 +224,7 @@ class ScenarioService : Service() {
                     }
                 }
             }
-            geofencingService?.addGeofenceForClue()
+            geofencingService?.processNext()
         }
     }
 

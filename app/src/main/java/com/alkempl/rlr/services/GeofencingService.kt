@@ -42,9 +42,8 @@ class GeofencingService : Service() {
         * is now "active."
         */
     @SuppressLint("MissingPermission")
-    public fun addGeofenceForClue() {
+    public fun processNext() {
         if (!applicationContext.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)) return
-
         geofencingRepository.processNext()
     }
 

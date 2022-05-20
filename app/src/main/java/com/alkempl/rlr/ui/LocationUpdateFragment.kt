@@ -3,18 +3,14 @@ package com.alkempl.rlr.ui
 import android.Manifest
 import android.content.*
 import android.graphics.Color
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.provider.Settings
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.alkempl.rlr.R
@@ -28,11 +24,9 @@ import com.alkempl.rlr.viewmodel.LocationUpdateViewModel
 import com.alkempl.rlr.viewmodel.ObstacleUpdateViewModel
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.alkempl.rlr.BuildConfig
 import com.alkempl.rlr.services.TTSManager
 import com.alkempl.rlr.utils.hasPermission
 import com.google.android.material.snackbar.Snackbar
-import org.json.JSONObject
 
 
 private const val TAG = "LocationUpdateFragment"
@@ -130,8 +124,8 @@ class LocationUpdateFragment : Fragment() {
 
         val actionReceiver = IntentFilter()
         bm = LocalBroadcastManager.getInstance(context)
-        actionReceiver.addAction("shutdownScenarioServicePlease")
-        actionReceiver.addAction("ACTION_GEOFENCE_EVENT")
+        actionReceiver.addAction("scenarioShutdownHealth")
+        actionReceiver.addAction("scenarioShutdownChapterEnd")
         bm!!.registerReceiver(onJsonReceived, actionReceiver)
 
         if (context is Callbacks) {
@@ -153,14 +147,29 @@ class LocationUpdateFragment : Fragment() {
                 /* intent.getStringExtra("json")?.let {
                      val data = JSONObject(it)
                  }*/
+
                 manageScenarioService()
+
+                val text = when (intent.action){
+                    "scenarioShutdownHealth" -> getString(R.string.training_suspense_by_health_text)
+                    "scenarioShutdownChapterEnd" -> getString(R.string.training_suspense_by_chapter_end_text)
+                    else -> "Что-то пошло не так."
+                }
+
+                val btnText = when (intent.action){
+                    "scenarioShutdownHealth" -> R.string.ok
+                    "scenarioShutdownChapterEnd" -> R.string.hooray
+                    else -> R.string.ok
+                }
+
+
                 val sb = Snackbar.make(
                     binding.root,
-                    getString(R.string.training_suspense_text),
+                    text,
                     Snackbar.LENGTH_INDEFINITE
                 )
 
-                sb.setAction(R.string.ok) {
+                sb.setAction(btnText) {
                     sb.dismiss()
                 }
 

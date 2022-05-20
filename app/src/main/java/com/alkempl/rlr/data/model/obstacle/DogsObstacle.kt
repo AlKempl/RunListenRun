@@ -6,12 +6,16 @@ import java.util.*
 import java.util.stream.IntStream
 
 class DogsObstacle(context: Context, duration: Int) : Obstacle(context, duration) {
-    private val TAG: String = "OBS_DOGS"
+    private val TAG: String = "OBS/DOGS"
+
+    override val name = "дикие собаки"
+    override val hint = "чтобы от них убежать, надо ускориться"
 
     override fun onStart() {
         Log.i(TAG, "onStart")
         this.entity.type = ObstacleType.DOGS
         this.obstacleRepository.add(this.entity)
+        super.onStart()
     }
 
     private fun isIncreasing(a: List<Float>): Boolean {
@@ -36,16 +40,20 @@ class DogsObstacle(context: Context, duration: Int) : Obstacle(context, duration
             }
             this.obstacleRepository.update(this.entity)
         })
+
+        super.onFinish()
     }
 
     override fun onSuccess() {
         Log.i(TAG, "onSuccess")
 //        TODO("Not yet implemented")
+        super.onSuccess()
     }
 
     override fun onFailure() {
         Log.i(TAG, "onFailure")
 //        TODO("Not yet implemented")
+        super.onFailure()
     }
 
 }

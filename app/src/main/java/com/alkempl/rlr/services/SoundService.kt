@@ -50,9 +50,6 @@ class SoundService : Service() {
     fun onPause() {}
     override fun onDestroy() {
         Log.d(TAG, "onDestroy")
-        this.player.stop()
-        this.player.reset()
-        this.player.release()
     }
 
     fun playTrack(track_name: String) {

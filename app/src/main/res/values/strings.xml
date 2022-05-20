@@ -14,6 +14,7 @@
 
     <string name="settings">Settings</string>
     <string name="ok">OK</string>
+    <string name="hooray">УРА!</string>
 
     <string name="fine_location_access_rationale_title_text">Welcome to the Background Location Sample!</string>
 
@@ -177,7 +178,8 @@
     <string name="avatar_fragment">Image upload</string>
     <string name="scenario_stop_button_caption">Stop scenario</string>
     <string name="scenario_start_button_caption">Start scenario</string>
-    <string name="training_suspense_text">The training was interrupted in order to prevent potential damage to your health due to maximum training length limit reached.</string>
+    <string name="training_suspense_by_health_text">The training was interrupted in order to prevent potential damage to your health due to maximum training length limit reached.</string>
+    <string name="training_suspense_by_chapter_end_text">Ура! Вы завершили главу!</string>
 
     <!--    Geofence Status Strings-->
     <string name="geofences_added">Clue Geofence added</string>

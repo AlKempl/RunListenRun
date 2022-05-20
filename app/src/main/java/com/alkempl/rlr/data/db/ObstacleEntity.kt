@@ -15,7 +15,7 @@ data class ObstacleEntity(
     @PrimaryKey val id: UUID = UUID.randomUUID(),
     var type: ObstacleType,
     var date: Date = Date(),
-    var status: ObstacleStatus?
+    var status: ObstacleStatus?,
 ) {
 
     fun getPrefix(): String{

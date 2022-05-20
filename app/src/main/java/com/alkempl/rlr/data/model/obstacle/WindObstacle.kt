@@ -6,12 +6,16 @@ import java.util.*
 import java.util.stream.IntStream
 
 class WindObstacle(context: Context, duration: Int) : Obstacle(context, duration) {
-    private val TAG: String = "OBS_WIND"
+    private val TAG: String = "OBS/WIND"
+
+    override val name = "сильный ветер"
+    override val hint = "стоит снизить скорость, чтобы не присоединиться к унесенным ветром"
 
     override fun onStart() {
         Log.i(TAG, "onStart")
         this.entity.type = ObstacleType.WIND
         this.obstacleRepository.add(this.entity)
+        super.onStart()
     }
 
     private fun isDecreasing(a: List<Float>): Boolean {
@@ -35,16 +39,19 @@ class WindObstacle(context: Context, duration: Int) : Obstacle(context, duration
         })
 
         this.obstacleRepository.update(this.entity)
+        super.onFinish()
     }
 
     override fun onSuccess() {
         Log.i(TAG, "onSuccess")
 //        TODO("Not yet implemented")
+        super.onSuccess()
     }
 
     override fun onFailure() {
         Log.i(TAG, "onFailure")
 //        TODO("Not yet implemented")
+        super.onFailure()
     }
 
 }

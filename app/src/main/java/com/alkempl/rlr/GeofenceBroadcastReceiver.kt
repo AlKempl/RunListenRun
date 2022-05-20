@@ -19,9 +19,12 @@ package com.alkempl.rlr
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.alkempl.rlr.data.GeofencingRepository
+import com.alkempl.rlr.data.model.scenario.GeofenceEntry
 import com.alkempl.rlr.services.TTSManager
 import com.alkempl.rlr.utils.errorMessage
 import com.alkempl.rlr.utils.vibrate
@@ -91,42 +94,53 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
                 ttsManager = TTSManager.getInstance(context)
 
-//                val notificationManager = ContextCompat.getSystemService(
-//                    context,
-//                    NotificationManager::class.java
-//                ) as NotificationManager
-//
-//                notificationManager.sendGeofenceEnteredNotification(
-//                    context, foundIndex
-//                )
-
                 val enteredGeofence = geofencingRepository.getActiveEntry()
                 Log.d(TAG, "Entered: $enteredGeofence")
-
-                val enteredDesc = "Ура! Локация ${enteredGeofence?.name} открыта!"
                 geofencingRepository.processNext()
-
                 val nextGeofence = geofencingRepository.getActiveEntry()
 
-                val nextDesc = if (nextGeofence != null)
-                    "Следующая локация – ${nextGeofence.name}. ${nextGeofence.hint}"
-                     else "Глава завершена!"
+                onGoodGeofenceEntered(enteredGeofence, nextGeofence, context)
 
-                val pattern = longArrayOf(0, 200, 100, 300)
-                vibrate(context,pattern)
+                if (nextGeofence == null){
+                    //TODO Stop scenario on chapter finish
+                    ttsManager.speak("Ура! Глава завершена!")
 
-                ttsManager.speak("$enteredDesc $nextDesc")
+                    val intent22 = Intent("scenarioShutdownChapterEnd")
+                    val bundle = Bundle()
+//        bundle.putString("json", json)
+//        intent.putExtras(bundle);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent22)
+                }
 
-                Toast.makeText(
-                    context,
-//                    context.getString(R.string.geofence_entered)
-                    "$enteredDesc: $nextDesc",
-                    Toast.LENGTH_LONG
-                ).show()
 
-                //TODO Stop scenario on chapter finish
             }
         }
+    }
+
+    private fun onGoodGeofenceEntered(
+        enteredGeofence: GeofenceEntry?,
+        nextGeofence: GeofenceEntry?,
+        context: Context
+    ) {
+        val enteredDesc = "Ура! Локация ${enteredGeofence?.name} открыта!"
+        val nextDesc = if (nextGeofence != null)
+            "Следующая локация – ${nextGeofence.name}. ${nextGeofence.hint}"
+        else ""
+
+        val pattern = longArrayOf(0, 200, 100, 300)
+        vibrate(context, pattern)
+
+        ttsManager.speak("$enteredDesc $nextDesc")
+
+        Toast.makeText(
+            context,
+    //                    context.getString(R.string.geofence_entered)
+            "$enteredDesc: $nextDesc",
+            Toast.LENGTH_LONG
+        ).show()
+
+
+
     }
 
     companion object {

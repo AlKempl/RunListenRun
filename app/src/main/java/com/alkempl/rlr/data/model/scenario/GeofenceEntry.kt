@@ -24,11 +24,18 @@ data class GeofenceEntry(
      */
     @SerializedName("expires_in")
     private val _expires_in: Long?,
+    /**
+    * Actions to run on geofence entered
+    */
     @SerializedName("actions")
     val actions: List<ChapterEventAction>?,
 ){
     override fun toString(): String {
         return "GeofenceEntry(id='$id', name='$name', hint='$hint', location=$location, actions=$actions)"
+    }
+
+    fun getTTSEntryText(): String {
+        return "Ура! Локация ${name} открыта!";
     }
 
     /**

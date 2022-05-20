@@ -58,7 +58,7 @@ class HealthProtectionService : Service() {
     }
 
     private fun firePhysicalProtection() {
-        val intent = Intent("shutdownScenarioServicePlease")
+        val intent = Intent("scenarioShutdownHealth")
         val bundle = Bundle()
 //        bundle.putString("json", json)
 //        intent.putExtras(bundle);
