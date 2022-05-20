@@ -99,16 +99,10 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 geofencingRepository.processNext()
                 val nextGeofence = geofencingRepository.getActiveEntry()
 
-                onGoodGeofenceEntered(enteredGeofence, nextGeofence, context)
-
+                enteredGeofence?.let { onGoodGeofenceEntered(it, nextGeofence, context) }
                 if (nextGeofence == null){
-                    //TODO Stop scenario on chapter finish
                     ttsManager.speak("Ура! Глава завершена!")
-
                     val intent22 = Intent("scenarioShutdownChapterEnd")
-                    val bundle = Bundle()
-//        bundle.putString("json", json)
-//        intent.putExtras(bundle);
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent22)
                 }
 
@@ -118,11 +112,11 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
     }
 
     private fun onGoodGeofenceEntered(
-        enteredGeofence: GeofenceEntry?,
+        enteredGeofence: GeofenceEntry,
         nextGeofence: GeofenceEntry?,
         context: Context
     ) {
-        val enteredDesc = "Ура! Локация ${enteredGeofence?.name} открыта!"
+        val enteredDesc = enteredGeofence.getTTSEntryText()
         val nextDesc = if (nextGeofence != null)
             "Следующая локация – ${nextGeofence.name}. ${nextGeofence.hint}"
         else ""
@@ -138,9 +132,6 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             "$enteredDesc: $nextDesc",
             Toast.LENGTH_LONG
         ).show()
-
-
-
     }
 
     companion object {
