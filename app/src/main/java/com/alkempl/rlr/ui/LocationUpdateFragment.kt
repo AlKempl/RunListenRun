@@ -162,7 +162,6 @@ class LocationUpdateFragment : Fragment() {
                     else -> R.string.ok
                 }
 
-
                 val sb = Snackbar.make(
                     binding.root,
                     text,
