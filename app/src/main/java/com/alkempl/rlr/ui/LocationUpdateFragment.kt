@@ -25,6 +25,7 @@ import com.alkempl.rlr.databinding.FragmentLocationItemListBinding
 import com.alkempl.rlr.databinding.FragmentLocationUpdateBinding
 import com.alkempl.rlr.databinding.FragmentObstacleItemListBinding
 import com.alkempl.rlr.services.ScenarioService
+import com.alkempl.rlr.services.SoundManager
 import com.alkempl.rlr.services.TTSManager
 import com.alkempl.rlr.utils.hasPermission
 import com.alkempl.rlr.viewmodel.LocationUpdateViewModel
@@ -39,6 +40,7 @@ class LocationUpdateFragment : Fragment() {
     private var activityListener: Callbacks? = null
 
     private lateinit var ttsManager: TTSManager
+    private lateinit var soundManager: SoundManager
     private lateinit var sensorManager: SensorManager
     private lateinit var heartSensor: Sensor
 
@@ -78,7 +80,10 @@ class LocationUpdateFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         ttsManager = TTSManager.getInstance(this.requireContext())
+
+        soundManager = SoundManager.getInstance(this.requireContext())
 
         /*
         * https://stackoverflow.com/questions/44337896/get-heart-rate-from-android-wear
