@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences.Editor
 import android.util.Log
 import androidx.preference.PreferenceManager
-import com.alkempl.rlr.data.GeofencingRepository
+import com.alkempl.rlr.data.GeofencingManager
 import com.alkempl.rlr.data.model.scenario.*
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
@@ -38,10 +38,18 @@ class ScenarioManager private constructor(private val context: Context) {
     private lateinit var soundManager: SoundManager
     private lateinit var actionsManager: ActionsManager
 
-    private val geofencingRepository = GeofencingRepository.getInstance(
+    private val geofencingManager = GeofencingManager.getInstance(
         context,
         Executors.newSingleThreadExecutor()
     )
+
+    fun runScenario(){
+        if(scenarioParsed && scenarioInitialized){
+            geofencingManager.processNext()
+        }else{
+            Log.e(TAG, "runScenario: not scenarioParsed && scenarioInitialized")
+        }
+    }
 
     fun initialize() {
         soundManager = SoundManager.getInstance(context)
@@ -107,6 +115,8 @@ class ScenarioManager private constructor(private val context: Context) {
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
         val currentChapterIdPref = sharedPref.getString("internal_current_chapter_id", null)
 
+        Log.d(TAG, "currentChapterIdPref $currentChapterIdPref")
+
         currentChapterIdx = scenario
             ?.chapters
             ?.indexOfFirst { it.id == currentChapterIdPref }
@@ -121,6 +131,8 @@ class ScenarioManager private constructor(private val context: Context) {
         }
 
         currentChapterId = currentChapter!!.id
+        Log.d(TAG, "currentChapterId $currentChapterId")
+
 
         currentChapter!!.initial_event?.let { initial_event ->
             initial_event.actions?.forEach { action ->
@@ -135,11 +147,12 @@ class ScenarioManager private constructor(private val context: Context) {
         }
 
         currentChapter!!.geofencing?.forEach { geofence ->
-            geofencingRepository.storeGeofence(geofence)
-            Log.d("${TAG}/ADD_GEOFENCES", "Len: ${currentChapter!!.geofencing?.size}")
+            geofencingManager.storeGeofence(geofence)
+            Log.d("${TAG}/ADD_GEOFENCE", geofence.toString())
         }
 
         scenarioInitialized = true
+        Log.d(TAG, "current chapter initialized")
     }
 
     fun clear() {

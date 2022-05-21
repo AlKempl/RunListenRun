@@ -37,7 +37,7 @@ data class LocationEntity(
     }
     override fun toString(): String {
         val appState = getPrefix()
-        return "$appState $latitude, $longitude ( ${getDateTime(date)} )\n"
+        return "$provider $mock $latitude, $longitude ( ${getDateTime(date)} )\n"
     }
 }
 

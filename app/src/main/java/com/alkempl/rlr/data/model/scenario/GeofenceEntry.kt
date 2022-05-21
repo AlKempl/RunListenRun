@@ -1,8 +1,8 @@
 package com.alkempl.rlr.data.model.scenario
 
+import com.alkempl.rlr.data.model.TextContentType
 import com.google.android.gms.maps.model.LatLng
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 import java.util.concurrent.TimeUnit
 
 data class GeofenceEntry(
@@ -32,11 +32,21 @@ data class GeofenceEntry(
     val events: List<ChapterEvent>?,
 ){
     override fun toString(): String {
-        return "GeofenceEntry(id='$id', name='$name', hint='$hint', location=$location, events=$events)"
+        return "GeofenceEntry(id='$id', name='$name', location=$location, events=${events?.size})"
     }
 
-    fun getTTSEntryText(): String {
-        return "Ура! Локация ${name} открыта!";
+    fun getEnteredText(type: TextContentType): String {
+        return when (type){
+            TextContentType.VOICE -> "Ура! Локация.  ${name}. открыта!. ";
+            TextContentType.ONSCREEN -> "Ура! Локация ${name} открыта!.";
+        }
+    }
+
+    fun getTargetedText(type: TextContentType): String {
+        return when (type){
+            TextContentType.VOICE -> "Следующая локация. ${name}..  ${hint}.. ";
+            TextContentType.ONSCREEN -> "Следующая локация – ${name}. ${hint}.";
+        }
     }
 
     /**

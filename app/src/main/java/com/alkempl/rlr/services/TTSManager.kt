@@ -47,33 +47,12 @@ class TTSManager private constructor(private val context: Context) {
             return
         }
 
-        /*            val mPlaybackAttributes = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-            .setFlags(FLAG_AUDIBILITY_ENFORCED) //VERY IMPORTANT
-            .build()
-        this.textToSpeech.setAudioAttributes(mPlaybackAttributes)
-//            this.textToSpeech.speak(textToSay, TextToSpeech.QUEUE_FLUSH, null, textToSay)
-
-        this.textToSpeech.speak(
-            text,
-            TextToSpeech.QUEUE_FLUSH,
-//                TextToSpeech.QUEUE_ADD,
-            null,
-            text
-//                Math.random().toString() + ""
-        )*/
+        Log.d("$TAG/Speak", text)
         textToSpeech.speak(text, queueMode, null, text)
-        /*//            val ttsSpeak = Handler()
-//            val checkTTSRunning: Runnable = object : Runnable {
-//                override fun run() {
-//                    if (tts.isSpeaking()) {
-//                        ttsSpeak.postDelayed(this, 1000)
-//                    } else am!!.abandonAudioFocusRequest(mFocusRequest)
-//                }
-//            }
-//            ttsSpeak.postDelayed(checkTTSRunning, 3000)*/
+    }
 
+    fun stop(){
+        textToSpeech.stop()
     }
 
     init {

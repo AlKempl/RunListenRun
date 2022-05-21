@@ -1,12 +1,10 @@
 package com.alkempl.rlr.data
 
 import android.content.Context
-import androidx.lifecycle.LiveData
+import android.util.Log
 import com.alkempl.rlr.data.db.AppDatabase
-import com.alkempl.rlr.data.db.ObstacleEntity
 import com.alkempl.rlr.data.model.scenario.GeofenceEntry
 import com.alkempl.rlr.services.LocationManager
-import com.google.firebase.auth.FirebaseUser
 import java.util.*
 import java.util.concurrent.ExecutorService
 
@@ -15,7 +13,7 @@ private const val TAG = "GeofencingRepository"
 
 /**
  */
-class GeofencingRepository private constructor(
+class GeofencingManager private constructor(
     private val database: AppDatabase,
     private val myLocationManager: LocationManager,
     private val executor: ExecutorService
@@ -46,11 +44,13 @@ class GeofencingRepository private constructor(
     }
 
     fun reset() {
+        Log.d(TAG, "reset")
         active_idx = -1
         landmarkData.clear()
     }
 
     fun processNext() {
+        Log.d(TAG, "processNext")
         active_idx += 1
         if(active_idx > landmarkData.size - 1){
             myLocationManager.removeGeofences()
@@ -65,11 +65,11 @@ class GeofencingRepository private constructor(
 
     companion object {
         @Volatile
-        private var INSTANCE: GeofencingRepository? = null
+        private var INSTANCE: GeofencingManager? = null
 
-        fun getInstance(context: Context, executor: ExecutorService): GeofencingRepository {
+        fun getInstance(context: Context, executor: ExecutorService): GeofencingManager {
             return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: GeofencingRepository(
+                INSTANCE ?: GeofencingManager(
                     AppDatabase.getInstance(context),
                     LocationManager.getInstance(context),
                     executor

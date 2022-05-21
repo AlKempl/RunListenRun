@@ -30,16 +30,24 @@ open class Obstacle(
 
     open val name = "Непонятное препятствие"
     open val hint = "Непонятное препятствие"
+    open val failureText = "Препятствие не пройдено. "
+    open val successText = "Препятствие пройдено. "
 
     open fun onStart() {
-        ttsManager.speak(getTTSText())
+        ttsManager.speak(getTTSIntroText())
     }
 
     open fun onFinish() {}
-    open fun onSuccess() {}
-    open fun onFailure() {}
 
-    fun getTTSText(): String {
+    open fun onSuccess() {
+        ttsManager.speak(successText)
+    }
+    open fun onFailure() {
+        ttsManager.speak(failureText)
+    }
+
+    fun getTTSIntroText(): String {
         return "Обнаружено препятствие: $name! $hint."
     }
+
 }

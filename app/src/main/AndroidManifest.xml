@@ -43,10 +43,6 @@
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".services.GeofencingService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
             android:name=".services.ScenarioService"
             android:enabled="true"
             android:exported="true" />

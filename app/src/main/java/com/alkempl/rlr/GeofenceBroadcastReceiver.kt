@@ -22,7 +22,8 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.alkempl.rlr.data.GeofencingRepository
+import com.alkempl.rlr.data.GeofencingManager
+import com.alkempl.rlr.data.model.TextContentType
 import com.alkempl.rlr.data.model.scenario.GeofenceEntry
 import com.alkempl.rlr.services.ActionsManager
 import com.alkempl.rlr.services.ScenarioManager
@@ -74,12 +75,12 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                     }
                 }
 
-                val geofencingRepository =
-                    GeofencingRepository.getInstance(context, Executors.newSingleThreadExecutor())
+                val geofencingManager =
+                    GeofencingManager.getInstance(context, Executors.newSingleThreadExecutor())
 
                 // Check geofence against the constants listed in GeofenceUtil.kt to see if the
                 // user has entered any of the locations we track for geofences.
-                val foundIndex = geofencingRepository.getStored().indexOfFirst {
+                val foundIndex = geofencingManager.getStored().indexOfFirst {
                     it.id == fenceId
                 }
 
@@ -89,7 +90,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                     return
                 }
 
-                if (geofencingRepository.getActiveIdx() != foundIndex) {
+                if (geofencingManager.getActiveIdx() != foundIndex) {
                     Log.e(TAG, "Not Active Geofence: Abort Mission")
                     return
                 }
@@ -98,10 +99,10 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 actionsManager = ActionsManager.getInstance(context)
                 scenarioManager = ScenarioManager.getInstance(context)
 
-                val enteredGeofence = geofencingRepository.getActiveEntry()
+                val enteredGeofence = geofencingManager.getActiveEntry()
                 Log.d(TAG, "Entered: $enteredGeofence")
-                geofencingRepository.processNext()
-                val nextGeofence = geofencingRepository.getActiveEntry()
+                geofencingManager.processNext()
+                val nextGeofence = geofencingManager.getActiveEntry()
 
                 enteredGeofence?.let {
                     onGoodGeofenceEntered(it, nextGeofence, context)
@@ -110,8 +111,6 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                 if (nextGeofence == null) {
                     onChapterFinished(context)
                 }
-
-
             }
         }
     }
@@ -132,19 +131,18 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         nextGeofence: GeofenceEntry?,
         context: Context
     ) {
-        val enteredDesc = enteredGeofence.getTTSEntryText()
-        val nextDesc = if (nextGeofence != null)
-            "Следующая локация – ${nextGeofence.name}. ${nextGeofence.hint}"
-        else ""
+        val ttsEnteredDesc = enteredGeofence.getEnteredText(TextContentType.VOICE)
+        val enteredDesc = enteredGeofence.getEnteredText(TextContentType.ONSCREEN)
+        val nextDesc = nextGeofence?.getTargetedText(TextContentType.ONSCREEN) ?: ""
+        val ttsNextDesc = nextGeofence?.getTargetedText(TextContentType.VOICE) ?: ""
 
         val pattern = longArrayOf(0, 200, 100, 300)
         vibrate(context, pattern)
 
-        ttsManager.speak("$enteredDesc $nextDesc")
+        ttsManager.speak("$ttsEnteredDesc .. $ttsNextDesc")
 
         Toast.makeText(
             context,
-            //                    context.getString(R.string.geofence_entered)
             "$enteredDesc: $nextDesc",
             Toast.LENGTH_LONG
         ).show()

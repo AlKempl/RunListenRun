@@ -11,6 +11,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.annotation.UiThread
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.alkempl.rlr.data.GeofencingManager
 import com.alkempl.rlr.data.ObstacleRepository
 import com.alkempl.rlr.data.model.scenario.ChapterEventAction
 import java.util.*
@@ -23,7 +24,6 @@ class ScenarioService : Service() {
     private val binder = LocalBinder()
 
     private var locationService: LocationService? = null
-    private var geofencingService: GeofencingService? = null
     private var healthService: HealthProtectionService? = null
 
     private var locationServiceBounded = false
@@ -41,23 +41,6 @@ class ScenarioService : Service() {
         override fun onServiceDisconnected(arg0: ComponentName) {
             locationServiceBounded = false
             locationService = null
-        }
-    }
-
-    private val geofencingServiceConnection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            val binder = service as GeofencingService.LocalBinder
-            geofencingService = binder.getService()
-            geofencingServiceBounded = true
-            Log.d("$TAG/GEO1", "geofencingServiceConnection onServiceConnected")
-//            processGeofences()
-        }
-
-        override fun onServiceDisconnected(arg0: ComponentName) {
-            geofencingServiceBounded = false
-            geofencingService = null
-            Log.d("$TAG/GEO9", "geofencingServiceConnection onServiceDisconnected")
         }
     }
 
@@ -79,6 +62,7 @@ class ScenarioService : Service() {
     private lateinit var soundManager: SoundManager
     private lateinit var scenarioManager: ScenarioManager
     private lateinit var actionsManager: ActionsManager
+    private lateinit var geofencingManager: GeofencingManager
 
     private fun ttsTest() {
         Log.d("$TAG/HELLO", "Привет, приложение запущено!")
@@ -112,15 +96,12 @@ class ScenarioService : Service() {
         soundManager = SoundManager.getInstance(baseContext)
         scenarioManager = ScenarioManager.getInstance(baseContext)
         actionsManager = ActionsManager.getInstance(baseContext)
+        geofencingManager = GeofencingManager.getInstance(baseContext, Executors.newSingleThreadExecutor())
 
 
         // Bind to LocalService
         Intent(application, LocationService::class.java).also { ssintent ->
             bindService(ssintent, locationServiceConnection, Context.BIND_AUTO_CREATE)
-        }
-
-        Intent(application, GeofencingService::class.java).also { ssintent ->
-            bindService(ssintent, geofencingServiceConnection, Context.BIND_AUTO_CREATE)
         }
 
         Intent(application, HealthProtectionService::class.java).also { ssintent ->
@@ -134,21 +115,11 @@ class ScenarioService : Service() {
 
         scenarioManager.initialize()
         scenarioManager.initializeCurrentChapter()
+        scenarioManager.runScenario()
         someTask()
     }
 
-
-    private fun notifyFragment(json: String) {
-        val intent = Intent("scenarioShutdownHealth")
-        val bundle = Bundle()
-//        bundle.putString("json", json)
-//        intent.putExtras(bundle);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-    }
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-
 //        initRandomTickActionTimer()
 //        Log.d(TAG, "random tick parsed")
         Log.d(TAG, "onStartCommand End")
@@ -187,6 +158,8 @@ class ScenarioService : Service() {
         soundManager.clear()
         scenarioManager.clear()
         actionsManager.clear()
+        geofencingManager.reset()
+        ttsManager.stop()
 
         if (locationServiceBounded) {
             val locationServiceIntent = Intent(applicationContext, LocationService::class.java)
@@ -194,11 +167,6 @@ class ScenarioService : Service() {
             unbindService(locationServiceConnection)
         }
 
-        if (geofencingServiceBounded) {
-            val geofencingServiceIntent = Intent(applicationContext, GeofencingService::class.java)
-            this.stopService(geofencingServiceIntent)
-            unbindService(geofencingServiceConnection)
-        }
 
         if (healthServiceBounded) {
             val healthServiceIntent =
