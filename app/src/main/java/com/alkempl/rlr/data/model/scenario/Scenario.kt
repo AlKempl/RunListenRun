@@ -1,17 +1,14 @@
 import com.alkempl.rlr.data.model.scenario.ScenarioChapter
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 data class Scenario(
-    @SerializedName("chapters")
+    @Json(name = "chapters")
     val chapters: List<ScenarioChapter>?,
-    @SerializedName("description")
+    @Json(name = "description")
     val description: String, // It's a really demo
-    @SerializedName("id")
+    @Json(name = "id")
     val id: String, // 436207e3-0f06-4c5b-9b88-74ba456ede32
-    @SerializedName("name")
+    @Json(name = "name")
     val name: String, // Demo scenario
-    @SerializedName("next_id")
-    val nextId: Any?, // null
-    @SerializedName("prev_id")
-    val prevId: Any? // null
 )

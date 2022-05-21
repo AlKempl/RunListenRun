@@ -1,12 +1,14 @@
 package com.alkempl.rlr.data.model.scenario
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = false)
 enum class ChapterEventType() {
-    @SerializedName("init")
+    @Json(name = "init")
     INITIAL,
-    @SerializedName("timer")
+    @Json(name = "timer")
     TIME_BASED,
-    @SerializedName("random")
+    @Json(name = "random")
     RANDOM
 }

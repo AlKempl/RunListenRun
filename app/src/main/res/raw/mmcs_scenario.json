@@ -9,7 +9,23 @@
       "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
       "name": "Chapter 1",
       "description": "The One Where Monica Gets a Roommate",
-      "is_final": false,
+      "initial_event": {
+        "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+        "type": "init",
+        "actions": [
+          {
+            "action": "sound",
+            "track_name": "shakalaka",
+            "delay": 0
+          },
+          {
+            "action": "obstacle",
+            "type": "dogs",
+            "severity": 3,
+            "delay": 0
+          }
+        ]
+      },
       "geofencing": [
         {
           "id": "enter",
@@ -65,18 +81,14 @@
           "actions": [
             {
               "action": "sound",
-              "attributes": {
-                "track_name": "groovin",
-                "delay": 0
-              }
+              "track_name": "groovin",
+              "delay": 0
             },
             {
               "action": "obstacle",
-              "attributes": {
-                "type": "dogs",
-                "severity": 20,
-                "delay": 0
-              }
+              "type": "dogs",
+              "severity": 20,
+              "delay": 0
             }
           ]
         }

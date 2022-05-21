@@ -1,10 +1,11 @@
 package com.alkempl.rlr.data.model.scenario
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 data class ChapterAudio(
-    @SerializedName("music")
+    @Json(name = "music")
     val music: List<String>,
-    @SerializedName("radio")
+    @Json(name = "radio")
     val radio: List<String>
 )

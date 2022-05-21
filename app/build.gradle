@@ -57,13 +57,19 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.preference:preference:1.1.1'
+    implementation fileTree(dir: 'C:\\Users\\Alexk\\samsung jar', include: ['*.aar', '*.jar'], exclude: [])
+    implementation 'androidx.test:core-ktx:1.4.0'
     def room_version = "2.3.0"
     implementation "androidx.room:room-runtime:$room_version"
-    implementation 'com.google.code.gson:gson:2.9.0'
+//    implementation 'com.google.code.gson:gson:2.9.0'
     kapt "androidx.room:room-compiler:$room_version"
     // Import the Firebase BoM
-    implementation("io.github.isharipov:gson-adapters:0.1")
     implementation platform('com.google.firebase:firebase-bom:29.0.3')
+
+    implementation("com.squareup.moshi:moshi:1.13.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.13.0")
+    implementation("com.squareup.moshi:moshi-adapters:1.13.0")
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.13.0'
 
     // Add the dependency for the Firebase SDK for Google Analytics
     // When using the BoM, don't specify versions in Firebase dependencies

@@ -1,33 +1,34 @@
 package com.alkempl.rlr.data.model.scenario
 
 import com.google.android.gms.maps.model.LatLng
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.util.concurrent.TimeUnit
 
 data class GeofenceEntry(
-    @SerializedName("id")
+    @Json(name = "id")
     val id: String, // ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4
-    @SerializedName("name")
+    @Json(name = "name")
     val name: String,
-    @SerializedName("hint")
+    @Json(name = "hint")
     val hint: String,
-    @SerializedName("location")
+    @Json(name = "location")
     val location: LatLng,
     /**
      * In meters
      * */
-    @SerializedName("radius")
-    private val _radius: Float?,
+    @Json(name = "radius")
+    val _radius: Float?,
     /**
      * Used to set an expiration time for a geofence. After this amount of time, Location services
      * stops tracking the geofence. For this sample, geofences expire after one hour.
      */
-    @SerializedName("expires_in")
-    private val _expires_in: Long?,
+    @Json(name = "expires_in")
+    val _expires_in: Long?,
     /**
     * Actions to run on geofence entered
     */
-    @SerializedName("events")
+    @Json(name = "events")
     val events: List<ChapterEvent>?,
 ){
     override fun toString(): String {

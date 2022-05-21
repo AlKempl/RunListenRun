@@ -29,18 +29,14 @@
         "actions": [
           {
             "action": "sound",
-            "attributes": {
-              "track_name": "shakalaka",
-              "delay": 0
-            }
+            "track_name": "shakalaka",
+            "delay": 0
           },
           {
             "action": "obstacle",
-            "attributes": {
-              "type": "dogs",
-              "severity": 3,
-              "delay": 0
-            }
+            "type": "dogs",
+            "severity": 3,
+            "delay": 0
           }
         ]
       },
@@ -56,18 +52,14 @@
           "actions": [
             {
               "action": "sound",
-              "attributes": {
-                "track_name": "shakalaka",
-                "delay": 0
-              }
+              "track_name": "shakalaka",
+              "delay": 0
             },
             {
               "action": "obstacle",
-              "attributes": {
-                "type": "dogs",
-                "severity": 3,
-                "delay": 0
-              }
+              "type": "dogs",
+              "severity": 3,
+              "delay": 0
             }
           ]
         },
@@ -89,62 +81,14 @@
           "actions": [
             {
               "action": "sound",
-              "attributes": {
-                "track_name": "shakalaka",
-                "delay": 0
-              }
+              "track_name": "shakalaka",
+              "delay": 0
             },
             {
               "action": "obstacle",
-              "attributes": {
-                "type": "dogs",
-                "severity": 3,
-                "delay": 0
-              }
-            }
-          ]
-        },
-        {
-          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
-          "type": "timer",
-          "time": 30,
-          "actions": [
-            {
-              "action": "sound",
-              "attributes": {
-                "track_name": "ampup",
-                "delay": 0
-              }
-            },
-            {
-              "action": "obstacle",
-              "attributes": {
-                "type": "wind",
-                "severity": 1,
-                "delay": 0
-              }
-            }
-          ]
-        },
-        {
-          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
-          "type": "random",
-          "time": null,
-          "actions": [
-            {
-              "action": "sound",
-              "attributes": {
-                "track_name": "groovin",
-                "delay": 0
-              }
-            },
-            {
-              "action": "obstacle",
-              "attributes": {
-                "type": "dogs",
-                "severity": 20,
-                "delay": 0
-              }
+              "type": "dogs",
+              "severity": 3,
+              "delay": 0
             }
           ]
         }

@@ -1,12 +1,10 @@
 package com.alkempl.rlr.data.model.obstacle
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProviders
 import com.alkempl.rlr.data.LocationRepository
 import com.alkempl.rlr.data.ObstacleRepository
 import com.alkempl.rlr.data.db.ObstacleEntity
 import com.alkempl.rlr.services.TTSManager
-import com.alkempl.rlr.viewmodel.LocationUpdateViewModel
 import java.util.concurrent.Executors
 
 open class Obstacle(
@@ -36,6 +34,7 @@ open class Obstacle(
     open fun onStart() {
         ttsManager.speak(getTTSText())
     }
+
     open fun onFinish() {}
     open fun onSuccess() {}
     open fun onFailure() {}

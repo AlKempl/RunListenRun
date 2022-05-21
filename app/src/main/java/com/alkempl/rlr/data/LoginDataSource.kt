@@ -21,7 +21,7 @@ class LoginDataSource {
 
     suspend fun login(username: String, password: String): Result<FirebaseUser> {
         try {
-            val task = auth.signInWithEmailAndPassword(username, password).await()
+            auth.signInWithEmailAndPassword(username, password).await()
             return if (auth.currentUser != null){
                 Result.Success(auth.currentUser!!)
             }else{
@@ -34,7 +34,7 @@ class LoginDataSource {
 
     suspend fun register(username: String, password: String): Result<FirebaseUser> {
          try {
-            val task = auth.createUserWithEmailAndPassword(username, password).await();
+             auth.createUserWithEmailAndPassword(username, password).await();
             if(auth.currentUser != null){
                 Log.d("LDRE", auth.currentUser!!.email.toString());
                 return Result.Success(auth.currentUser!!)

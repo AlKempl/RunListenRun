@@ -1,29 +1,20 @@
 package com.alkempl.rlr.services
 
-import Scenario
 import android.app.Service
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.*
+import android.os.Binder
+import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import androidx.annotation.UiThread
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.preference.PreferenceManager
 import com.alkempl.rlr.data.ObstacleRepository
-import com.alkempl.rlr.data.model.obstacle.ObstacleFactory
-import com.alkempl.rlr.data.model.obstacle.ObstacleType
-import com.alkempl.rlr.data.model.scenario.ChapterEvent
 import com.alkempl.rlr.data.model.scenario.ChapterEventAction
-import com.alkempl.rlr.data.model.scenario.ChapterEventType
-import com.alkempl.rlr.data.model.scenario.EventActionType
-import com.google.gson.Gson
-import java.io.File
-import java.io.Reader
 import java.util.*
 import java.util.concurrent.Executors
-import kotlin.collections.ArrayList
 
 
 class ScenarioService : Service() {
@@ -142,6 +133,7 @@ class ScenarioService : Service() {
         )
 
         scenarioManager.initialize()
+        scenarioManager.initializeCurrentChapter()
         someTask()
     }
 

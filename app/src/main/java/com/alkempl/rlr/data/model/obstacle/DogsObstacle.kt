@@ -19,10 +19,12 @@ class DogsObstacle(context: Context, duration: Int) : Obstacle(context, duration
     }
 
     private fun isIncreasing(a: List<Float>): Boolean {
-        return 0 === IntStream.range(1, a.size)
-            .reduce(0) { acc, e -> acc + if (a[e - 1] <= a[e]) 0 else 1 }
+        return (
+                IntStream.range(1, a.size)
+                    .reduce(0)
+                    { acc, e -> acc + if (a[e - 1] <= a[e]) 0 else 1 }
+                ) == 0
     }
-
 
     override fun onFinish() {
         Log.i(TAG, "onFinish")

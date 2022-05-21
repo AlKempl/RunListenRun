@@ -41,8 +41,6 @@ class LocationUpdateFragment : Fragment() {
     private lateinit var soundManager: SoundManager
     private lateinit var scenarioManager: ScenarioManager
     private lateinit var actionsManager: ActionsManager
-    private lateinit var sensorManager: SensorManager
-    private lateinit var heartSensor: Sensor
 
     private lateinit var binding: FragmentLocationUpdateBinding
     private lateinit var bindingLocationItemList: FragmentLocationItemListBinding
@@ -89,9 +87,6 @@ class LocationUpdateFragment : Fragment() {
         /*
         * https://stackoverflow.com/questions/44337896/get-heart-rate-from-android-wear
         * */
-        sensorManager = this.requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        heartSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)
-        sensorManager.registerListener(mSensorEventListener, heartSensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         binding = FragmentLocationUpdateBinding.inflate(inflater, container, false)
         bindingLocationItemList =
@@ -195,18 +190,6 @@ class LocationUpdateFragment : Fragment() {
                 sb.view.findViewById<TextView>(snbid).maxLines = 5
                 sb.show()
             }
-        }
-    }
-    private val mSensorEventListener: SensorEventListener = object : SensorEventListener {
-        override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
-        override fun onSensorChanged(event: SensorEvent) {
-//            mStub.setOnLayoutInflatedListener(object : OnLayoutInflatedListener() {
-//                fun onLayoutInflated(stub: WatchViewStub) {
-//                    mTextView = stub.findViewById(R.id.text) as TextView
-//                    mTextView.setText(java.lang.Float.toString(event.values[0]))
-//                }
-//            })
-            Log.d("$TAG/HeartSensor", "Value: ${event.values[0]}")
         }
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -6,13 +6,12 @@ import android.content.SharedPreferences.Editor
 import android.util.Log
 import androidx.preference.PreferenceManager
 import com.alkempl.rlr.data.GeofencingRepository
-import com.alkempl.rlr.data.model.scenario.ChapterEventAction
-import com.alkempl.rlr.data.model.scenario.ScenarioChapter
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import io.github.isharipov.gson.adapters.PolymorphDeserializer
+import com.alkempl.rlr.data.model.scenario.*
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import java.io.BufferedReader
 import java.io.File
-import java.io.Reader
 import java.util.concurrent.Executors
 
 
@@ -20,13 +19,21 @@ private const val TAG = "ScenarioManager"
 
 class ScenarioManager private constructor(private val context: Context) {
 
-    private var scenario: Scenario? = null
+    var scenarioPrefix: String? = null
+        private set
+
+    var scenario: Scenario? = null
+        private set
 
     private var currentChapter: ScenarioChapter? = null
     private var currentChapterId: String? = null
     private var currentChapterIdx: Int? = null
 
-    private var _scenarioInitialized = false
+    var scenarioInitialized = false
+        private set
+
+    var scenarioParsed = false
+        private set
 
     private lateinit var soundManager: SoundManager
     private lateinit var actionsManager: ActionsManager
@@ -36,31 +43,24 @@ class ScenarioManager private constructor(private val context: Context) {
         Executors.newSingleThreadExecutor()
     )
 
-    /**
-     * Status of scenario
-     */
-    val scenarioInitialized: Boolean
-        get() = _scenarioInitialized
-
     fun initialize() {
         soundManager = SoundManager.getInstance(context)
         actionsManager = ActionsManager.getInstance(context)
 
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
-        val scenario_prefix = sharedPref.getString("scenario_pref_value", "demo")
+        scenarioPrefix = sharedPref.getString("scenario_pref_value", "mmcs")
 
-        if (scenario_prefix == "custom") {
+        if (scenarioPrefix == "custom") {
             val filename = "dummy_test_filename.json"
             Log.d(TAG, "loading scenario from custom [$filename] file")
             loadScenarioFromFile(filename)
         } else {
-            val resName = "${scenario_prefix}_scenario"
+            val resName = "${scenarioPrefix}_scenario"
             Log.d(TAG, "loading scenario from bundled [$resName] file")
-            loadScenarioFromRawResource("${scenario_prefix}_scenario")
+            loadScenarioFromRawResource("${scenarioPrefix}_scenario")
         }
+        scenarioParsed = true
         Log.d(TAG, "scenario parsed")
-
-        initializeCurrentChapter()
     }
 
     private fun loadScenarioFromRawResource(res_name: String) {
@@ -74,20 +74,36 @@ class ScenarioManager private constructor(private val context: Context) {
         loadScenario(reader)
     }
 
-    private fun loadScenario(reader: Reader) {
+    private fun loadScenario(reader: BufferedReader) {
 //        val gson = Gson()
 
-        val gson: Gson = GsonBuilder()
-            .registerTypeAdapter(
-                ChapterEventAction::class.java,
-                PolymorphDeserializer<ChapterEventAction>()
-            )
-            .create()
+        val allText = reader.use(BufferedReader::readText)
 
-        scenario = gson.fromJson(reader, Scenario::class.java)
+        val moshi = Moshi.Builder()
+            .add(
+                PolymorphicJsonAdapterFactory.of(ChapterEventAction::class.java, "action")
+                    .withSubtype(MusicChapterEventAction::class.java, "sound")
+                    .withSubtype(GenerateObstacleChapterEventAction::class.java, "obstacle")
+            )
+            .add(KotlinJsonAdapterFactory())
+//            .add(EnumJsonAdapter.create(ChapterEventType::class.java).withUnknownFallback(ChapterEventType.INITIAL))
+//            .add(EnumJsonAdapter.create(EventActionType::class.java))
+            .build()
+
+        val jsonAdapter = moshi.adapter(Scenario::class.java)
+
+        scenario = jsonAdapter.fromJson(allText)
+        //                val gson: Gson = GsonBuilder()
+//            .registerTypeAdapter(
+//                ChapterEventAction::class.java,
+//                PolymorphDeserializer<ChapterEventAction>()
+//            )
+//            .create()
+
+//                        scenario = gson . fromJson (reader, Scenario::class.java)
     }
 
-    private fun initializeCurrentChapter() {
+    fun initializeCurrentChapter() {
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
         val currentChapterIdPref = sharedPref.getString("internal_current_chapter_id", null)
 
@@ -123,13 +139,14 @@ class ScenarioManager private constructor(private val context: Context) {
             Log.d("${TAG}/ADD_GEOFENCES", "Len: ${currentChapter!!.geofencing?.size}")
         }
 
-        _scenarioInitialized = true
+        scenarioInitialized = true
     }
 
     fun clear() {
         Log.d(TAG, "clear")
 
-        _scenarioInitialized = false
+        scenarioInitialized = false
+        scenarioParsed = false
         scenario = null
         currentChapter = null
         currentChapterId = null
