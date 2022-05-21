@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/locationUpdateFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/locationUpdateFragment"
@@ -33,4 +33,19 @@
         android:name="com.alkempl.rlr.ui.UploadImageFragment"
         android:label="fragment_upload_image"
         tools:layout="@layout/fragment_upload_image" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.alkempl.rlr.ui.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_locationUpdateFragment_to_uploadImageFragment"
+            app:destination="@id/avatarFragment" />
+        <action
+            android:id="@+id/action_locationUpdateFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_locationUpdateFragment_to_lipsumFragment"
+            app:destination="@id/lipsumFragment" />
+    </fragment>
 </navigation>

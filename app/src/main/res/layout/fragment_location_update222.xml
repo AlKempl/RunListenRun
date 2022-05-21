@@ -27,13 +27,14 @@
         android:visibility="visible">
 
         <TextView
-            android:id="@+id/status_message2"
+            android:id="@+id/chapter_caption"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginBottom="16dp"
             android:fontFamily="sans-serif-light"
+            android:gravity="center|center_horizontal|center_vertical"
             android:text="Ававава"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
         <RelativeLayout
             android:id="@+id/relative_container"
@@ -41,7 +42,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/image_test"
+                android:id="@+id/obstacle_image"
                 android:layout_width="80dp"
                 android:layout_height="294dp"
                 android:layout_centerInParent="true"
@@ -50,7 +51,7 @@
                 android:src="@drawable/android_treasure" />
 
             <ProgressBar
-                android:id="@+id/progress"
+                android:id="@+id/chapter_progress_circular"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="match_parent"
                 android:layout_height="255dp"
@@ -59,13 +60,14 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/status_message"
+            android:id="@+id/geofencing_status_caption"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginBottom="16dp"
             android:fontFamily="sans-serif-light"
+            android:gravity="center|center_horizontal|center_vertical"
             android:text="Ававава"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
