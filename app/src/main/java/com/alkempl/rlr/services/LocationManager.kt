@@ -40,7 +40,7 @@ class LocationManager private constructor(private val context: Context) {
 //    private lateinit var locationCallback: LocationCallback
 
     // Stores parameters for requests to the FusedLocationProviderApi.
-    private val locationRequest: LocationRequest = LocationRequest().apply {
+    private val locationRequest: LocationRequest = LocationRequest.create().apply {
         // Sets the desired interval for active location updates. This interval is inexact. You
         // may not receive updates at all if no location sources are available, or you may
         // receive them slower than requested. You may also receive updates faster than
@@ -123,11 +123,11 @@ class LocationManager private constructor(private val context: Context) {
             .build()
 
         // First, remove any existing geofences that use our pending intent
-        geofencingClient.removeGeofences(geofencePendingIntent)?.run {
+        geofencingClient.removeGeofences(geofencePendingIntent).run {
             // Regardless of success/failure of the removal, add the new geofence
             addOnCompleteListener {
                 // Add the new geofence request with the new geofence
-                geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent)?.run {
+                geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent).run {
                     addOnSuccessListener {
                         // Geofences added.
 //                        Toast.makeText(this@HuntMainActivity, getString(R.string.geofences_added) + " " + GEOFENCE_VERSION,
@@ -156,7 +156,7 @@ class LocationManager private constructor(private val context: Context) {
      * permission.
      */
     fun removeGeofences() {
-        geofencingClient.removeGeofences(geofencePendingIntent)?.run {
+        geofencingClient.removeGeofences(geofencePendingIntent).run {
             addOnSuccessListener {
                 // Geofences removed
                 Log.d(TAG, context.getString(R.string.geofences_removed))

@@ -34,13 +34,13 @@ class LocationUpdatesBroadcastReceiver : BroadcastReceiver() {
         if (intent.action == ACTION_PROCESS_UPDATES) {
             Log.d(TAG, "ACTION_PROCESS_UPDATES!")
             // Checks for location availability changes.
-            LocationAvailability.extractLocationAvailability(intent)?.let { locationAvailability ->
+            LocationAvailability.extractLocationAvailability(intent).let { locationAvailability ->
                 if (!locationAvailability.isLocationAvailable) {
                     Log.d(TAG, "Location services are no longer available!")
                 }
             }
 
-            LocationResult.extractResult(intent)?.let { locationResult ->
+            LocationResult.extractResult(intent).let { locationResult ->
                 val locations = locationResult.locations.map { location ->
                     LocationEntity(
                         latitude = location.latitude,

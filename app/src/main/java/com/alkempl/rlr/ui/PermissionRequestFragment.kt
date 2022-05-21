@@ -99,6 +99,7 @@ class PermissionRequestFragment : Fragment() {
 
         binding = FragmentPermissionRequestBinding.inflate(inflater, container, false)
 
+        @Suppress("NON_EXHAUSTIVE_WHEN_STATEMENT")
         when (permissionRequestType) {
             PermissionRequestType.FINE_LOCATION -> {
 
@@ -150,6 +151,7 @@ class PermissionRequestFragment : Fragment() {
         }
 
         binding.permissionRequestButton.setOnClickListener {
+            @Suppress("NON_EXHAUSTIVE_WHEN_STATEMENT")
             when (permissionRequestType) {
                 PermissionRequestType.FINE_LOCATION ->
                     requestFineLocationPermission()

@@ -35,8 +35,6 @@ private const val TAG = "LUFragment"
 
 class LocationUpdateFragment : Fragment() {
 
-    private var activityListener: Callbacks? = null
-
     private lateinit var ttsManager: TTSManager
     private lateinit var soundManager: SoundManager
     private lateinit var scenarioManager: ScenarioManager
@@ -94,10 +92,6 @@ class LocationUpdateFragment : Fragment() {
         bindingObstacleItemList =
             FragmentObstacleItemListBinding.inflate(inflater, container, false)
 
-        binding.enableBackgroundLocationButton.setOnClickListener {
-            activityListener?.requestBackgroundLocationPermission()
-        }
-
         binding.scenarioControlButton.setOnClickListener {
             manageScenarioService()
         }
@@ -109,15 +103,15 @@ class LocationUpdateFragment : Fragment() {
         val scenarioServiceIntent = Intent(context, ScenarioService::class.java)
 
         if (scenarioServiceBounded) {
-            Log.d(TAG, "stop Scenario Service")
+            Log.d(TAG, "stop com.alkempl.rlr.data.model.scenario.Scenario Service")
             requireActivity().unbindService(scenarioServiceConnection)
 //            requireActivity().stopService(scenarioServiceIntent)
         } else {
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                Log.d(TAG, "start Scenario ForegroundService")
+//                Log.d(TAG, "start com.alkempl.rlr.data.model.scenario.Scenario ForegroundService")
 //                requireActivity().startForegroundService(scenarioServiceIntent)
 //            } else {
-//                Log.d(TAG, "start Scenario Service")
+//                Log.d(TAG, "start com.alkempl.rlr.data.model.scenario.Scenario Service")
 //                requireActivity().startService(scenarioServiceIntent)
 //            }
             // Bind to LocalService
@@ -141,18 +135,6 @@ class LocationUpdateFragment : Fragment() {
         actionReceiver.addAction("scenarioShutdownHealth")
         actionReceiver.addAction("scenarioShutdownChapterEnd")
         bm!!.registerReceiver(onJsonReceived, actionReceiver)
-
-        if (context is Callbacks) {
-            activityListener = context
-
-            // If fine location permission isn't approved, instructs the parent Activity to replace
-            // this fragment with the permission request fragment.
-            if (!context.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                activityListener?.requestFineLocationPermission()
-            }
-        } else {
-            throw RuntimeException("$context must implement LocationUpdateFragment.Callbacks")
-        }
     }
 
     private val onJsonReceived: BroadcastReceiver = object : BroadcastReceiver() {
@@ -257,7 +239,6 @@ class LocationUpdateFragment : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        activityListener = null
         requireActivity().unbindService(scenarioServiceConnection)
         bm!!.unregisterReceiver(onJsonReceived)
     }

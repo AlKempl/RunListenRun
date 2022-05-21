@@ -14,7 +14,7 @@ import java.util.UUID
  */
 @Entity(tableName = "location")
 data class LocationEntity(
-    @PrimaryKey val id: UUID = UUID.randomUUID(),
+    @PrimaryKey var id: UUID = UUID.randomUUID(),
     var latitude: Double = 0.0,
     var longitude: Double = 0.0,
     var accuracy: Float = 0.0f,
@@ -36,7 +36,6 @@ data class LocationEntity(
         }
     }
     override fun toString(): String {
-        val appState = getPrefix()
         return "$provider $mock $latitude, $longitude ( ${getDateTime(date)} )\n"
     }
 }

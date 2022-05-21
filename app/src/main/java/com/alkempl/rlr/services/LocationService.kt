@@ -1,32 +1,13 @@
 package com.alkempl.rlr.services
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.Service
-import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.os.Binder
-import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
-import androidx.lifecycle.ViewModelProviders
-import com.alkempl.rlr.data.LocationRepository
-import com.alkempl.rlr.viewmodel.LocationUpdateViewModel
-import com.google.android.gms.location.*
-import java.lang.Exception
-import java.lang.IllegalArgumentException
-import java.util.concurrent.Executors
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationCompat.PRIORITY_MIN
 import androidx.preference.PreferenceManager
-import androidx.preference.SwitchPreference
+import com.alkempl.rlr.data.LocationRepository
+import java.util.concurrent.Executors
 
 
 class LocationService : Service() {

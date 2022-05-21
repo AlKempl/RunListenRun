@@ -15,7 +15,7 @@ import com.alkempl.rlr.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity(), PermissionRequestFragment.Callbacks, LocationUpdateFragment.Callbacks {
+class MainActivity : AppCompatActivity(), PermissionRequestFragment.Callbacks, HomeFragment.Callbacks {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), PermissionRequestFragment.Callbacks, L
 
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (currentFragment == null) {
-            val fragment = LocationUpdateFragment.newInstance()
+            val fragment = HomeFragment.newInstance()
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)

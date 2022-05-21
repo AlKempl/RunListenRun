@@ -50,6 +50,7 @@ class ActionsManager private constructor(private val context: Context) {
 
     private fun scheduleAction(
         millisInFuture: Number,
+        @Suppress("UNUSED_PARAMETER")
         event: ChapterEvent,
         action: ChapterEventAction,
         fromGeofence: Boolean = false

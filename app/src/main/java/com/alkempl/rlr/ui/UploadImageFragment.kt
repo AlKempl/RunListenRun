@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.alkempl.rlr.ui
 
 import android.app.ProgressDialog
@@ -90,25 +92,23 @@ class UploadImageFragment : Fragment() {
     }
 
     private fun UploadImage() {
-        if (filePath != null) {
-            var prgd = ProgressDialog(context)
-            prgd.setTitle("Uploading...")
-            prgd.show()
+        val prgd = ProgressDialog(context)
+        prgd.setTitle("Uploading...")
+        prgd.show()
 
-            val ref = storageReference.child("images/" + UUID.randomUUID().toString())
-            ref.putFile(filePath)
-                .addOnSuccessListener {
-                    prgd.dismiss()
-                    Toast.makeText(context, "Image uploaded", Toast.LENGTH_SHORT).show()
-                }
-                .addOnFailureListener {
-                    prgd.dismiss()
-                    Toast.makeText(context, "Failed: " + it.message, Toast.LENGTH_SHORT).show()
-                }
-                .addOnProgressListener {
-                    val progress = (100.0 * it.bytesTransferred / it.totalByteCount)
-                    prgd.setMessage("Uploaded: " + progress.toInt() + "%")
-                }
-        }
+        val ref = storageReference.child("images/" + UUID.randomUUID().toString())
+        ref.putFile(filePath)
+            .addOnSuccessListener {
+                prgd.dismiss()
+                Toast.makeText(context, "Image uploaded", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                prgd.dismiss()
+                Toast.makeText(context, "Failed: " + it.message, Toast.LENGTH_SHORT).show()
+            }
+            .addOnProgressListener {
+                val progress = (100.0 * it.bytesTransferred / it.totalByteCount)
+                prgd.setMessage("Uploaded: " + progress.toInt() + "%")
+            }
     }
 }

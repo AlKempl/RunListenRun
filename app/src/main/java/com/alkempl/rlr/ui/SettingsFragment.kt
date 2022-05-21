@@ -42,7 +42,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
     }
 
-    private fun logIfUserDisabledFeature(pref: Preference?, newValue: Any): Boolean {
+    private fun logIfUserDisabledFeature(
+        @Suppress("UNUSED_PARAMETER") pref: Preference?,
+        newValue: Any
+    ): Boolean {
         if (newValue as Boolean) {
             locationUpdateViewModel.startLocationUpdates()
         }else{

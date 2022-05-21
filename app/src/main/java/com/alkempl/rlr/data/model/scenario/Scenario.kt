@@ -1,6 +1,6 @@
-import com.alkempl.rlr.data.model.scenario.ScenarioChapter
+package com.alkempl.rlr.data.model.scenario
+
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 
 data class Scenario(
     @Json(name = "chapters")

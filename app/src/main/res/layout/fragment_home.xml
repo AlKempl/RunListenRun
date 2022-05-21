@@ -10,4 +10,13 @@
         android:layout_height="match_parent"
         android:text="Hello" />
 
+    <Button
+        android:id="@+id/enableBackgroundLocationButton"
+        android:layout_width="114dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginEnd="@dimen/margin_normal"
+        android:text="@string/enhance_with_background_location_button_text" />
+
 </FrameLayout>

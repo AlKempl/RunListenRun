@@ -6,20 +6,6 @@
     app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/locationUpdateFragment"
-        android:name="com.alkempl.rlr.ui.LocationUpdateFragment"
-        android:label="@string/app_name" >
-        <action
-            android:id="@+id/action_locationUpdateFragment_to_uploadImageFragment"
-            app:destination="@id/avatarFragment" />
-        <action
-            android:id="@+id/action_locationUpdateFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
-        <action
-            android:id="@+id/action_locationUpdateFragment_to_lipsumFragment"
-            app:destination="@id/lipsumFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/settingsFragment"
         android:name="com.alkempl.rlr.ui.SettingsFragment"
         android:label="SettingsFragment" />
@@ -38,6 +24,20 @@
         android:name="com.alkempl.rlr.ui.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_locationUpdateFragment_to_uploadImageFragment"
+            app:destination="@id/avatarFragment" />
+        <action
+            android:id="@+id/action_locationUpdateFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_locationUpdateFragment_to_lipsumFragment"
+            app:destination="@id/lipsumFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/locationUpdateFragment"
+        android:name="com.alkempl.rlr.ui.LocationUpdateFragment"
+        android:label="@string/app_name">
         <action
             android:id="@+id/action_locationUpdateFragment_to_uploadImageFragment"
             app:destination="@id/avatarFragment" />

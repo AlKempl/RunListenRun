@@ -1,6 +1,5 @@
 package com.alkempl.rlr.services
 
-import Scenario
 import android.content.Context
 import android.content.SharedPreferences.Editor
 import android.util.Log
@@ -108,7 +107,7 @@ class ScenarioManager private constructor(private val context: Context) {
 //            )
 //            .create()
 
-//                        scenario = gson . fromJson (reader, Scenario::class.java)
+//                        scenario = gson . fromJson (reader, com.alkempl.rlr.data.model.scenario.Scenario::class.java)
     }
 
     fun initializeCurrentChapter() {

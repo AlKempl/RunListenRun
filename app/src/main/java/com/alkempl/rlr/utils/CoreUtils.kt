@@ -44,12 +44,7 @@ fun vibrate(context: Context, pattern: LongArray){
     }
 
     val vib = context.getSystemService(VIBRATOR_SERVICE) as Vibrator
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        vib.vibrate(VibrationEffect.createWaveform(pattern, -1))
-    }else{
-        vib.vibrate(pattern[1])
-    }
+    vib.vibrate(VibrationEffect.createWaveform(pattern, -1))
 }
 
 
@@ -84,6 +79,7 @@ fun Fragment.requestPermissionWithRationale(
     if (provideRationale) {
         snackbar.show()
     } else {
+        @Suppress("DEPRECATION")
         requestPermissions(arrayOf(permission), requestCode)
     }
 }
