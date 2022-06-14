@@ -2,6 +2,8 @@ package com.alkempl.rlr.services
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.alkempl.rlr.data.model.obstacle.Obstacle
 
 
@@ -13,6 +15,10 @@ class ObstaclesManager private constructor(private val context: Context) {
 
     var currentObstacle: Obstacle? = null
         private set
+
+    val _currentObstacleImage = MutableLiveData<String>()
+    val currentObstacleImage: LiveData<String>
+        get() = _currentObstacleImage
 
     init {
         Log.d("${TAG}/BasicSetup", "OK")
@@ -31,6 +37,7 @@ class ObstaclesManager private constructor(private val context: Context) {
 
     fun cleanCurrentObstacle() {
         Log.d(TAG, "cleanCurrentObstacle")
+        _currentObstacleImage.value = ""
         currentObstacle = null
     }
 
@@ -40,6 +47,7 @@ class ObstaclesManager private constructor(private val context: Context) {
             Log.d("$TAG/setCurrent", "obstacle [$hashCode] OK")
             obstacle.onStart()
             obstacles[hashCode] = obstacle
+            _currentObstacleImage.value = obstacle.image
         } else {
             Log.e("$TAG/setCurrent", "ERR for obstacle [$hashCode]: currentObstacle not empty")
         }

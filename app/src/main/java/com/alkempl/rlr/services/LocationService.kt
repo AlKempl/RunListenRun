@@ -38,18 +38,18 @@ class LocationService : Service() {
         return binder
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        Log.d(TAG, "onStartCommand")
-        super.onStartCommand(intent, flags, startId)
-        locationRepository.wipeOldLocations()
-        val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
-        val enabled = sharedPref.getBoolean("bg_location_updates", true)
-
-        if(enabled){
-            locationRepository.startLocationUpdates()
-        }
-        return START_STICKY
-    }
+/*    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+//        Log.d(TAG, "onStartCommand")
+//        super.onStartCommand(intent, flags, startId)
+//        locationRepository.wipeOldLocations()
+//        val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+//        val enabled = sharedPref.getBoolean("bg_location_updates", true)
+//
+//        if(enabled){
+//            locationRepository.startLocationUpdates()
+//        }
+//        return START_STICKY
+    }*/
 
     override fun onCreate() {
         Log.d(TAG, "onCreate")

@@ -1,6 +1,7 @@
 package com.alkempl.rlr.data
 
 import android.content.Context
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import com.alkempl.rlr.data.db.AppDatabase
@@ -80,6 +81,7 @@ class LocationRepository private constructor(
      * Adds list of locations to the database.
      */
     fun addLocations(myLocationEntities: List<LocationEntity>) {
+        Log.d(TAG, "adding ${myLocationEntities.size} LocationEntities to repository")
         executor.execute {
             locationDao.addLocations(myLocationEntities)
         }

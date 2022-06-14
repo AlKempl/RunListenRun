@@ -3,6 +3,8 @@ package com.alkempl.rlr.services
 import android.content.Context
 import android.content.SharedPreferences.Editor
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.alkempl.rlr.data.GeofencingManager
 import com.alkempl.rlr.data.model.scenario.*
@@ -24,9 +26,17 @@ class ScenarioManager private constructor(private val context: Context) {
     var scenario: Scenario? = null
         private set
 
+    val _scenarioRunning = MutableLiveData<Boolean>(false)
+    val scenarioRunning: LiveData<Boolean>
+        get() = _scenarioRunning
+
     private var currentChapter: ScenarioChapter? = null
     private var currentChapterId: String? = null
     private var currentChapterIdx: Int? = null
+
+    val _currentChapterName = MutableLiveData<String>()
+    val currentChapterName: LiveData<String>
+        get() = _currentChapterName
 
     var scenarioInitialized = false
         private set
@@ -44,7 +54,26 @@ class ScenarioManager private constructor(private val context: Context) {
 
     fun runScenario(){
         if(scenarioParsed && scenarioInitialized){
+
+            currentChapter!!.initial_event?.let { initial_event ->
+                initial_event.actions?.forEach { action ->
+                    actionsManager.processEventAction(initial_event, action)
+                }
+            }
+
+            currentChapter!!.events?.forEach { event ->
+                event.actions?.forEach { action ->
+                    actionsManager.processEventAction(event, action)
+                }
+            }
+
+            currentChapter!!.geofencing?.forEach { geofence ->
+                geofencingManager.storeGeofence(geofence)
+                Log.d("${TAG}/ADD_GEOFENCE", geofence.toString())
+            }
+
             geofencingManager.processNext()
+            _scenarioRunning.value = true
         }else{
             Log.e(TAG, "runScenario: not scenarioParsed && scenarioInitialized")
         }
@@ -132,23 +161,7 @@ class ScenarioManager private constructor(private val context: Context) {
         currentChapterId = currentChapter!!.id
         Log.d(TAG, "currentChapterId $currentChapterId")
 
-
-        currentChapter!!.initial_event?.let { initial_event ->
-            initial_event.actions?.forEach { action ->
-                actionsManager.processEventAction(initial_event, action)
-            }
-        }
-
-        currentChapter!!.events?.forEach { event ->
-            event.actions?.forEach { action ->
-                actionsManager.processEventAction(event, action)
-            }
-        }
-
-        currentChapter!!.geofencing?.forEach { geofence ->
-            geofencingManager.storeGeofence(geofence)
-            Log.d("${TAG}/ADD_GEOFENCE", geofence.toString())
-        }
+        _currentChapterName.value = currentChapter!!.name
 
         scenarioInitialized = true
         Log.d(TAG, "current chapter initialized")
@@ -157,12 +170,14 @@ class ScenarioManager private constructor(private val context: Context) {
     fun clear() {
         Log.d(TAG, "clear")
 
+        _scenarioRunning.value = false
         scenarioInitialized = false
         scenarioParsed = false
         scenario = null
         currentChapter = null
         currentChapterId = null
         currentChapterIdx = null
+        _currentChapterName.value = ""
     }
 
     fun finishChapter() {
@@ -170,7 +185,8 @@ class ScenarioManager private constructor(private val context: Context) {
 
         //TODO: inc chapter idx
         scenario!!.chapters
-            ?.get(currentChapterIdx!! + 1)
+//            ?.get(currentChapterIdx!! + 1)
+            ?.get(currentChapterIdx!!)
             ?.id
             .let {
                 val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)

@@ -190,7 +190,19 @@ class PermissionRequestFragment : Fragment() {
                     Log.d(TAG, "User interaction was cancelled.")
 
                 grantResults[0] == PackageManager.PERMISSION_GRANTED ->
-                    activityListener?.displayLocationUI()
+                {
+                    when(requestCode){
+                        REQUEST_FINE_LOCATION_PERMISSIONS_REQUEST_CODE -> {
+                            activityListener?.requestPermissionFragment(PermissionRequestType.BACKGROUND_LOCATION)
+                        }
+                        REQUEST_BACKGROUND_LOCATION_PERMISSIONS_REQUEST_CODE -> {
+                            activityListener?.requestPermissionFragment(PermissionRequestType.ACTIVITY_RECOGNITION)
+                        }
+                        REQUEST_ACTIVITY_RECOGNITION_PERMISSIONS_REQUEST_CODE -> {
+                            activityListener?.displayHomeUI()
+                        }
+                    }
+                }
 
                 else -> {
 
@@ -230,12 +242,12 @@ class PermissionRequestFragment : Fragment() {
             context?.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) ?: return
 
         if (permissionApproved) {
-            activityListener?.displayLocationUI()
+            activityListener?.requestPermissionFragment(PermissionRequestType.BACKGROUND_LOCATION)
         } else {
-            requestPermissionWithRationale(
-                Manifest.permission.ACCESS_FINE_LOCATION,
+            requestPermissions(
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 REQUEST_FINE_LOCATION_PERMISSIONS_REQUEST_CODE,
-                fineLocationRationalSnackbar)
+            )
         }
     }
 
@@ -244,12 +256,12 @@ class PermissionRequestFragment : Fragment() {
             context?.hasPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) ?: return
 
         if (permissionApproved) {
-            activityListener?.displayLocationUI()
+            activityListener?.requestPermissionFragment(PermissionRequestType.ACTIVITY_RECOGNITION)
         } else {
-            requestPermissionWithRationale(
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+            requestPermissions(
+                arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
                 REQUEST_BACKGROUND_LOCATION_PERMISSIONS_REQUEST_CODE,
-                backgroundRationalSnackbar)
+            )
         }
     }
 
@@ -258,12 +270,12 @@ class PermissionRequestFragment : Fragment() {
             context?.hasPermission(Manifest.permission.ACTIVITY_RECOGNITION) ?: return
 
         if (permissionApproved) {
-            activityListener?.displayLocationUI()
+            activityListener?.displayHomeUI()
         } else {
-            requestPermissionWithRationale(
-                Manifest.permission.ACTIVITY_RECOGNITION,
+            requestPermissions(
+                arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
                 REQUEST_ACTIVITY_RECOGNITION_PERMISSIONS_REQUEST_CODE,
-                activityRecognitionRationalSnackbar)
+            )
         }
     }
 
@@ -291,7 +303,8 @@ class PermissionRequestFragment : Fragment() {
     }
 
     interface Callbacks {
-        fun displayLocationUI()
+        fun displayHomeUI()
+        fun requestPermissionFragment(type: PermissionRequestType)
     }
 }
 

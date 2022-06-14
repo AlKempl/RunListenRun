@@ -3,10 +3,7 @@ package com.alkempl.rlr.ui
 import android.Manifest
 import android.content.*
 import android.graphics.Color
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
+import android.opengl.Visibility
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -14,13 +11,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.recyclerview.widget.RecyclerView
 import com.alkempl.rlr.R
-import com.alkempl.rlr.adapter.LocationEntityItemRecyclerViewAdapter
-import com.alkempl.rlr.adapter.ObstacleEntityItemRecyclerViewAdapter
 import com.alkempl.rlr.databinding.FragmentLocationItemListBinding
 import com.alkempl.rlr.databinding.FragmentLocationUpdateBinding
 import com.alkempl.rlr.databinding.FragmentObstacleItemListBinding
@@ -34,6 +29,8 @@ import com.google.android.material.snackbar.Snackbar
 private const val TAG = "LUFragment"
 
 class LocationUpdateFragment : Fragment() {
+
+    private var activityListener: Callbacks? = null
 
     private lateinit var ttsManager: TTSManager
     private lateinit var soundManager: SoundManager
@@ -77,6 +74,8 @@ class LocationUpdateFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        container?.removeAllViews()
+
         ttsManager = TTSManager.getInstance(this.requireContext())
         soundManager = SoundManager.getInstance(this.requireContext())
         scenarioManager = ScenarioManager.getInstance(this.requireContext())
@@ -96,6 +95,8 @@ class LocationUpdateFragment : Fragment() {
             manageScenarioService()
         }
 
+        binding.chapterProgressCircular.indeterminateMode = true;
+
         return binding.root
     }
 
@@ -105,6 +106,7 @@ class LocationUpdateFragment : Fragment() {
         if (scenarioServiceBounded) {
             Log.d(TAG, "stop com.alkempl.rlr.data.model.scenario.Scenario Service")
             requireActivity().unbindService(scenarioServiceConnection)
+            activityListener?.displayHomeUI()
 //            requireActivity().stopService(scenarioServiceIntent)
         } else {
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -177,35 +179,87 @@ class LocationUpdateFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        locationUpdateViewModel.locationListLiveData.observe(
-            viewLifecycleOwner,
-            androidx.lifecycle.Observer { locations ->
-                locations?.let {
-                    val det: RecyclerView =
-                        binding.fragmentLocationContainerView.findViewById(R.id.locations_list)
-                    with(det.adapter!!) {
-                        if (this is LocationEntityItemRecyclerViewAdapter) {
-                            updateUserList(locations)
-                        }
-                    }
-                }
+        locationUpdateViewModel.progressNow.observe(viewLifecycleOwner
+        ) { newProgressNow ->
+            if (newProgressNow > 0){
+                binding.chapterProgressCircular.progress = newProgressNow.toFloat()
             }
-        )
+        }
 
-        obstacleUpdateViewModel.obstacleListLiveData.observe(
-            viewLifecycleOwner,
-            androidx.lifecycle.Observer { obstacles ->
-                obstacles?.let {
-                    val det: RecyclerView =
-                        binding.fragmentObstaclesContainerView.findViewById(R.id.obstacles_list)
-                    with(det.adapter!!) {
-                        if (this is ObstacleEntityItemRecyclerViewAdapter) {
-                            updateUserList(obstacles)
-                        }
-                    }
-                }
+        locationUpdateViewModel.progressMax.observe(viewLifecycleOwner
+        ) { newProgressMax ->
+            if(newProgressMax > 0){
+                binding.chapterProgressCircular.progressMax = newProgressMax.toFloat()
             }
-        )
+        }
+
+        locationUpdateViewModel.geofenceStatus.observe(viewLifecycleOwner
+        ) { newHint ->
+            if(newHint.isNotEmpty()){
+                binding.geofencingStatusCaption.visibility = View.VISIBLE
+                binding.geofencingStatusCaption.text = newHint
+            }else{
+                binding.geofencingStatusCaption.visibility = View.GONE
+            }
+        }
+
+        locationUpdateViewModel.chapterName.observe(viewLifecycleOwner
+        ) { newChapterName ->
+            if(newChapterName.isNotEmpty()){
+                binding.chapterCaption.visibility = View.VISIBLE
+                binding.chapterCaption.text = newChapterName
+            }else{
+                binding.chapterCaption.visibility = View.GONE
+            }
+        }
+
+        locationUpdateViewModel.obstacleImg.observe(viewLifecycleOwner
+        ) { newObstacleImg ->
+            if(newObstacleImg.isNotEmpty()){
+                binding.obstacleImage.visibility = View.VISIBLE
+                val id = resources.getIdentifier(newObstacleImg,
+                    "drawable", requireContext().packageName)
+                binding.obstacleImage.setImageResource(id)
+            }else{
+                binding.chapterCaption.visibility = View.GONE
+            }
+        }
+
+        locationUpdateViewModel.scenarioRunning.observe(viewLifecycleOwner)
+        { newStatusIsRunning ->
+            binding.chapterProgressCircular.indeterminateMode = !newStatusIsRunning
+        }
+        /* locationUpdateViewModel.locationListLiveData.observe(
+             viewLifecycleOwner,
+             androidx.lifecycle.Observer { locations ->
+                 locations?.let {
+                     val det: RecyclerView =
+                         binding.fragmentLocationContainerView.findViewById(R.id.locations_list)
+                     with(det.adapter!!) {
+                         if (this is LocationEntityItemRecyclerViewAdapter) {
+                             updateUserList(locations)
+                         }
+                     }
+                 }
+             }
+         )
+
+         obstacleUpdateViewModel.obstacleListLiveData.observe(
+             viewLifecycleOwner,
+             androidx.lifecycle.Observer { obstacles ->
+                 obstacles?.let {
+                     val det: RecyclerView =
+                         binding.fragmentObstaclesContainerView.findViewById(R.id.obstacles_list)
+                     with(det.adapter!!) {
+                         if (this is ObstacleEntityItemRecyclerViewAdapter) {
+                             updateUserList(obstacles)
+                         }
+                     }
+                 }
+             }
+         )*/
+
+        manageScenarioService()
 
 
         /*locationUpdateViewModel.locationListLiveData.observe(
@@ -233,7 +287,6 @@ class LocationUpdateFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        updateBackgroundButtonState()
         updateScenarioButtonState()
     }
 
@@ -245,14 +298,6 @@ class LocationUpdateFragment : Fragment() {
 
     private fun showBackgroundButton(): Boolean {
         return !requireContext().hasPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-    }
-
-    private fun updateBackgroundButtonState() {
-        if (showBackgroundButton()) {
-            binding.enableBackgroundLocationButton.visibility = View.VISIBLE
-        } else {
-            binding.enableBackgroundLocationButton.visibility = View.GONE
-        }
     }
 
     private fun updateScenarioButtonState() {
@@ -279,7 +324,6 @@ class LocationUpdateFragment : Fragment() {
     }
 
     interface Callbacks {
-        fun requestFineLocationPermission()
-        fun requestBackgroundLocationPermission()
+        fun displayHomeUI()
     }
 }

@@ -47,6 +47,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
     private lateinit var ttsManager: TTSManager
     private lateinit var actionsManager: ActionsManager
     private lateinit var scenarioManager: ScenarioManager
+    private lateinit var geofencingManager: GeofencingManager
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(TAG, "onReceive() context:$context, intent:$intent")
@@ -62,9 +63,6 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
             if (geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
                 Log.d(TAG, context.getString(R.string.geofence_entered))
-//                Toast.makeText(context, context.getString(R.string.geofence_entered),
-//                    Toast.LENGTH_LONG)
-//                    .show()
 
                 val fenceId = when {
                     geofencingEvent.triggeringGeofences.isNotEmpty() ->
@@ -75,7 +73,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                     }
                 }
 
-                val geofencingManager =
+                geofencingManager =
                     GeofencingManager.getInstance(context, Executors.newSingleThreadExecutor())
 
                 // Check geofence against the constants listed in GeofenceUtil.kt to see if the
@@ -140,6 +138,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         vibrate(context, pattern)
 
         ttsManager.speak("$ttsEnteredDesc .. $ttsNextDesc")
+
+        geofencingManager.setStatusHint("$enteredDesc: $nextDesc")
 
         Toast.makeText(
             context,

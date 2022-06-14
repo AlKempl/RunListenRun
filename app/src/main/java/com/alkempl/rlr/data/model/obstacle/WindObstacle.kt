@@ -10,6 +10,7 @@ class WindObstacle(context: Context, duration: Int) : Obstacle(context, duration
 
     override val name = "сильный ветер"
     override val hint = "стоит снизить скорость, чтобы не присоединиться к унесенным ветром"
+    override val image = "wind"
 
     override fun onStart() {
         Log.i(TAG, "onStart")

@@ -32,6 +32,7 @@ open class Obstacle(
     open val hint = "Непонятное препятствие"
     open val failureText = "Препятствие не пройдено. "
     open val successText = "Препятствие пройдено. "
+    open val image = "man"
 
     open fun onStart() {
         ttsManager.speak(getTTSIntroText())

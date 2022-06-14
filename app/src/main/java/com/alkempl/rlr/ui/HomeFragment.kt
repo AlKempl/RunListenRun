@@ -2,18 +2,27 @@ package com.alkempl.rlr.ui
 
 import android.Manifest
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.alkempl.rlr.R
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.alkempl.rlr.databinding.FragmentHomeBinding
-import com.alkempl.rlr.databinding.FragmentLocationItemListBinding
-import com.alkempl.rlr.databinding.FragmentLocationUpdateBinding
-import com.alkempl.rlr.databinding.FragmentObstacleItemListBinding
 import com.alkempl.rlr.utils.hasPermission
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.fitness.Fitness
+import com.google.android.gms.fitness.data.DataSet
+import com.google.android.gms.fitness.data.DataType
+import com.google.android.gms.fitness.request.DataReadRequest
+import com.google.android.gms.fitness.result.DataReadResult
+import java.text.DateFormat
+import java.text.DateFormat.getDateInstance
+import java.util.*
+import java.util.concurrent.TimeUnit
+
+private const val TAG = "HomeFragment"
 
 class HomeFragment : Fragment() {
 
@@ -35,10 +44,31 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         binding.enableBackgroundLocationButton.setOnClickListener {
-            activityListener?.requestBackgroundLocationPermission()
+//            activityListener?.requestPermissionFragment()
+        }
+        binding.startSession.setOnClickListener {
+            activityListener?.sessionStartFragment()
         }
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+//        updateBackgroundButtonState()
+    }
+
+    private fun showBackgroundButton(): Boolean {
+        return requireContext().hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                && !requireContext().hasPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+    }
+
+    private fun updateBackgroundButtonState() {
+        if (showBackgroundButton()) {
+            binding.enableBackgroundLocationButton.visibility = View.VISIBLE
+        } else {
+            binding.enableBackgroundLocationButton.visibility = View.GONE
+        }
     }
 
     @Deprecated("Deprecated in Java")
@@ -57,8 +87,18 @@ class HomeFragment : Fragment() {
             // If fine location permission isn't approved, instructs the parent Activity to replace
             // this fragment with the permission request fragment.
             if (!context.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                activityListener?.requestFineLocationPermission()
+                activityListener?.requestPermissionFragment(PermissionRequestType.FINE_LOCATION)
+            }else{
+                if (!context.hasPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+                    activityListener?.requestPermissionFragment(PermissionRequestType.BACKGROUND_LOCATION
+                    )
+                } else {
+                    if (!context.hasPermission(Manifest.permission.ACTIVITY_RECOGNITION)) {
+                        activityListener?.requestPermissionFragment(PermissionRequestType.ACTIVITY_RECOGNITION)
+                    }
+                }
             }
+
         } else {
             throw RuntimeException("$context must implement LocationUpdateFragment.Callbacks")
         }
@@ -70,8 +110,8 @@ class HomeFragment : Fragment() {
     }
 
     interface Callbacks {
-        fun requestFineLocationPermission()
-        fun requestBackgroundLocationPermission()
+        fun requestPermissionFragment(type: PermissionRequestType)
+        fun sessionStartFragment()
     }
 
 }

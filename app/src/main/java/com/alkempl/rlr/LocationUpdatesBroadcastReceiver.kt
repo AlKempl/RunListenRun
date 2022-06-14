@@ -30,37 +30,44 @@ private const val TAG = "LUBroadcastReceiver"
 class LocationUpdatesBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d(TAG, "onReceive() context:$context, intent:$intent")
+        Log.d(TAG, "onReceive() context:$context, intent:$intent, extras:${intent.extras}}")
         if (intent.action == ACTION_PROCESS_UPDATES) {
+
             Log.d(TAG, "ACTION_PROCESS_UPDATES!")
             // Checks for location availability changes.
-            LocationAvailability.extractLocationAvailability(intent).let { locationAvailability ->
-                if (!locationAvailability.isLocationAvailable) {
-                    Log.d(TAG, "Location services are no longer available!")
-                }
-            }
+            LocationAvailability.extractLocationAvailability(intent)
+                ?.let { locationAvailability ->
+                locationAvailability?.let {
+                    if (!locationAvailability.isLocationAvailable) {
+                        Log.d(TAG, "Location services are no longer available!")
+                    }
 
-            LocationResult.extractResult(intent).let { locationResult ->
-                val locations = locationResult.locations.map { location ->
-                    LocationEntity(
-                        latitude = location.latitude,
-                        longitude = location.longitude,
-                        accuracy = location.accuracy,
-                        speed = location.speed,
-                        altitude = location.altitude,
-                        bearing = location.bearing,
-                        mock = location.isFromMockProvider,
-                        provider = location.provider,
-                        foreground = isAppInForeground(context),
-                        date = Date(location.time)
-                    )
-                }
-                if (locations.isNotEmpty()) {
-                    LocationRepository.getInstance(context, Executors.newSingleThreadExecutor())
-                        .addLocations(locations)
+                    LocationResult.extractResult(intent).let { locationResult ->
+                        locationResult ?: return
+
+                        val locations = locationResult.locations.map { location ->
+                            LocationEntity(
+                                latitude = location.latitude,
+                                longitude = location.longitude,
+                                accuracy = location.accuracy,
+                                speed = location.speed,
+                                altitude = location.altitude,
+                                bearing = location.bearing,
+                                mock = location.isFromMockProvider,
+                                provider = location.provider,
+                                foreground = isAppInForeground(context),
+                                date = Date(location.time)
+                            )
+                        }
+                        if (locations.isNotEmpty()) {
+                            LocationRepository.getInstance(context, Executors.newSingleThreadExecutor())
+                                .addLocations(locations)
+                        }
+                    }
                 }
             }
-        }else{
+        }
+        else{
             Log.d(TAG, "intent.action")
         }
     }

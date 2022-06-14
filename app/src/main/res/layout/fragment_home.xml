@@ -8,7 +8,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        android:text="Hello"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/enableBackgroundLocationButton"
@@ -17,6 +18,13 @@
         android:layout_gravity="start"
         android:layout_marginTop="@dimen/margin_normal"
         android:layout_marginEnd="@dimen/margin_normal"
-        android:text="@string/enhance_with_background_location_button_text" />
+        android:text="@string/enhance_with_background_location_button_text"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/start_session"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start session" />
 
 </FrameLayout>

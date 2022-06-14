@@ -7,15 +7,18 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Binder
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.IBinder
 import android.util.Log
 import androidx.annotation.UiThread
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.alkempl.rlr.data.GeofencingManager
 import com.alkempl.rlr.data.ObstacleRepository
+import com.alkempl.rlr.data.model.obstacle.ObstacleFactory
 import com.alkempl.rlr.data.model.scenario.ChapterEventAction
 import java.util.*
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 
 class ScenarioService : Service() {
@@ -63,6 +66,7 @@ class ScenarioService : Service() {
     private lateinit var scenarioManager: ScenarioManager
     private lateinit var actionsManager: ActionsManager
     private lateinit var geofencingManager: GeofencingManager
+    private lateinit var obstaclesManager: ObstaclesManager
 
     private fun ttsTest() {
         Log.d("$TAG/HELLO", "Привет, приложение запущено!")
@@ -96,16 +100,13 @@ class ScenarioService : Service() {
         soundManager = SoundManager.getInstance(baseContext)
         scenarioManager = ScenarioManager.getInstance(baseContext)
         actionsManager = ActionsManager.getInstance(baseContext)
+        obstaclesManager = ObstaclesManager.getInstance(baseContext)
         geofencingManager = GeofencingManager.getInstance(baseContext, Executors.newSingleThreadExecutor())
 
 
         // Bind to LocalService
         Intent(application, LocationService::class.java).also { ssintent ->
             bindService(ssintent, locationServiceConnection, Context.BIND_AUTO_CREATE)
-        }
-
-        Intent(application, HealthProtectionService::class.java).also { ssintent ->
-            bindService(ssintent, healthServiceConnection, Context.BIND_AUTO_CREATE)
         }
 
         startForeground(
@@ -115,8 +116,20 @@ class ScenarioService : Service() {
 
         scenarioManager.initialize()
         scenarioManager.initializeCurrentChapter()
-        scenarioManager.runScenario()
-        someTask()
+
+        object : CountDownTimer(TimeUnit.SECONDS.toMillis(3), TimeUnit.SECONDS.toMillis(1)) {
+            override fun onTick(millisUntilFinished: Long) {
+            }
+
+            override fun onFinish() {
+                Intent(application, HealthProtectionService::class.java).also { ssintent ->
+                    bindService(ssintent, healthServiceConnection, Context.BIND_AUTO_CREATE)
+                }
+//                val scenarioManager = ScenarioManager.getInstance(applicationContext)
+                scenarioManager.runScenario()
+                someTask()
+            }
+        }.start()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -160,6 +173,8 @@ class ScenarioService : Service() {
         actionsManager.clear()
         geofencingManager.reset()
         ttsManager.stop()
+        obstaclesManager.clear()
+
 
         if (locationServiceBounded) {
             val locationServiceIntent = Intent(applicationContext, LocationService::class.java)

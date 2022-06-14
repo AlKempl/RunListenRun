@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  Copyright 2020 The Android Open Source Project
 
  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,63 +13,112 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/scenario_control_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Start scenario" />
-        </TableRow>
+        android:id="@+id/loading_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <TextView
-            android:id="@+id/locationOutputTextView"
-            android:layout_width="match_parent"
-            android:layout_height="74dp"
-            android:layout_marginStart="@dimen/margin_normal"
-            android:layout_marginLeft="@dimen/margin_normal"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:layout_marginEnd="@dimen/margin_normal"
-            android:layout_marginRight="@dimen/margin_normal"
-            android:layout_marginBottom="@dimen/margin_normal"
-            android:layout_weight="1"
-            android:scrollbars="vertical"
-            android:textIsSelectable="true"
-            android:visibility="gone"
-            tools:visibility="gone" />
-
-        <LinearLayout
+            android:id="@+id/chapter_caption"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center|center_horizontal|center_vertical"
+            android:text="Here will be Chapter 1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:visibility="gone" />
 
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragmentObstaclesContainerView"
-                android:name="com.alkempl.rlr.ui.ObstaclesItemFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7" />
+        <RelativeLayout
+            android:id="@+id/relative_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragmentLocationContainerView"
-                android:name="com.alkempl.rlr.ui.LocationItemFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3" />
-        </LinearLayout>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/obstacle_image"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_centerInParent="true"
+                android:clickable="true"
+                android:elevation="5dp"
+                android:focusable="true"
+                android:foregroundGravity="left|center"
+                android:padding="20dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/man"
+                android:visibility="visible"
+                app:civ_border_color="#FFFFFFFF"
+                app:civ_border_width="3dp" />
+
+            <!--            <ImageView-->
+            <!--                android:id="@+id/obstacle_image"-->
+            <!--                android:layout_width="80dp"-->
+            <!--                android:layout_height="294dp"-->
+            <!--                android:layout_centerInParent="true"-->
+            <!--                android:adjustViewBounds="true"-->
+            <!--                android:contentDescription="TODO"-->
+            <!--                android:src="@drawable/android_treasure"-->
+            <!--                android:visibility="gone" />-->
+
+            <!--            <ProgressBar-->
+            <!--                android:id="@+id/chapter_progress_circular"-->
+            <!--                style="?android:attr/progressBarStyleLarge"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="255dp"-->
+            <!--                android:layout_centerInParent="true"-->
+            <!--                android:indeterminate="false"-->
+            <!--                android:max="100"-->
+            <!--                android:progress="00"-->
+            <!--                android:visibility="visible" />-->
+            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                android:id="@+id/chapter_progress_circular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="50dp"
+                android:visibility="visible"
+                app:cpb_background_progressbar_color="#b6bbd8"
+                app:cpb_background_progressbar_width="20dp"
+                app:cpb_indeterminate_mode="true"
+                app:cpb_progress="0"
+                app:cpb_progress_direction="to_right"
+                app:cpb_progress_max="100"
+                app:cpb_progressbar_color="#3f51b5"
+                app:cpb_progressbar_width="15dp"
+                app:cpb_round_border="false" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/geofencing_status_caption"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center|center_horizontal|center_vertical"
+            android:text="Here will be geofence status"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:visibility="gone" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/scenario_control_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            android:text="Start scenario" />
+
 
     </LinearLayout>
 </layout>

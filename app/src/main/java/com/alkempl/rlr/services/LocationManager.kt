@@ -190,6 +190,7 @@ class LocationManager private constructor(private val context: Context) {
             // If the PendingIntent is the same as the last request (which it always is), this
             // request will replace any requestLocationUpdates() called before.
             fusedLocationClient.requestLocationUpdates(locationRequest, locationUpdatePendingIntent)
+            Log.d(TAG, "fusedLocationClient.requestLocationUpdates")
 
         } catch (permissionRevoked: SecurityException) {
             _receivingLocationUpdates.value = false

@@ -2,13 +2,15 @@ package com.alkempl.rlr.data
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.alkempl.rlr.data.db.AppDatabase
 import com.alkempl.rlr.data.model.scenario.GeofenceEntry
 import com.alkempl.rlr.services.LocationManager
 import java.util.*
 import java.util.concurrent.ExecutorService
 
-private const val TAG = "GeofencingRepository"
+private const val TAG = "GeofencingManager"
 
 
 /**
@@ -21,7 +23,23 @@ class GeofencingManager private constructor(
 
     // in-memory cache
     private var landmarkData = ArrayList<GeofenceEntry>()
-    private var active_idx = -1
+    private val _activeIdx = MutableLiveData<Int>(-1)
+    private val _maxIdx = MutableLiveData<Int>(0)
+    private val _statusHint = MutableLiveData<String>()
+
+    val activeIdx: LiveData<Int>
+        get() = _activeIdx
+
+    val maxIdx: LiveData<Int>
+        get() = _maxIdx
+
+    val statusHint: LiveData<String>
+        get() = _statusHint
+
+
+    fun setStatusHint(str: String){
+        _statusHint.value = str
+    }
 
     fun getStored(): ArrayList<GeofenceEntry> {
         return landmarkData
@@ -36,26 +54,30 @@ class GeofencingManager private constructor(
     }
 
     fun getActiveIdx(): Int {
-        return active_idx
+        return _activeIdx.value!!
     }
 
     fun getActiveEntry(): GeofenceEntry? {
-        return landmarkData.getOrNull(active_idx)
+        return landmarkData.getOrNull(_activeIdx.value!!)
     }
 
     fun reset() {
         Log.d(TAG, "reset")
-        active_idx = -1
+        _activeIdx.value = -1
+        _maxIdx.value = 0
         landmarkData.clear()
+        _statusHint.value = ""
+        myLocationManager.removeGeofences()
     }
 
     fun processNext() {
         Log.d(TAG, "processNext")
-        active_idx += 1
-        if(active_idx > landmarkData.size - 1){
-            myLocationManager.removeGeofences()
+        _maxIdx.value = landmarkData.size
+        _activeIdx.value = _activeIdx.value!! + 1
+        if(_activeIdx.value!! > landmarkData.size - 1){
+//            myLocationManager.removeGeofences()
         }else{
-            myLocationManager.setActiveGeofence(landmarkData[active_idx])
+            myLocationManager.setActiveGeofence(landmarkData[_activeIdx.value!!])
         }
     }
 

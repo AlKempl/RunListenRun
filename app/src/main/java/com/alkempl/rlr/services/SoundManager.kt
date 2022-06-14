@@ -46,7 +46,7 @@ class SoundManager private constructor(private val context: Context) {
     fun playTrack(
         track_name: String,
         looping: Boolean = true,
-        volume: Pair<Float, Float> = Pair(50f, 50f)
+        volume: Pair<Float, Float> = Pair(20f, 20f)
     ) {
         if (!_mediaEnabled) {
             Log.e(TAG, "playTrack: Cant play [$track_name]: mediaplayer disabled hard-way")

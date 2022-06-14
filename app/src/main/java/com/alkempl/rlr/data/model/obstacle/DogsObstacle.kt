@@ -10,6 +10,7 @@ class DogsObstacle(context: Context, duration: Int) : Obstacle(context, duration
 
     override val name = "дикие собаки"
     override val hint = "чтобы от них убежать, надо ускориться"
+    override val image = "dogs"
 
     override fun onStart() {
         Log.i(TAG, "onStart")
