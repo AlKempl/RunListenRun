@@ -176,8 +176,8 @@
     <string name="lipsum">Lorem Ipsum</string>
     <string name="bg_location_updates">Background location updates</string>
     <string name="avatar_fragment">Image upload</string>
-    <string name="scenario_stop_button_caption">Stop scenario</string>
-    <string name="scenario_start_button_caption">Start scenario</string>
+    <string name="scenario_stop_button_caption">Завершить тренировку</string>
+    <string name="scenario_start_button_caption">Начать тренировку</string>
     <string name="training_suspense_by_health_text">Тренировка была прервана автоматически для защиты вашего здоровья от потенциальных физических перегрузок в соответствии с настройками максимальной длительности тренировки на основе вашего уровня подготовки.</string>
     <string name="training_suspense_by_chapter_end_text">Ура! Вы завершили главу!</string>
 

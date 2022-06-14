@@ -215,13 +215,17 @@ class LocationUpdateFragment : Fragment() {
             }
         }
 
-        locationUpdateViewModel.chapterName.observe(viewLifecycleOwner
-        ) { newChapterName ->
-            if(newChapterName.isNotEmpty()){
+        locationUpdateViewModel.currentChapter.observe(viewLifecycleOwner
+        ) { newChapter ->
+            if(newChapter != null){
                 binding.chapterCaption.visibility = View.VISIBLE
-                binding.chapterCaption.text = newChapterName
+                binding.chapterCaption.text = newChapter.name
+
+                binding.chapterDescCaption.visibility = View.VISIBLE
+                binding.chapterDescCaption.text = newChapter.description
             }else{
                 binding.chapterCaption.visibility = View.GONE
+                binding.chapterDescCaption.visibility = View.GONE
             }
         }
 

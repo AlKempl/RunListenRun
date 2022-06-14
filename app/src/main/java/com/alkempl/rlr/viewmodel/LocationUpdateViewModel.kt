@@ -39,7 +39,7 @@ class LocationUpdateViewModel(application: Application) : AndroidViewModel(appli
     val progressNow = geofencingManager.activeIdx
     val geofenceStatus = geofencingManager.statusHint
 
-    val chapterName = scenarioManager.currentChapterName
+    val currentChapter = scenarioManager.currentChapterValue
     val scenarioRunning = scenarioManager.scenarioRunning
 
     val obstacleImg = obstaclesManager.currentObstacleImage

@@ -34,9 +34,9 @@ class ScenarioManager private constructor(private val context: Context) {
     private var currentChapterId: String? = null
     private var currentChapterIdx: Int? = null
 
-    val _currentChapterName = MutableLiveData<String>()
-    val currentChapterName: LiveData<String>
-        get() = _currentChapterName
+    val _currentChapterValue = MutableLiveData<ScenarioChapter?>()
+    val currentChapterValue: LiveData<ScenarioChapter?>
+        get() = _currentChapterValue
 
     var scenarioInitialized = false
         private set
@@ -164,7 +164,7 @@ class ScenarioManager private constructor(private val context: Context) {
         currentChapterId = currentChapter!!.id
         Log.d(TAG, "currentChapterId $currentChapterId")
 
-        _currentChapterName.value = currentChapter!!.name
+        _currentChapterValue.value = currentChapter!!
 
         scenarioInitialized = true
         Log.d(TAG, "current chapter initialized")
@@ -180,7 +180,7 @@ class ScenarioManager private constructor(private val context: Context) {
         currentChapter = null
         currentChapterId = null
         currentChapterIdx = null
-        _currentChapterName.value = ""
+        _currentChapterValue.value = null
         healthProtectionManager.clear()
     }
 
