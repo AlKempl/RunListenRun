@@ -37,8 +37,9 @@ android {
             targetSdkVersion 30
 
             versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
-            versionName "${versionMajor}.${versionMinor}.${versionPatch} build ${versionBuild}"
-            buildConfigField "String", "GitHash", "\"${getGitHash()}\""
+            versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+            buildConfigField "String", "gitHash", "\"${getGitHash()}\""
+            buildConfigField "String", "versionBuild", "\"${versionBuild}\""
 
             testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
