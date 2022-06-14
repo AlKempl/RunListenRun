@@ -5,6 +5,15 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
 android {
     compileSdkVersion 30
 
@@ -14,17 +23,22 @@ android {
 
         versionProps.load(new FileInputStream(versionPropsFile))
 
-        def code = versionProps['VERSION_CODE'].toInteger() + 1
+        def versionMajor = versionProps['VERSION_MAJOR'].toInteger()
+        def versionMinor = versionProps['VERSION_MINOR'].toInteger()
+        def versionPatch = versionProps['VERSION_PATCH'].toInteger()
+        def versionBuild = versionProps['VERSION_BUILD'].toInteger() + 1
 
-        versionProps['VERSION_CODE'] = code.toString()
+        versionProps['VERSION_BUILD'] = versionBuild.toString()
         versionProps.store(versionPropsFile.newWriter(), null)
 
         defaultConfig {
             applicationId "com.alkempl.rlr"
             minSdk 26
             targetSdkVersion 30
-            versionCode code
-            versionName "1.0"
+
+            versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+            versionName "${versionMajor}.${versionMinor}.${versionPatch} build ${versionBuild}"
+            buildConfigField "String", "GitHash", "\"${getGitHash()}\""
 
             testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

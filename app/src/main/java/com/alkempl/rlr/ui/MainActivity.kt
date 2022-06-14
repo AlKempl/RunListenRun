@@ -1,14 +1,18 @@
 package com.alkempl.rlr.ui
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.MenuView
 import androidx.databinding.DataBindingUtil.setContentView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.alkempl.rlr.BuildConfig
 import com.alkempl.rlr.R
 import com.alkempl.rlr.databinding.ActivityMainBinding
+import org.w3c.dom.Text
 
 private const val TAG = "MainActivity"
 
@@ -43,6 +47,10 @@ class MainActivity : AppCompatActivity(),
 
         val navView = binding.navView
         NavigationUI.setupWithNavController(navView, navController)
+
+//        val versionItem = findViewById<TextView>(R.id.version_info_textview)
+//        versionItem?.let{
+//            it.text =         }
     }
 
     override fun onSupportNavigateUp(): Boolean {

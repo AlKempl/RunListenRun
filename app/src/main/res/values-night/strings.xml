@@ -18,4 +18,5 @@
     <string name="basic_heart_rate_caption">Ваш нормальный пульс</string>
     <string name="fragment_upload_image">Avatar uploading</string>
     <string name="home_fragment">Home</string>
+    <string name="about">About</string>
 </resources>

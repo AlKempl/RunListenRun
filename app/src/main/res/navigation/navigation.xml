@@ -33,5 +33,12 @@
         <action
             android:id="@+id/action_locationUpdateFragment_to_lipsumFragment"
             app:destination="@id/lipsumFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_aboutDialog2"
+            app:destination="@id/aboutDialog" />
     </fragment>
+    <dialog
+        android:id="@+id/aboutDialog"
+        android:name="com.alkempl.rlr.ui.AboutDialog"
+        android:label="AboutDialog" />
 </navigation>
