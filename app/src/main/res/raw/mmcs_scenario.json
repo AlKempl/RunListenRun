@@ -17,12 +17,6 @@
             "action": "sound",
             "track_name": "shakalaka",
             "delay": 0
-          },
-          {
-            "action": "obstacle",
-            "type": "dogs",
-            "severity": 3,
-            "delay": 0
           }
         ]
       },
@@ -43,7 +37,27 @@
           "location": {
             "latitude": 47.21680561247273,
             "longitude": 39.62795443832874
-          }
+          },
+          "events": [
+            {
+              "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
+              "type": "timer",
+              "time": 2,
+              "actions": [
+                {
+                  "action": "sound",
+                  "track_name": "groovin",
+                  "delay": 0
+                },
+                {
+                  "action": "obstacle",
+                  "type": "wind",
+                  "severity": 20,
+                  "delay": 0
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "parking",
@@ -71,26 +85,6 @@
             "latitude": 47.216940199717435,
             "longitude": 39.628869742155075
           }
-        }
-      ],
-      "events": [
-        {
-          "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
-          "type": "timer",
-          "time": 20,
-          "actions": [
-            {
-              "action": "sound",
-              "track_name": "groovin",
-              "delay": 0
-            },
-            {
-              "action": "obstacle",
-              "type": "dogs",
-              "severity": 20,
-              "delay": 0
-            }
-          ]
         }
       ]
     }

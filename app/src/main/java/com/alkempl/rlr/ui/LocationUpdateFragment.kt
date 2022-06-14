@@ -3,7 +3,6 @@ package com.alkempl.rlr.ui
 import android.Manifest
 import android.content.*
 import android.graphics.Color
-import android.opengl.Visibility
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -92,7 +91,7 @@ class LocationUpdateFragment : Fragment() {
             FragmentObstacleItemListBinding.inflate(inflater, container, false)
 
         binding.scenarioControlButton.setOnClickListener {
-            manageScenarioService()
+            shutdown()
         }
 
         binding.chapterProgressCircular.indeterminateMode = true;
@@ -100,33 +99,27 @@ class LocationUpdateFragment : Fragment() {
         return binding.root
     }
 
-    private fun manageScenarioService() {
-        val scenarioServiceIntent = Intent(context, ScenarioService::class.java)
 
-        if (scenarioServiceBounded) {
-            Log.d(TAG, "stop com.alkempl.rlr.data.model.scenario.Scenario Service")
-            requireActivity().unbindService(scenarioServiceConnection)
-            activityListener?.displayHomeUI()
-//            requireActivity().stopService(scenarioServiceIntent)
-        } else {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                Log.d(TAG, "start com.alkempl.rlr.data.model.scenario.Scenario ForegroundService")
-//                requireActivity().startForegroundService(scenarioServiceIntent)
-//            } else {
-//                Log.d(TAG, "start com.alkempl.rlr.data.model.scenario.Scenario Service")
-//                requireActivity().startService(scenarioServiceIntent)
-//            }
-            // Bind to LocalService
-            Intent(context, ScenarioService::class.java).also { ssintent ->
-                requireActivity().bindService(
-                    ssintent,
-                    scenarioServiceConnection,
-                    Context.BIND_AUTO_CREATE
-                )
-            }
+    private fun startScenario(){
+        // Bind to LocalService
+        Intent(context, ScenarioService::class.java).also { ssintent ->
+            requireActivity().bindService(
+                ssintent,
+                scenarioServiceConnection,
+                Context.BIND_AUTO_CREATE
+            )
         }
         scenarioServiceBounded = !scenarioServiceBounded
         updateScenarioButtonState()
+    }
+
+    private fun shutdown(){
+        val scenarioServiceIntent = Intent(context, ScenarioService::class.java)
+        Log.d(TAG, "stop com.alkempl.rlr.data.model.scenario.Scenario Service")
+        requireActivity().unbindService(scenarioServiceConnection)
+        scenarioServiceBounded = !scenarioServiceBounded
+        updateScenarioButtonState()
+        activityListener?.displayHomeUI()
     }
 
     override fun onAttach(context: Context) {
@@ -137,6 +130,12 @@ class LocationUpdateFragment : Fragment() {
         actionReceiver.addAction("scenarioShutdownHealth")
         actionReceiver.addAction("scenarioShutdownChapterEnd")
         bm!!.registerReceiver(onJsonReceived, actionReceiver)
+
+        if (context is Callbacks) {
+            activityListener = context
+        } else {
+            throw RuntimeException("$context must implement PermissionRequestFragment.Callbacks")
+        }
     }
 
     private val onJsonReceived: BroadcastReceiver = object : BroadcastReceiver() {
@@ -146,7 +145,12 @@ class LocationUpdateFragment : Fragment() {
                      val data = JSONObject(it)
                  }*/
 
-                manageScenarioService()
+                when (intent.action){
+                    "scenarioShutdownHealth" -> shutdown()
+                    "scenarioShutdownChapterEnd" -> shutdown()
+                    else -> {}
+                }
+
 
                 val text = when (intent.action){
                     "scenarioShutdownHealth" -> getString(R.string.training_suspense_by_health_text)
@@ -229,65 +233,19 @@ class LocationUpdateFragment : Fragment() {
         { newStatusIsRunning ->
             binding.chapterProgressCircular.indeterminateMode = !newStatusIsRunning
         }
-        /* locationUpdateViewModel.locationListLiveData.observe(
-             viewLifecycleOwner,
-             androidx.lifecycle.Observer { locations ->
-                 locations?.let {
-                     val det: RecyclerView =
-                         binding.fragmentLocationContainerView.findViewById(R.id.locations_list)
-                     with(det.adapter!!) {
-                         if (this is LocationEntityItemRecyclerViewAdapter) {
-                             updateUserList(locations)
-                         }
-                     }
-                 }
-             }
-         )
 
-         obstacleUpdateViewModel.obstacleListLiveData.observe(
-             viewLifecycleOwner,
-             androidx.lifecycle.Observer { obstacles ->
-                 obstacles?.let {
-                     val det: RecyclerView =
-                         binding.fragmentObstaclesContainerView.findViewById(R.id.obstacles_list)
-                     with(det.adapter!!) {
-                         if (this is ObstacleEntityItemRecyclerViewAdapter) {
-                             updateUserList(obstacles)
-                         }
-                     }
-                 }
-             }
-         )*/
-
-        manageScenarioService()
-
-
-        /*locationUpdateViewModel.locationListLiveData.observe(
-            viewLifecycleOwner,
-            androidx.lifecycle.Observer { locations ->
-                locations?.let {
-                    Log.d(TAG, "Got ${locations.size} locations")
-
-                    if (locations.isEmpty()) {
-                        binding.locationOutputTextView.text =
-                            getString(R.string.emptyLocationDatabaseMessage)
-                    } else {
-                        val outputStringBuilder = StringBuilder("")
-                        for (location in locations) {
-                            outputStringBuilder.append(location.toString() + "\n")
-                        }
-
-                        binding.locationOutputTextView.text = outputStringBuilder.toString()
-                        *//* bindingRecyclerViewAdapter.list.adapter.updateUserList(locations) *//*
-                    }
-                }
-            }
-        )*/
+        startScenario()
     }
 
     override fun onResume() {
         super.onResume()
+        (requireActivity() as AppCompatActivity).supportActionBar!!.hide()
         updateScenarioButtonState()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (requireActivity() as AppCompatActivity).supportActionBar!!.show()
     }
 
     override fun onDetach() {

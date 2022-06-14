@@ -1,9 +1,6 @@
 package com.alkempl.rlr.ui
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil.setContentView
@@ -18,8 +15,7 @@ private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(),
     PermissionRequestFragment.Callbacks,
     HomeFragment.Callbacks,
-    LocationUpdateFragment.Callbacks
-{
+    LocationUpdateFragment.Callbacks {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
@@ -30,7 +26,8 @@ class MainActivity : AppCompatActivity(),
         binding = setContentView<ActivityMainBinding>(this, R.layout.activity_main)
         drawerLayout = binding.drawerLayout
 
-        binding.navView.getHeaderView(0).findViewById<TextView>(R.id.username_label).text = intent.getStringExtra("displayName")
+        binding.navView.getHeaderView(0).findViewById<TextView>(R.id.username_label).text =
+            intent.getStringExtra("displayName")
 
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (currentFragment == null) {
@@ -42,7 +39,7 @@ class MainActivity : AppCompatActivity(),
         }
 
         val navController = this.findNavController(R.id.fragment_container)
-        NavigationUI.setupActionBarWithNavController(this,navController, drawerLayout)
+        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
 
         val navView = binding.navView
         NavigationUI.setupWithNavController(navView, navController)
@@ -59,6 +56,18 @@ class MainActivity : AppCompatActivity(),
 
         val fragment = HomeFragment.newInstance()
 //        val fragment = LocationUpdateFragment.newInstance()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    override fun requestPermissionFragment(type: PermissionRequestType) {
+        val fragment = PermissionRequestFragment.newInstance(
+            type
+        )
+
         this.supportActionBar?.show()
         supportFragmentManager
             .beginTransaction()
@@ -67,66 +76,7 @@ class MainActivity : AppCompatActivity(),
             .commit()
     }
 
-/*
-//    // Triggers a splash screen (fragment) to help users decide if they want to approve the missing
-//    // fine location permission.
-//    override fun requestFineLocationPermission() {
-//        val fragment = PermissionRequestFragment.newInstance(PermissionRequestType.FINE_LOCATION)
-//
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragment_container, fragment)
-//            .addToBackStack(null)
-//            .commit()
-//    }
-//
-//    // Triggers a splash screen (fragment) to help users decide if they want to approve the missing
-//    // background location permission.
-//    override fun requestBackgroundLocationPermission() {
-//        val fragment = PermissionRequestFragment.newInstance(
-//            PermissionRequestType.BACKGROUND_LOCATION
-//        )
-//
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragment_container, fragment)
-//            .addToBackStack(null)
-//            .commit()
-//    }
-//
-//    // Triggers a splash screen (fragment) to help users decide if they want to approve the missing
-//    // background location permission.
-//    override fun requestActivityRecognitionPermission() {
-//        val fragment = PermissionRequestFragment.newInstance(
-//            PermissionRequestType.ACTIVITY_RECOGNITION
-//        )
-//
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragment_container, fragment)
-//            .addToBackStack(null)
-//            .commit()
-//    }
-//
-
- */
-    override fun requestPermissionFragment(type: PermissionRequestType){
-        val fragment = PermissionRequestFragment.newInstance(
-            type
-        )
-
-    this.supportActionBar?.show()
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
-
-    override fun sessionStartFragment(){
-
-        this.supportActionBar?.hide()
-
+    override fun sessionStartFragment() {
         val fragment = LocationUpdateFragment.newInstance()
 
         supportFragmentManager

@@ -244,5 +244,7 @@
     <string name="enable_tts_pref_caption">Включить голосовое сопровождение</string>
     <string name="audio_settings">Звуки</string>
     <string name="basic_heart_rate_caption">Ваш нормальный пульс</string>
+    <string name="fragment_upload_image">Avatar uploading</string>
+    <string name="home_fragment">Home</string>
 
 </resources>
