@@ -178,7 +178,7 @@
     <string name="avatar_fragment">Image upload</string>
     <string name="scenario_stop_button_caption">Stop scenario</string>
     <string name="scenario_start_button_caption">Start scenario</string>
-    <string name="training_suspense_by_health_text">The training was interrupted in order to prevent potential damage to your health due to maximum training length limit reached.</string>
+    <string name="training_suspense_by_health_text">Тренировка была прервана автоматически для защиты вашего здоровья от потенциальных физических перегрузок в соответствии с настройками максимальной длительности тренировки на основе вашего уровня подготовки.</string>
     <string name="training_suspense_by_chapter_end_text">Ура! Вы завершили главу!</string>
 
     <!--    Geofence Status Strings-->
@@ -244,11 +244,13 @@
     <string name="enable_tts_pref_caption">Включить голосовое сопровождение</string>
     <string name="audio_settings">Звуки</string>
     <string name="basic_heart_rate_caption">Ваш нормальный пульс</string>
-    <string name="fragment_upload_image">Avatar uploading</string>
-    <string name="home_fragment">Home</string>
-    <string name="about">About</string>
-    <string name="build_number_text">\"Build number: %s\"</string>
-    <string name="commit_hash_text">\"Last commit hash: %s\"</string>
-    <string name="version_text">\"Version name: %s, code: %s, build type: %s\"</string>
+    <string name="fragment_upload_image">Загрузка сценария</string>
+    <string name="home_fragment">Главная</string>
+    <string name="about">О приложении</string>
+    <string name="build_number_text">Build number: %s"</string>
+    <string name="commit_hash_text">Last commit hash: %s</string>
+    <string name="version_text">Version name: %s, code: %s, build type: %s</string>
+    <string name="start_session">Начать тренировку</string>
+    <string name="health_protection_title">Система защиты здоровья</string>
 
 </resources>

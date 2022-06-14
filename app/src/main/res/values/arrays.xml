@@ -21,6 +21,7 @@
     </string-array>
 
     <string-array name="health_level_names">
+        <item>Супер-новичок</item>
         <item>Новичок</item>
         <item>Продвинутый</item>
         <item>Уверенный</item>
@@ -29,6 +30,7 @@
     </string-array>
 
     <string-array name="health_level_values">
+        <item>1</item>
         <item>30</item>
         <item>45</item>
         <item>60</item>

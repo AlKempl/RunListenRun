@@ -19,7 +19,9 @@
     <string name="fragment_upload_image">Avatar uploading</string>
     <string name="home_fragment">Home</string>
     <string name="about">About</string>
-    <string name="build_number_text">\"Build number: %s\"</string>
-    <string name="commit_hash_text">\"Last commit hash: %s\"</string>
-    <string name="version_text">\"Version name: %s, code: %s, build type: %s\"</string>
+    <string name="build_number_text">Build number: %s</string>
+    <string name="commit_hash_text">Last commit hash: %s</string>
+    <string name="version_text">Version name: %s, code: %s, build type: %s</string>
+    <string name="start_session">Start session</string>
+    <string name="health_protection_title">Health protection service</string>
 </resources>

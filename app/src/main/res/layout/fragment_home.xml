@@ -1,30 +1,324 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.HomeFragment">
 
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/chapter_progress_circular9"
+        android:layout_width="99dp"
+        android:layout_height="91dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:visibility="visible"
+        app:cpb_background_progressbar_color="#FFE0B2"
+        app:cpb_background_progressbar_width="15dp"
+        app:cpb_indeterminate_mode="false"
+        app:cpb_progress="3"
+        app:cpb_progress_direction="to_right"
+        app:cpb_progress_max="7"
+        app:cpb_progressbar_color="#FF9800"
+        app:cpb_progressbar_width="10dp"
+        app:cpb_round_border="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chapter_progress_circular8" />
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Ежедневная цепочка:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintStart_toEndOf="@+id/chapter_progress_circular9"
+        app:layout_constraintTop_toTopOf="@+id/chapter_progress_circular9" />
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="3 / 7"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toEndOf="@+id/chapter_progress_circular9"
+        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Завершено глав:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintStart_toEndOf="@+id/chapter_progress_circular5"
+        app:layout_constraintTop_toTopOf="@+id/chapter_progress_circular5" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="1 / 5"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toEndOf="@+id/chapter_progress_circular5"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/chapter_progress_circular8"
+        android:layout_width="99dp"
+        android:layout_height="91dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:visibility="visible"
+        app:cpb_background_progressbar_color="#E1BEE7"
+        app:cpb_background_progressbar_width="15dp"
+        app:cpb_indeterminate_mode="false"
+        app:cpb_progress="1"
+        app:cpb_progress_direction="to_right"
+        app:cpb_progress_max="5"
+        app:cpb_progressbar_color="#9C27B0"
+        app:cpb_progressbar_width="10dp"
+        app:cpb_round_border="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chapter_progress_circular4" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Завершено глав:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintStart_toEndOf="@+id/chapter_progress_circular5"
+        app:layout_constraintTop_toTopOf="@+id/chapter_progress_circular5" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="1 / 5"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toEndOf="@+id/chapter_progress_circular5"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/chapter_progress_circular7"
+        android:layout_width="99dp"
+        android:layout_height="91dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:visibility="visible"
+        app:cpb_background_progressbar_color="#E1BEE7"
+        app:cpb_background_progressbar_width="15dp"
+        app:cpb_indeterminate_mode="false"
+        app:cpb_progress="1"
+        app:cpb_progress_direction="to_right"
+        app:cpb_progress_max="5"
+        app:cpb_progressbar_color="#9C27B0"
+        app:cpb_progressbar_width="10dp"
+        app:cpb_round_border="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chapter_progress_circular4" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Завершено глав:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintStart_toEndOf="@+id/chapter_progress_circular5"
+        app:layout_constraintTop_toTopOf="@+id/chapter_progress_circular5" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="1 / 5"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toEndOf="@+id/chapter_progress_circular5"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/chapter_progress_circular6"
+        android:layout_width="99dp"
+        android:layout_height="91dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:visibility="visible"
+        app:cpb_background_progressbar_color="#E1BEE7"
+        app:cpb_background_progressbar_width="15dp"
+        app:cpb_indeterminate_mode="false"
+        app:cpb_progress="1"
+        app:cpb_progress_direction="to_right"
+        app:cpb_progress_max="5"
+        app:cpb_progressbar_color="#9C27B0"
+        app:cpb_progressbar_width="10dp"
+        app:cpb_round_border="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chapter_progress_circular4" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/chapter_progress_circular5"
+        android:layout_width="99dp"
+        android:layout_height="91dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:visibility="visible"
+        app:cpb_background_progressbar_color="#E1BEE7"
+        app:cpb_background_progressbar_width="15dp"
+        app:cpb_indeterminate_mode="false"
+        app:cpb_progress="1"
+        app:cpb_progress_direction="to_right"
+        app:cpb_progress_max="5"
+        app:cpb_progressbar_color="#9C27B0"
+        app:cpb_progressbar_width="10dp"
+        app:cpb_round_border="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chapter_progress_circular4" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Завершено глав:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintStart_toEndOf="@+id/chapter_progress_circular5"
+        app:layout_constraintTop_toTopOf="@+id/chapter_progress_circular5" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="1 / 5"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toEndOf="@+id/chapter_progress_circular5"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/chapter_progress_circular4"
+        android:layout_width="99dp"
+        android:layout_height="91dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:visibility="visible"
+        app:cpb_background_progressbar_color="#B3E5FC"
+        app:cpb_background_progressbar_width="15dp"
+        app:cpb_indeterminate_mode="false"
+        app:cpb_progress="7000"
+        app:cpb_progress_direction="to_right"
+        app:cpb_progress_max="10000"
+        app:cpb_progressbar_color="#03A9F4"
+        app:cpb_progressbar_width="10dp"
+        app:cpb_round_border="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chapter_progress_circular3" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Пройдено шагов:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintStart_toEndOf="@+id/chapter_progress_circular4"
+        app:layout_constraintTop_toTopOf="@+id/chapter_progress_circular4" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="7 000 / 10 000"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toEndOf="@+id/chapter_progress_circular4"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/chapter_progress_circular3"
+        android:layout_width="99dp"
+        android:layout_height="91dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:visibility="visible"
+        app:cpb_background_progressbar_color="#DCEDC8"
+        app:cpb_background_progressbar_width="15dp"
+        app:cpb_indeterminate_mode="false"
+        app:cpb_progress="30"
+        app:cpb_progress_direction="to_right"
+        app:cpb_progress_max="100"
+        app:cpb_progressbar_color="#8BC34A"
+        app:cpb_progressbar_width="10dp"
+        app:cpb_round_border="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/start_session" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Hello"
         android:visibility="gone" />
 
     <Button
         android:id="@+id/enableBackgroundLocationButton"
-        android:layout_width="114dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginTop="@dimen/margin_normal"
-        android:layout_marginEnd="@dimen/margin_normal"
         android:text="@string/enhance_with_background_location_button_text"
         android:visibility="gone" />
 
     <Button
         android:id="@+id/start_session"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/start_session"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start session" />
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Пройдено препятствий:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintStart_toEndOf="@+id/chapter_progress_circular3"
+        app:layout_constraintTop_toTopOf="@+id/chapter_progress_circular3" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="30 / 100"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toEndOf="@+id/chapter_progress_circular3"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

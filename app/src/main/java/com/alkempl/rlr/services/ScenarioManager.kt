@@ -46,6 +46,7 @@ class ScenarioManager private constructor(private val context: Context) {
 
     private lateinit var soundManager: SoundManager
     private lateinit var actionsManager: ActionsManager
+    private lateinit var healthProtectionManager: HealthProtectionManager
 
     private val geofencingManager = GeofencingManager.getInstance(
         context,
@@ -73,6 +74,7 @@ class ScenarioManager private constructor(private val context: Context) {
             }
 
             geofencingManager.processNext()
+            healthProtectionManager.startPhysicalProtectionTimer()
             _scenarioRunning.value = true
         }else{
             Log.e(TAG, "runScenario: not scenarioParsed && scenarioInitialized")
@@ -82,6 +84,7 @@ class ScenarioManager private constructor(private val context: Context) {
     fun initialize() {
         soundManager = SoundManager.getInstance(context)
         actionsManager = ActionsManager.getInstance(context)
+        healthProtectionManager = HealthProtectionManager.getInstance(context)
 
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
         scenarioPrefix = sharedPref.getString("scenario_pref_value", "mmcs")
@@ -178,6 +181,7 @@ class ScenarioManager private constructor(private val context: Context) {
         currentChapterId = null
         currentChapterIdx = null
         _currentChapterName.value = ""
+        healthProtectionManager.clear()
     }
 
     fun finishChapter() {

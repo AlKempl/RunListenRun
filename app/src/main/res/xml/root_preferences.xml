@@ -15,11 +15,10 @@
     <PreferenceCategory app:title="@string/helth_protection_pref_cat">
 
         <ListPreference
-            android:key="max_running_time_value"
+            app:key="max_running_time_value"
             app:defaultValue="30"
             app:entries="@array/health_level_names"
             app:entryValues="@array/health_level_values"
-            app:key="30"
             app:title="@string/health_level_pref_caption"
             app:useSimpleSummaryProvider="true" />
 

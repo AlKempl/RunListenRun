@@ -16,6 +16,6 @@
         android:title="@string/avatar_fragment" />
     <item
         android:id="@+id/aboutDialog"
-        android:icon="@android:drawable/ic_menu_compass"
-        android:title="ABOUT" />
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="@string/about" />
 </menu>

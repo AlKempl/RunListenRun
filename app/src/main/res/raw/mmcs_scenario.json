@@ -7,8 +7,8 @@
   "chapters": [
     {
       "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
-      "name": "Chapter 1",
-      "description": "The One Where Monica Gets a Roommate",
+      "name": "Эпизод 4",
+      "description": "Эпизод с метафорическим туннелем",
       "initial_event": {
         "id": "ca1b1ed4-ef6d-49e7-9e7f-bfafa29281d4",
         "type": "init",

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -151,10 +152,15 @@ class LocationUpdateFragment : Fragment() {
                     else -> {}
                 }
 
-
                 val text = when (intent.action){
                     "scenarioShutdownHealth" -> getString(R.string.training_suspense_by_health_text)
                     "scenarioShutdownChapterEnd" -> getString(R.string.training_suspense_by_chapter_end_text)
+                    else -> "Что-то пошло не так."
+                }
+
+                val title = when (intent.action){
+                    "scenarioShutdownHealth" -> getString(R.string.health_protection_title)
+                    "scenarioShutdownChapterEnd" -> "Тренировка завершена"
                     else -> "Что-то пошло не так."
                 }
 
@@ -164,22 +170,24 @@ class LocationUpdateFragment : Fragment() {
                     else -> R.string.ok
                 }
 
-                val sb = Snackbar.make(
-                    binding.root,
-                    text,
-                    Snackbar.LENGTH_INDEFINITE
-                )
-
-                sb.setAction(btnText) {
-                    sb.dismiss()
+                val dialogIcon = when (intent.action){
+                    "scenarioShutdownHealth" -> R.drawable.ic_baseline_warning_24
+                    "scenarioShutdownChapterEnd" -> R.drawable.ic_baseline_directions_run_24
+                    else -> R.drawable.ic_baseline_info_24
                 }
 
-                val snbid = com.google.android.material.R.id.snackbar_text
-                sb.view.findViewById<TextView>(snbid).maxLines = 5
-                sb.show()
+                val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                alertDialogBuilder.setTitle(title)
+                alertDialogBuilder.setIcon(dialogIcon)
+                alertDialogBuilder.setMessage(text)
+                alertDialogBuilder.setNeutralButton(btnText, { dialogInterface: DialogInterface, i: Int -> })
+
+                val alertDialog = alertDialogBuilder.create()
+                alertDialog.show()
             }
         }
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
